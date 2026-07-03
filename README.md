@@ -18,6 +18,27 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
+## Features
+
+This engineering toolkit includes:
+
+### Knowledge Base
+- 20+ comprehensive engineering hubs covering Instrumentation, PLC, SCADA, DCS, Process Control & more
+- Each hub includes articles, calculators, downloads, MCQs & interview questions
+
+### Tools Suite
+- **4-20 mA Signal Converter** - Convert percentage ↔ milliamp bidirectionally
+- **PV Calculator** - Convert mA signal to Engineering Units using LRV/URV span
+- **DP Flow Calculator** - Calculate flow from differential pressure using square-root extraction
+- **RTD Pt100 Calculator** - Convert resistance ↔ temperature per IEC 60751
+- **Thermocouple mV Calculator** - Type K mV output from temperature input
+- **Valve Cv/Kv Calculator** - Liquid service flow coefficient per ISA-75.01
+- **Ohm's Law Calculator** - Solve V, I, R, Power from any two values
+- **Unit Converter** - Pressure, Temperature, Flow, Length & Mass conversions
+- **Cable Sizing** - Calculate voltage drop for instrument copper cable
+- **Loop Checklist** - Pre-commissioning checklist with progress tracking
+- **NEW: Pressure Gauge Simulator** - Interactive Bourdon tube pressure gauge simulation with visual gauge display
+
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
 ## Learn More
