@@ -2,4 +2,4 @@
 2:I[39756,["/instrumentation-hub/_next/static/chunks/2tluujebmzcki.js","/instrumentation-hub/_next/static/chunks/14mrh2-p_w84d.js"],"default"]
 3:I[37457,["/instrumentation-hub/_next/static/chunks/2tluujebmzcki.js","/instrumentation-hub/_next/static/chunks/14mrh2-p_w84d.js"],"default"]
 4:[]
-0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"tP7HfHUVorAZT81etyr4o"}
+0:{"rsc":["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","template":["$","$L3",null,{}]}]]}],"isPartial":false,"staleTime":300,"varyParams":"$W4","buildId":"NPwIUiVK4QSBLEarEGgPu"}
