@@ -15,6 +15,17 @@ const TOOLS = [
   { id: "unit",  icon: "↔",  name: "Unit Converter",       desc: "Pressure · Temp · Flow · Length · Mass" },
   { id: "cable", icon: "🔌", name: "Cable Sizing",         desc: "Voltage drop for instrument copper cable" },
   { id: "cl",    icon: "✅", name: "Loop Checklist",        desc: "Pre-commissioning checklist with progress tracking" },
+  { id: "pg",    icon: "📏", name: "Pressure Gauge Sim",   desc: "Interactive Bourdon tube pressure gauge simulation" },
+  { id: "ma",    icon: "〰", name: "4-20 mA Signal",       desc: "Convert percentage ↔ milliamp bidirectionally" },
+  { id: "pv",    icon: "📊", name: "PV Calculator",        desc: "mA → Engineering Units using LRV/URV span" },
+  { id: "dp",    icon: "〜", name: "DP Flow Calculator",   desc: "Flow from DP using square-root extraction" },
+  { id: "rtd",   icon: "📟", name: "RTD Pt100",            desc: "Resistance ↔ Temperature per IEC 60751" },
+  { id: "tc",    icon: "🔥", name: "Thermocouple mV",      desc: "Type K mV output from temperature" },
+  { id: "cv",    icon: "⚙",  name: "Valve Cv / Kv",        desc: "Liquid service flow coefficient per ISA-75.01" },
+  { id: "ohm",   icon: "⚡", name: "Ohm's Law",            desc: "Solve V, I, R, Power from any two values" },
+  { id: "unit",  icon: "↔",  name: "Unit Converter",       desc: "Pressure · Temp · Flow · Length · Mass" },
+  { id: "cable", icon: "🔌", name: "Cable Sizing",         desc: "Voltage drop for instrument copper cable" },
+  { id: "cl",    icon: "✅", name: "Loop Checklist",        desc: "Pre-commissioning checklist with progress tracking" },
 ];
 
 export default function ToolsPage() {
@@ -629,6 +640,110 @@ ${"=".repeat(50)}
               })}
             </div>
           ))}
+        </div>
+      );
+
+
+    case "pg":
+      return (
+        <div className="rounded-xl p-6 sm:p-8" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
+          <div className="flex items-center gap-3 pb-5 mb-5 border-b border-[var(--color-border)]">
+            <span className="text-2xl">📏</span>
+            <div>
+              <div className="text-lg font-black uppercase tracking-[.03em] text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-display)" }}>Pressure Gauge Simulator</div>
+              <div className="text-xs text-[var(--color-text-muted)] mt-0.5">Interactive Bourdon tube pressure gauge simulation</div>
+            </div>
+          </div>
+          <div className="space-y-6">
+            {/* Pressure Input */}
+            <div>
+              <label className="block mb-2 text-[9px] font-semibold uppercase tracking-[.16em] text-[var(--color-text-muted)]" style={{ fontFamily: "var(--font-mono)" }}>
+                Applied Pressure
+              </label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={gs("pg-pressure") || "0"}
+                  onChange={e => setInputs(prev => ({ ...prev, "pg-pressure": e.target.value }))}
+                  className="flex-1 h-2 bg-[var(--color-bg-raise)] rounded-full"
+                  style={{ accentColor: "var(--color-accent-blue)" }}
+                />
+                <span className="w-16 text-center text-[var(--color-text-primary)] font-mono">{gs("pg-pressure") || "0"}%</span>
+              </div>
+              <p className="text-[var(--color-text-secondary)] text-xs mt-1">0% = 0 PSI, 100% = Full Scale (e.g., 100 PSI)</p>
+            </div>
+            
+            {/* Gauge Display */}
+            <div className="relative aspect-[1/1] w-full max-w-[300px] mx-auto">
+              {/* Gauge Face */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative w-[280px] h-[280px] bg-[var(--color-bg-card)] rounded-full border-2 border-[var(--color-border)] shadow-lg overflow-hidden">
+                  {/* Gauge Background */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-bg-raise)] to-[var(--color-bg-card)]/50 rounded-full">
+                    {/* Degree markings */}
+                    <div className="absolute inset-0 pointer-events-none">
+                      {[...Array(101)].map((_, i) => (
+            <div key={i} className="absolute left-1/2 top-0 w-[1px] h-2 bg-[var(--color-border)]/30 transform origin-bottom translate-x-[-0.5px] rotate-[${i * 3.6}deg]"></div>
+                      ))}
+                    </div>
+                    {/* Pressure labels */}
+                    <div className="absolute inset-0 pointer-events-none text-[var(--color-text-muted)] text-xs font-mono">
+                      {[0, 25, 50, 75, 100].map(p => (
+            <div key={p} className="absolute left-1/2 top-1/2 w-[120px] h-[120px] flex items-center justify-center transform origin-bottom translate-x-[-50%] translate-y-[-50%] rotate-[${p * 3.6}deg]">
+              <div className="absolute -left-1/2 -top-1/2 w-full h-full flex items-center justify-center rotate-[${-p * 3.6}deg]">
+                <div className="w-4 text-center">{p}</div>
+              </div>
+            </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Bourdon Tube Simulation */}
+                  <div className="absolute inset-0 pointer-events-none">
+                    {/* Moving pointer */}
+                    <div className="absolute left-1/2 top-1/2 w-[2px] h-[100px] bg-[var(--color-accent-blue)]/80 origin-bottom transform origin-bottom translate-x-[-1px] rotate-[${(gs("pg-pressure") || "0") * 3.6}deg] transition-transform duration-200"></div>
+                    
+                    {/* Bourdon tube arc */}
+                    <div className="absolute left-1/2 top-1/2 w-[180px] h-[180px] rounded-full border-[var(--color-border)]/20 transform -translate-x-[-50%] -translate-y-[-50%] rotate-45">
+                      <div className="absolute left-1/2 top-1/2 w-[2px] h-[80px] bg-[var(--color-accent-blue)]/50 origin-bottom transform origin-bottom translate-x-[-1px] rotate-[${(gs("pg-pressure") || "0") * 1.8}deg]"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Gauge Image */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <img
+                  src="/pressure-gauge-diagram.png"
+                  alt="Inside of a Pressure Gauge"
+                  className="w-[200px] h-[200px] object-contain opacity-70"
+                />
+              </div>
+            </div>
+            
+            {/* Pressure Reading */}
+            <div className="text-center">
+              <div className="text-[9px] font-semibold uppercase tracking-[.15em] text-[var(--color-text-muted)] mb-2" style={{ fontFamily: "var(--font-mono)" }}>
+                Pressure Reading
+              </div>
+              <div className="text-3xl font-black leading-none" style={{ color: "var(--color-accent-blue)", fontFamily: "var(--font-display)" }}>
+                {((gs("pg-pressure") || "0") / 100 * 100).toFixed(0)} PSI
+              </div>
+              <p className="text-[var(--color-text-secondary)] text-xs mt-1">Simulated pressure based on input percentage</p>
+            </div>
+            
+            {/* Explanation */}
+            <div className="bg-[var(--color-bg-raise)] rounded-lg p-4 mt-6">
+              <h3 className="text-[var(--color-text-primary)] font-semibold mb-2" style={{ fontFamily: "var(--font-display)" }}>How It Works</h3>
+              <p className="text-[var(--color-text-muted)] text-sm">
+                As pressure increases, the Bourdon tube (shown as the curved blue element) straightens,
+                causing the pointer to rotate clockwise. This mechanical movement is converted to
+                a pressure reading on the dial.
+              </p>
+            </div>
+          </div>
         </div>
       );
 
