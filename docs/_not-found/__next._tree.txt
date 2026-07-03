@@ -1,2 +1,2 @@
-:HL["/instrumentation-hub/_next/static/chunks/03_n6lnlgwwgd.css","style"]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"NPwIUiVK4QSBLEarEGgPu"}
+:HL["/instrumentation-hub/_next/static/chunks/3ha3t7bkv0q2s.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"/_not-found","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"pFW3hrlBoODuROJkyXacn"}
