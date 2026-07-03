@@ -1,9 +1,11 @@
 import type { NextConfig } from "next";
 
+const isGithubPages = process.env.GITHUB_PAGES === "true";
+
 const nextConfig: NextConfig = {
-  output: "export",
-  basePath: "/instrumentation-hub",
-  trailingSlash: true,
+  output: isGithubPages ? "export" : undefined,
+  basePath: isGithubPages ? "/instrumentation-hub" : undefined,
+  trailingSlash: isGithubPages,
   images: { unoptimized: true },
 };
 
