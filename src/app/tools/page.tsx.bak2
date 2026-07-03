@@ -1,0 +1,753 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+
+// ─── TOOL DEFINITIONS ─────────────────────────────────────
+const TOOLS = [
+  { id: "ma",    icon: "〰", name: "4-20 mA Signal",       desc: "Convert percentage ↔ milliamp bidirectionally" },
+  { id: "pv",    icon: "📊", name: "PV Calculator",        desc: "mA → Engineering Units using LRV/URV span" },
+  { id: "dp",    icon: "〜", name: "DP Flow Calculator",   desc: "Flow from DP using square-root extraction" },
+  { id: "rtd",   icon: "📟", name: "RTD Pt100",            desc: "Resistance ↔ Temperature per IEC 60751" },
+  { id: "tc",    icon: "🔥", name: "Thermocouple mV",      desc: "Type K mV output from temperature" },
+  { id: "cv",    icon: "⚙",  name: "Valve Cv / Kv",        desc: "Liquid service flow coefficient per ISA-75.01" },
+  { id: "ohm",   icon: "⚡", name: "Ohm's Law",            desc: "Solve V, I, R, Power from any two values" },
+  { id: "unit",  icon: "↔",  name: "Unit Converter",       desc: "Pressure · Temp · Flow · Length · Mass" },
+  { id: "cable", icon: "🔌", name: "Cable Sizing",         desc: "Voltage drop for instrument copper cable" },
+  { id: "cl",    icon: "✅", name: "Loop Checklist",        desc: "Pre-commissioning checklist with progress tracking" },
+  { id: "pg",    icon: "📏", name: "Pressure Gauge Sim",   desc: "Interactive Bourdon tube pressure gauge simulation" },
+  { id: "ma",    icon: "〰", name: "4-20 mA Signal",       desc: "Convert percentage ↔ milliamp bidirectionally" },
+  { id: "pv",    icon: "📊", name: "PV Calculator",        desc: "mA → Engineering Units using LRV/URV span" },
+  { id: "dp",    icon: "〜", name: "DP Flow Calculator",   desc: "Flow from DP using square-root extraction" },
+  { id: "rtd",   icon: "📟", name: "RTD Pt100",            desc: "Resistance ↔ Temperature per IEC 60751" },
+  { id: "tc",    icon: "🔥", name: "Thermocouple mV",      desc: "Type K mV output from temperature" },
+  { id: "cv",    icon: "⚙",  name: "Valve Cv / Kv",        desc: "Liquid service flow coefficient per ISA-75.01" },
+  { id: "ohm",   icon: "⚡", name: "Ohm's Law",            desc: "Solve V, I, R, Power from any two values" },
+  { id: "unit",  icon: "↔",  name: "Unit Converter",       desc: "Pressure · Temp · Flow · Length · Mass" },
+  { id: "cable", icon: "🔌", name: "Cable Sizing",         desc: "Voltage drop for instrument copper cable" },
+  { id: "cl",    icon: "✅", name: "Loop Checklist",        desc: "Pre-commissioning checklist with progress tracking" },
+];
+
+export default function ToolsPage() {
+  const [active, setActive] = useState<string | null>(null);
+
+  return (
+    <div className="page-enter">
+      <div className="max-w-6xl mx-auto px-4 py-12">
+        <div className="mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--color-accent-blue)]/20 bg-[var(--color-accent-blue)]/5 mb-4">
+            <span className="text-[9px] font-semibold uppercase tracking-[.12em] text-[var(--color-accent-blue)]" style={{fontFamily: "var(--font-mono)"}}>Engineering Calculators</span>
+          </div>
+          <h1 className="text-5xl sm:text-6xl font-black text-[var(--color-text-primary)] mb-4" style={{fontFamily: "var(--font-display)"}}>
+            Tools <span className="gradient-blue">Suite</span>
+          </h1>
+          <p className="text-lg text-[var(--color-text-secondary)] max-w-2xl">
+            Precision-built calculators for I&C engineers. Built by a field engineer who needed them on site.
+          </p>
+        </div>
+
+        {!active ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            {TOOLS.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => setActive(t.id)}
+                className="glass-card rounded-xl p-6 text-left cursor-pointer transition-all duration-300 hover:translate-y-[-4px]"
+                style={{border: "1px solid var(--color-border)", background: "var(--color-bg-card)"}}
+              >
+                <div className="text-3xl mb-3">{t.icon}</div>
+                <div className="text-sm font-bold text-[var(--color-text-primary)] mb-2" style={{fontFamily: "var(--font-display)"}}>{t.name}</div>
+                <div className="text-xs text-[var(--color-text-muted)] leading-relaxed">{t.desc}</div>
+                <div className="mt-3 text-[10px] font-semibold uppercase tracking-[.1em] text-[var(--color-accent-blue)]" style={{fontFamily: "var(--font-mono)"}}>Open &rarr;</div>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <div>
+            <button
+              onClick={() => setActive(null)}
+              className="mb-6 text-[11px] font-semibold uppercase tracking-[.12em] text-[var(--color-text-muted)] hover:text-[var(--color-accent-blue)] transition-colors"
+              style={{fontFamily: "var(--font-mono)"}}
+            >
+              &larr; All Tools
+            </button>
+            <ToolPanel id={active} />
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ─── TOOL PANEL ──────────────────────────────────────────
+function ToolPanel({ id }: { id: string }) {
+  const [result, setResult] = useState<Record<string, string>>({});
+  const [inputs, setInputs] = useState<Record<string, string>>({});
+  const [checks, setChecks] = useState<Record<string, boolean>>({});
+
+  const set = (key: string, val: string) => {
+    setResult(prev => ({ ...prev, [key]: val }));
+  };
+
+  const g = (key: string) => inputs[key] || "";
+  const gi = (key: string) => parseFloat(g(key));
+  const gs = (key: string) => inputs[key] || "";
+
+  // ─── 4-20 mA Signal ────────────────────────────────────
+  const maPct = () => {
+    const p = gi("ma-p");
+    if (isNaN(p)) return;
+    const m = (p * 16 / 100) + 4;
+    setInputs(prev => ({ ...prev, "ma-m": m.toFixed(3) }));
+    set("ma-r1", m.toFixed(3) + " mA");
+    set("ma-r2", p.toFixed(2) + "%");
+    set("ma-r3", (m - 4).toFixed(3) + " mA");
+  };
+  const maMA = () => {
+    const m = gi("ma-m");
+    if (isNaN(m)) return;
+    const p = ((m - 4) * 100) / 16;
+    setInputs(prev => ({ ...prev, "ma-p": p.toFixed(2) }));
+    set("ma-r1", m.toFixed(3) + " mA");
+    set("ma-r2", p.toFixed(2) + "%");
+    set("ma-r3", (m - 4).toFixed(3) + " mA");
+  };
+
+  // ─── PV Calculator ─────────────────────────────────────
+  const pvMA = () => {
+    const l = gi("pv-lrv"), u = gi("pv-urv"), m = gi("pv-m");
+    if ([l, u, m].some(isNaN)) return;
+    const pv = l + ((m - 4) * (u - l)) / 16;
+    const pc = ((m - 4) * 100) / 16;
+    setInputs(prev => ({ ...prev, "pv-e": pv.toFixed(3) }));
+    set("pv-r1", pv.toFixed(3) + " EU");
+    set("pv-r2", m.toFixed(3) + " mA");
+    set("pv-r3", pc.toFixed(2) + "%");
+  };
+  const pvEU = () => {
+    const l = gi("pv-lrv"), u = gi("pv-urv"), e = gi("pv-e");
+    if ([l, u, e].some(isNaN)) return;
+    const m = 4 + ((e - l) / (u - l)) * 16;
+    const pc = ((m - 4) * 100) / 16;
+    setInputs(prev => ({ ...prev, "pv-m": m.toFixed(3) }));
+    set("pv-r1", e.toFixed(3) + " EU");
+    set("pv-r2", m.toFixed(3) + " mA");
+    set("pv-r3", pc.toFixed(2) + "%");
+  };
+
+  // ─── DP Flow ───────────────────────────────────────────
+  const calcDP = () => {
+    const q = gi("dp-q"), d = gi("dp-d"), m = gi("dp-m");
+    if ([q, d, m].some(isNaN) || d === 0) return;
+    const f = q * Math.sqrt(m / d);
+    set("dp-r1", f.toFixed(3));
+    set("dp-r2", ((f / q) * 100).toFixed(2) + "%");
+  };
+
+  // ─── RTD Pt100 ─────────────────────────────────────────
+  const rtdR = () => {
+    const r = gi("rtd-r");
+    if (isNaN(r)) return;
+    const t = (r - 100) / (100 * 0.00385);
+    setInputs(prev => ({ ...prev, "rtd-t": t.toFixed(2) }));
+    set("rtd-r1", t.toFixed(2) + " °C");
+    set("rtd-r2", r.toFixed(2) + " Ω");
+  };
+  const rtdT = () => {
+    const t = gi("rtd-t");
+    if (isNaN(t)) return;
+    const r = 100 * (1 + 0.00385 * t);
+    setInputs(prev => ({ ...prev, "rtd-r": r.toFixed(2) }));
+    set("rtd-r1", t.toFixed(2) + " °C");
+    set("rtd-r2", r.toFixed(2) + " Ω");
+  };
+
+  // ─── Thermocouple ──────────────────────────────────────
+  const calcTC = () => {
+    const t = gi("tc-t");
+    if (isNaN(t)) return;
+    set("tc-r1", (0.041 * t).toFixed(3) + " mV");
+  };
+
+  // ─── Cv / Kv ───────────────────────────────────────────
+  const calcCV = () => {
+    const q = gi("cv-q"), d = gi("cv-d"), g = gi("cv-g") || 1;
+    if (isNaN(q) || isNaN(d) || d <= 0) return;
+    const cv = q * Math.sqrt(g / d);
+    set("cv-r1", cv.toFixed(3));
+    set("cv-r2", (cv * 0.8550).toFixed(3));
+  };
+
+  // ─── Ohm"s Law ─────────────────────────────────────────
+  const calcOhm = () => {
+    const v = gi("ohm-v"), i = gi("ohm-i"), r = gi("ohm-r");
+    let rv = v, ri = i, rr = r, rp = NaN;
+    if (!isNaN(v) && !isNaN(i)) { rr = v / i; rp = v * i; }
+    else if (!isNaN(v) && !isNaN(r)) { ri = v / r; rp = v * v / r; }
+    else if (!isNaN(i) && !isNaN(r)) { rv = i * r; rp = i * i * r; }
+    else return;
+    const f = (n: number, u: string) => isNaN(n) ? "—" : n.toFixed(4) + " " + u;
+    set("ohm-r1", f(rv, "V"));
+    set("ohm-r2", f(ri, "A"));
+    set("ohm-r3", f(rr, "Ω"));
+    set("ohm-r4", f(rp, "W"));
+  };
+
+  // ─── Cable Sizing ──────────────────────────────────────
+  const calcCable = () => {
+    const i = gi("cab-i") / 1000;
+    const l = gi("cab-l");
+    const vs = gi("cab-v");
+    const mm = parseFloat(g("cab-mm") || "1.0");
+    if ([i, l, vs, mm].some(isNaN)) return;
+    const vd = 2 * l * (0.0175 / mm) * i;
+    const vload = vs - vd;
+    const pct = (vd / vs) * 100;
+    set("cab-r1", vd.toFixed(4) + " V");
+    set("cab-r2", vload.toFixed(4) + " V");
+    set("cab-r3", pct.toFixed(3) + "%");
+  };
+
+  // ─── Unit Converter ────────────────────────────────────
+  const UCD: Record<string, { u: string[]; b?: Record<string, number>; special?: boolean }> = {
+    Pressure: { u: ["bar", "psi", "kPa", "MPa", "kg/cm2", "mmH2O", "inH2O", "mmHg", "atm"], b: { bar: 1, psi: 0.0689476, kPa: 0.01, MPa: 10, "kg/cm2": 0.980665, mmH2O: 0.0000980665, inH2O: 0.00249089, mmHg: 0.00133322, atm: 1.01325 } },
+    Temperature: { u: ["°C", "°F", "K"], special: true },
+    "Flow Rate": { u: ["m³/h", "US GPM", "L/min", "L/s", "bbl/day", "SCFM"], b: { "m³/h": 1, "US GPM": 0.227124, "L/min": 0.06, "L/s": 3.6, "bbl/day": 0.006625, SCFM: 1.699 } },
+    Length: { u: ["mm", "inch", "m", "ft", "cm", "µm"], b: { mm: 1, inch: 25.4, m: 1000, ft: 304.8, cm: 10, "µm": 0.001 } },
+    Mass: { u: ["kg", "lb", "g", "metric ton", "oz"], b: { kg: 1, lb: 0.453592, g: 0.001, "metric ton": 1000, oz: 0.0283495 } },
+  };
+  const [ucCat, setUcCat] = useState("Pressure");
+  const [ucFrom, setUcFrom] = useState("bar");
+  const [ucTo, setUcTo] = useState("psi");
+  const calcUC = () => {
+    const val = gi("uc-val");
+    if (isNaN(val) || !ucFrom || !ucTo) { set("uc-r1", "—"); set("uc-r2", "—"); return; }
+    const d = UCD[ucCat];
+    if (!d) return;
+    let res: number;
+    if (d.special) {
+      let c = val;
+      if (ucFrom === "°F") c = (val - 32) * 5 / 9;
+      else if (ucFrom === "K") c = val - 273.15;
+      if (ucTo === "°C") res = c;
+      else if (ucTo === "°F") res = c * 9 / 5 + 32;
+      else res = c + 273.15;
+    } else {
+      res = (val * (d.b?.[ucFrom] ?? 1)) / (d.b?.[ucTo] ?? 1);
+    }
+    set("uc-r1", res.toFixed(6) + " " + ucTo);
+    set("uc-r2", val + " " + ucFrom + " → " + res.toFixed(4) + " " + ucTo);
+  };
+
+  // ─── Loop Checklist ─────────────────────────────────────
+  const CLD = [
+    { s: "Documentation & P&ID Verification", items: ["P&ID verified against as-built installation", "Instrument tag verified on nameplate vs loop diagram", "Hook-up drawing checked — impulse lines / tubing / gaskets", "Instrument data sheet reviewed: range, units, fail-safe direction", "Control philosophy / narrative reviewed for this loop/system"] },
+    { s: "Mechanical Inspection", items: ["Instrument mounted correctly per hook-up drawing", "Impulse lines / tubing installed, connected and supported", "Drain/vent valves correctly oriented and accessible", "Gland/seal correctly fitted — weatherproof", "Cable tray / conduit routing verified and tagged at both ends"] },
+    { s: "Electrical Pre-Check", items: ["Insulation resistance test passed (>100 MΩ @ 500 VDC)", "Continuity test passed — field to JB to DCS/MCC", "Supply voltage verified: 24 VDC / 120 VAC correct polarity", "Shield/screen grounded at one end only"] },
+    { s: "Loop Test & Signal Verification", items: ["4 mA zero: DCS reads 0.0% (±0.5%)", "12 mA mid-range: DCS reads 50.0% (±0.5%)", "20 mA span: DCS reads 100.0% (±0.5%)", "Alarm setpoints verified: HH · H · L · LL", "Fail-safe direction verified: FO / FC / FL"] },
+    { s: "Functional & Interlock Testing", items: ["Control valve stroke test: 0–25–50–75–100%", "Interlock / trip logic verified per C&E matrix", "MCC trip test — start/stop permissive logic confirmed", "ESD / shutdown function test completed and witnessed", "Final walk-through complete · punch list cleared · ITR signed"] },
+  ];
+
+  const allChecks = CLD.flatMap(s => s.items);
+  const doneCount = Object.values(checks).filter(Boolean).length;
+
+  const toggleCheck = (idx: number) => {
+    setChecks(prev => ({ ...prev, [idx.toString()]: !prev[idx.toString()] }));
+  };
+  const resetCL = () => setChecks({});
+  const exportCL = () => {
+    const tag = gs("cl-tag") || "UNTITLED";
+    const date = new Date().toLocaleDateString("en-GB");
+    let idx = 0;
+    let txt = `LOOP CHECK COMPLETION REPORT
+${"=".repeat(50)}
+Tag No.: ${tag}
+Date: ${date}
+Engineer: Satish Kumar Jaiswal
+${"=".repeat(50)}
+`;
+    CLD.forEach(sec => {
+      txt += `
+▸ ${sec.s}
+${"─".repeat(44)}
+`;
+      sec.items.forEach(item => {
+        txt += `  ${checks[idx.toString()] ? "[✓]" : "[ ]"}  ${item}
+`;
+        idx++;
+      });
+    });
+    const done = Object.values(checks).filter(Boolean).length;
+    txt += `
+${"=".repeat(50)}
+Completion: ${done}/${allChecks.length} (${Math.round(done / allChecks.length * 100)}%)
+${"=".repeat(50)}
+`;
+    const blob = new Blob([txt], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `LoopCheck_${tag.replace(/[^a-z0-9]/gi, "_")}_${date.replace(/\//g, "-")}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const input = (key: string, placeholder: string, step = "any") => (
+    <input
+      className="w-full px-3 py-2.5 rounded-md text-sm bg-[var(--color-bg-raise)] border border-[var(--color-border)] text-[var(--color-text-primary)] outline-none focus:border-[var(--color-accent-blue)] transition-colors"
+      style={{ fontFamily: "var(--font-body)" }}
+      type="number"
+      step={step}
+      placeholder={placeholder}
+      value={inputs[key] || ""}
+      onChange={e => setInputs(prev => ({ ...prev, [key]: e.target.value }))}
+    />
+  );
+
+  const resbox = (children: React.ReactNode) => (
+    <div className="rounded-lg p-4 my-4" style={{ background: "rgba(0,180,255,0.05)", border: "1px solid rgba(0,180,255,0.25)" }}>
+      {children}
+    </div>
+  );
+
+  const res = (label: string, value: string, color = "var(--color-accent-blue)") => (
+    <div className="text-center">
+      <div className="text-[9px] font-semibold uppercase tracking-[.15em] text-[var(--color-text-muted)] mb-2" style={{ fontFamily: "var(--font-mono)" }}>{label}</div>
+      <div className="text-xl font-black leading-none" style={{ color, fontFamily: "var(--font-display)" }}>{value}</div>
+    </div>
+  );
+
+  const field = (label: string, children: React.ReactNode) => (
+    <div className="flex flex-col gap-1.5">
+      <div className="text-[9px] font-semibold uppercase tracking-[.16em] text-[var(--color-text-muted)]" style={{ fontFamily: "var(--font-mono)" }}>{label}</div>
+      {children}
+    </div>
+  );
+
+  const note = (text: string) => (
+    <div className="rounded-md p-3 mt-3 text-[11px] leading-relaxed" style={{ background: "var(--color-bg-raise)", border: "1px solid var(--color-border)", color: "var(--color-text-muted)", fontFamily: "var(--font-mono)" }}>
+      {text}
+    </div>
+  );
+
+  // ─── RENDER SELECTED TOOL ──────────────────────────────
+  switch (id) {
+    case "ma":
+      return (
+        <div className="rounded-xl p-6 sm:p-8" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
+          <div className="flex items-center gap-3 pb-5 mb-5 border-b border-[var(--color-border)]">
+            <span className="text-2xl">〰</span>
+            <div>
+              <div className="text-lg font-black uppercase tracking-[.03em] text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-display)" }}>4-20 mA Signal Converter</div>
+              <div className="text-xs text-[var(--color-text-muted)] mt-0.5">Convert percentage ↔ milliamp bidirectionally</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            {field("Percentage (%)", input("ma-p", "0 – 100"))}
+            {field("Current (mA)", input("ma-m", "4 – 20"))}
+          </div>
+          <button className="w-full py-2.5 rounded-md text-[10px] font-bold uppercase tracking-[.09em] text-black mb-3" style={{ background: "var(--color-accent-blue)", fontFamily: "var(--font-mono)" }} onClick={() => { maPct(); maMA(); }}>Calculate</button>
+          {resbox(
+            <div className="grid grid-cols-3 gap-4">
+              {res("mA Signal", result["ma-r1"] || "—")}
+              {res("Percentage", result["ma-r2"] || "—")}
+              {res("Span Used", result["ma-r3"] || "—")}
+            </div>
+          )}
+          {note("mA = (% × 16/100) + 4  |  % = (mA − 4) × 100/16")}
+        </div>
+      );
+
+    case "pv":
+      return (
+        <div className="rounded-xl p-6 sm:p-8" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
+          <div className="flex items-center gap-3 pb-5 mb-5 border-b border-[var(--color-border)]">
+            <span className="text-2xl">📊</span>
+            <div>
+              <div className="text-lg font-black uppercase tracking-[.03em] text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-display)" }}>PV Calculator</div>
+              <div className="text-xs text-[var(--color-text-muted)] mt-0.5">mA → Engineering Units using LRV / URV span</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            {field("LRV", input("pv-lrv", "e.g. 0"))}
+            {field("URV", input("pv-urv", "e.g. 100"))}
+          </div>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            {field("mA Signal (4-20)", input("pv-m", "4 – 20"))}
+            {field("PV (EU)", input("pv-e", "Engineering Units"))}
+          </div>
+          <button className="w-full py-2.5 rounded-md text-[10px] font-bold uppercase tracking-[.09em] text-black mb-3" style={{ background: "var(--color-accent-blue)", fontFamily: "var(--font-mono)" }} onClick={() => { if (gs("pv-m")) pvMA(); if (gs("pv-e")) pvEU(); }}>Calculate</button>
+          {resbox(
+            <div className="grid grid-cols-3 gap-4">
+              {res("PV (EU)", result["pv-r1"] || "—")}
+              {res("mA Signal", result["pv-r2"] || "—")}
+              {res("Percent", result["pv-r3"] || "—")}
+            </div>
+          )}
+          {note("PV = LRV + (mA − 4) × (URV − LRV) / 16")}
+        </div>
+      );
+
+    case "dp":
+      return (
+        <div className="rounded-xl p-6 sm:p-8" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
+          <div className="flex items-center gap-3 pb-5 mb-5 border-b border-[var(--color-border)]">
+            <span className="text-2xl">〜</span>
+            <div>
+              <div className="text-lg font-black uppercase tracking-[.03em] text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-display)" }}>DP Flow Calculator</div>
+              <div className="text-xs text-[var(--color-text-muted)] mt-0.5">Flow from DP using square-root extraction</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            {field("Max Flow (Qmax)", input("dp-q", "e.g. 1000"))}
+            {field("DPmax (%)", input("dp-d", "100"))}
+          </div>
+          <div className="mb-4">
+            {field("Measured DP (% of DPmax)", input("dp-m", "0 – 100"))}
+          </div>
+          <button className="w-full py-2.5 rounded-md text-[10px] font-bold uppercase tracking-[.09em] text-black mb-3" style={{ background: "var(--color-accent-blue)", fontFamily: "var(--font-mono)" }} onClick={calcDP}>Calculate</button>
+          {resbox(
+            <div className="grid grid-cols-2 gap-4">
+              {res("Actual Flow", result["dp-r1"] || "—")}
+              {res("% of Qmax", result["dp-r2"] || "—")}
+            </div>
+          )}
+          {note("Q = Qmax × √(DPmeasured / DPmax) — DP transmitters output proportional to pressure, not flow.")}
+        </div>
+      );
+
+    case "rtd":
+      return (
+        <div className="rounded-xl p-6 sm:p-8" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
+          <div className="flex items-center gap-3 pb-5 mb-5 border-b border-[var(--color-border)]">
+            <span className="text-2xl">📟</span>
+            <div>
+              <div className="text-lg font-black uppercase tracking-[.03em] text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-display)" }}>RTD Pt100 Calculator</div>
+              <div className="text-xs text-[var(--color-text-muted)] mt-0.5">Resistance ↔ Temperature per IEC 60751</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            {field("Resistance (Ω)", input("rtd-r", "e.g. 138.50"))}
+            {field("Temperature (°C)", input("rtd-t", "e.g. 100.0"))}
+          </div>
+          <button className="w-full py-2.5 rounded-md text-[10px] font-bold uppercase tracking-[.09em] text-black mb-3" style={{ background: "var(--color-accent-blue)", fontFamily: "var(--font-mono)" }} onClick={() => { if (gs("rtd-r")) rtdR(); if (gs("rtd-t")) rtdT(); }}>Calculate</button>
+          {resbox(
+            <div className="grid grid-cols-2 gap-4">
+              {res("Temperature", result["rtd-r1"] || "—")}
+              {res("Resistance", result["rtd-r2"] || "—")}
+            </div>
+          )}
+          {note("Pt100: R₀=100Ω@0°C · α=0.00385 · 0°C=100.00Ω · 50°C=119.25Ω · 100°C=138.50Ω")}
+        </div>
+      );
+
+    case "tc":
+      return (
+        <div className="rounded-xl p-6 sm:p-8" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
+          <div className="flex items-center gap-3 pb-5 mb-5 border-b border-[var(--color-border)]">
+            <span className="text-2xl">🔥</span>
+            <div>
+              <div className="text-lg font-black uppercase tracking-[.03em] text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-display)" }}>Thermocouple mV Calculator</div>
+              <div className="text-xs text-[var(--color-text-muted)] mt-0.5">Type K mV output from temperature input</div>
+            </div>
+          </div>
+          <div className="mb-4">
+            {field("Temperature (°C)", input("tc-t", "e.g. 500"))}
+          </div>
+          <button className="w-full py-2.5 rounded-md text-[10px] font-bold uppercase tracking-[.09em] text-black mb-3" style={{ background: "var(--color-accent-blue)", fontFamily: "var(--font-mono)" }} onClick={calcTC}>Calculate</button>
+          {resbox(
+            <div className="grid grid-cols-2 gap-4">
+              {res("mV Output (Type K)", result["tc-r1"] || "—")}
+              {res("Range", "−200 to +1372°C", "var(--color-text-secondary)")}
+            </div>
+          )}
+          {note("Type K simplified: mV ≈ 0.041 × T(°C) · Valid 0–1000°C · ±2% typical")}
+        </div>
+      );
+
+    case "cv":
+      return (
+        <div className="rounded-xl p-6 sm:p-8" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
+          <div className="flex items-center gap-3 pb-5 mb-5 border-b border-[var(--color-border)]">
+            <span className="text-2xl">⚙</span>
+            <div>
+              <div className="text-lg font-black uppercase tracking-[.03em] text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-display)" }}>Valve Cv / Kv Calculator</div>
+              <div className="text-xs text-[var(--color-text-muted)] mt-0.5">Liquid service · ISA-75.01 · Kv equivalent</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4 mb-3">
+            {field("Flow Rate Q (US GPM)", input("cv-q", "e.g. 100"))}
+            {field("ΔP (psi)", input("cv-d", "e.g. 10"))}
+          </div>
+          <div className="mb-4">{field("Specific Gravity (water=1.000)", input("cv-g", "1.000"))}</div>
+          <button className="w-full py-2.5 rounded-md text-[10px] font-bold uppercase tracking-[.09em] text-black mb-3" style={{ background: "var(--color-accent-blue)", fontFamily: "var(--font-mono)" }} onClick={calcCV}>Calculate Cv / Kv</button>
+          {resbox(
+            <div className="grid grid-cols-2 gap-4">
+              {res("Cv (US)", result["cv-r1"] || "—")}
+              {res("Kv (metric)", result["cv-r2"] || "—")}
+            </div>
+          )}
+          {note("Cv = Q × √(G/ΔP)  |  Kv = Cv × 0.8550")}
+        </div>
+      );
+
+    case "ohm":
+      return (
+        <div className="rounded-xl p-6 sm:p-8" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
+          <div className="flex items-center gap-3 pb-5 mb-5 border-b border-[var(--color-border)]">
+            <span className="text-2xl">⚡</span>
+            <div>
+              <div className="text-lg font-black uppercase tracking-[.03em] text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-display)" }}>Ohm"s Law Calculator</div>
+              <div className="text-xs text-[var(--color-text-muted)] mt-0.5">Solve V, I, R, Power from any two values</div>
+            </div>
+          </div>
+          <p className="text-[11px] text-[var(--color-text-muted)] mb-4" style={{ fontFamily: "var(--font-mono)" }}>Enter any <strong style={{ color: "var(--color-text-primary)" }}>two values</strong>:</p>
+          <div className="grid grid-cols-3 gap-4 mb-4">
+            {field("Voltage V (V)", input("ohm-v", "Volts"))}
+            {field("Current I (A)", input("ohm-i", "Amps"))}
+            {field("Resistance R (Ω)", input("ohm-r", "Ohms"))}
+          </div>
+          <button className="w-full py-2.5 rounded-md text-[10px] font-bold uppercase tracking-[.09em] text-black mb-3" style={{ background: "var(--color-accent-blue)", fontFamily: "var(--font-mono)" }} onClick={calcOhm}>Calculate</button>
+          {resbox(
+            <div className="grid grid-cols-4 gap-2">
+              {res("Voltage", result["ohm-r1"] || "—")}
+              {res("Current", result["ohm-r2"] || "—")}
+              {res("Resistance", result["ohm-r3"] || "—", "var(--color-accent-green)")}
+              {res("Power", result["ohm-r4"] || "—", "var(--color-accent-orange)")}
+            </div>
+          )}
+          {note("V = IR  |  I = V/R  |  R = V/I  |  P = VI = I²R = V²/R")}
+        </div>
+      );
+
+    case "unit":
+      return (
+        <div className="rounded-xl p-6 sm:p-8" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
+          <div className="flex items-center gap-3 pb-5 mb-5 border-b border-[var(--color-border)]">
+            <span className="text-2xl">↔</span>
+            <div>
+              <div className="text-lg font-black uppercase tracking-[.03em] text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-display)" }}>Unit Converter</div>
+              <div className="text-xs text-[var(--color-text-muted)] mt-0.5">Pressure · Temperature · Flow · Length · Mass</div>
+            </div>
+          </div>
+          <div className="mb-4">
+            {field("Category",
+              <select className="w-full px-3 py-2.5 rounded-md text-sm bg-[var(--color-bg-raise)] border border-[var(--color-border)] text-[var(--color-text-primary)] outline-none" value={ucCat} onChange={e => { setUcCat(e.target.value); setUcFrom(UCD[e.target.value]?.u[0] || ""); setUcTo(UCD[e.target.value]?.u[1] || ""); }}>
+                {Object.keys(UCD).map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            )}
+          </div>
+          <div className="grid grid-cols-3 gap-4 mb-4 items-end">
+            {field("From",
+              <select className="w-full px-3 py-2.5 rounded-md text-sm bg-[var(--color-bg-raise)] border border-[var(--color-border)] text-[var(--color-text-primary)] outline-none" value={ucFrom} onChange={e => setUcFrom(e.target.value)}>
+                {(UCD[ucCat]?.u || []).map(u => <option key={u} value={u}>{u}</option>)}
+              </select>
+            )}
+            {field("Value", input("uc-val", "Enter value"))}
+            {field("To",
+              <select className="w-full px-3 py-2.5 rounded-md text-sm bg-[var(--color-bg-raise)] border border-[var(--color-border)] text-[var(--color-text-primary)] outline-none" value={ucTo} onChange={e => setUcTo(e.target.value)}>
+                {(UCD[ucCat]?.u || []).map(u => <option key={u} value={u}>{u}</option>)}
+              </select>
+            )}
+          </div>
+          <button className="w-full py-2.5 rounded-md text-[10px] font-bold uppercase tracking-[.09em] text-black mb-3" style={{ background: "var(--color-accent-blue)", fontFamily: "var(--font-mono)" }} onClick={calcUC}>Convert</button>
+          {resbox(
+            <div className="grid grid-cols-2 gap-4">
+              {res("Result", result["uc-r1"] || "—")}
+              {res("Conversion", result["uc-r2"] || "—", "var(--color-text-secondary)")}
+            </div>
+          )}
+        </div>
+      );
+
+    case "cable":
+      return (
+        <div className="rounded-xl p-6 sm:p-8" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
+          <div className="flex items-center gap-3 pb-5 mb-5 border-b border-[var(--color-border)]">
+            <span className="text-2xl">🔌</span>
+            <div>
+              <div className="text-lg font-black uppercase tracking-[.03em] text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-display)" }}>Cable Sizing</div>
+              <div className="text-xs text-[var(--color-text-muted)] mt-0.5">Voltage drop for instrument copper cable</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            {field("Current (mA)", input("cab-i", "e.g. 20"))}
+            {field("Cable Length (m)", input("cab-l", "e.g. 500"))}
+          </div>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            {field("Cross-Section (mm²)",
+              <select className="w-full px-3 py-2.5 rounded-md text-sm bg-[var(--color-bg-raise)] border border-[var(--color-border)] text-[var(--color-text-primary)] outline-none" value={gs("cab-mm") || "1.0"} onChange={e => setInputs(prev => ({ ...prev, "cab-mm": e.target.value }))}>
+                <option value="0.5">0.5 mm²</option>
+                <option value="0.75">0.75 mm²</option>
+                <option value="1.0">1.0 mm²</option>
+                <option value="1.5">1.5 mm²</option>
+                <option value="2.5">2.5 mm²</option>
+              </select>
+            )}
+            {field("Supply Voltage (VDC)", input("cab-v", "e.g. 24"))}
+          </div>
+          <button className="w-full py-2.5 rounded-md text-[10px] font-bold uppercase tracking-[.09em] text-black mb-3" style={{ background: "var(--color-accent-blue)", fontFamily: "var(--font-mono)" }} onClick={calcCable}>Calculate Drop</button>
+          {resbox(
+            <div className="grid grid-cols-3 gap-4">
+              {res("Voltage Drop", result["cab-r1"] || "—", "var(--color-accent-orange)")}
+              {res("V at Load", result["cab-r2"] || "—")}
+              {res("Drop %", result["cab-r3"] || "—", "var(--color-accent-green)")}
+            </div>
+          )}
+          {note("Vdrop = 2 × L × (ρ/A) × I  |  ρ(Cu) = 0.0175 Ω·mm²/m · Instrument loops typically <5% drop")}
+        </div>
+      );
+
+    case "cl":
+      return (
+        <div className="rounded-xl p-6 sm:p-8" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
+          <div className="flex items-center gap-3 pb-5 mb-5 border-b border-[var(--color-border)]">
+            <span className="text-2xl">✅</span>
+            <div>
+              <div className="text-lg font-black uppercase tracking-[.03em] text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-display)" }}>Loop Checklist</div>
+              <div className="text-xs text-[var(--color-text-muted)] mt-0.5">Pre-commissioning checklist with progress tracking</div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <div className="text-3xl font-black" style={{ color: "var(--color-accent-blue)", fontFamily: "var(--font-display)" }}>{doneCount}/{allChecks.length}</div>
+              <div className="text-[9px] font-semibold uppercase tracking-[.13em] text-[var(--color-text-muted)]" style={{ fontFamily: "var(--font-mono)" }}>Items Completed</div>
+            </div>
+            <div className="flex gap-2">
+              <button className="px-3 py-1.5 rounded-md text-[9px] font-semibold uppercase tracking-[.08em] border border-[var(--color-border)] text-[var(--color-text-muted)]" style={{ fontFamily: "var(--font-mono)" }} onClick={resetCL}>Reset</button>
+              <button className="px-3 py-1.5 rounded-md text-[9px] font-semibold uppercase tracking-[.08em] text-black" style={{ background: "var(--color-accent-blue)", fontFamily: "var(--font-mono)" }} onClick={exportCL}>Export</button>
+            </div>
+          </div>
+          <div className="mb-4">
+            {field("Loop Tag Number", <input className="w-full px-3 py-2.5 rounded-md text-sm bg-[var(--color-bg-raise)] border border-[var(--color-border)] text-[var(--color-text-primary)] outline-none" type="text" placeholder="e.g. FT-201-001A" value={gs("cl-tag")} onChange={e => setInputs(prev => ({ ...prev, "cl-tag": e.target.value }))} />)}
+          </div>
+          <div className="h-1.5 rounded-full mb-4" style={{ background: "var(--color-bg-raise)" }}>
+            <div className="h-full rounded-full transition-all duration-500" style={{ width: allChecks.length ? `${(doneCount / allChecks.length) * 100}%` : "0%", background: "linear-gradient(90deg, var(--color-accent-blue), var(--color-accent-cyan))" }}></div>
+          </div>
+          {CLD.map((sec, si) => (
+            <div key={si}>
+              <div className="text-[9px] font-semibold uppercase tracking-[.2em] text-[var(--color-accent-blue)] my-3" style={{ fontFamily: "var(--font-mono)" }}>{sec.s}</div>
+              {sec.items.map((item, ii) => {
+                const idx = CLD.slice(0, si).reduce((a, s) => a + s.items.length, 0) + ii;
+                return (
+                  <div key={idx} className="flex items-start gap-2.5 py-1.5 px-2 rounded-md cursor-pointer hover:bg-white/[.03] transition-colors" onClick={() => toggleCheck(idx)}>
+                    <div className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 mt-0.5 transition-all ${checks[idx.toString()] ? "bg-[var(--color-accent-blue)] border-[var(--color-accent-blue)]" : "border-[var(--color-border)]"}`} style={{ background: checks[idx.toString()] ? "var(--color-accent-blue)" : "transparent" }}>
+                      {checks[idx.toString()] && <span className="text-[8px] font-bold" style={{ color: "#000" }}>✓</span>}
+                    </div>
+                    <span className={`text-xs leading-relaxed transition-colors ${checks[idx.toString()] ? "text-[var(--color-text-muted)] line-through" : "text-[var(--color-text-secondary)]"}`}>{item}</span>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      );
+
+
+    case "pg":
+      return (
+        <div className="rounded-xl p-6 sm:p-8" style={{ background: "var(--color-bg-card)", border: "1px solid var(--color-border)" }}>
+          <div className="flex items-center gap-3 pb-5 mb-5 border-b border-[var(--color-border)]">
+            <span className="text-2xl">📏</span>
+            <div>
+              <div className="text-lg font-black uppercase tracking-[.03em] text-[var(--color-text-primary)]" style={{ fontFamily: "var(--font-display)" }}>Pressure Gauge Simulator</div>
+              <div className="text-xs text-[var(--color-text-muted)] mt-0.5">Interactive Bourdon tube pressure gauge simulation</div>
+            </div>
+          </div>
+          <div className="space-y-6">
+            {/* Pressure Input */}
+            <div>
+              <label className="block mb-2 text-[9px] font-semibold uppercase tracking-[.16em] text-[var(--color-text-muted)]" style={{ fontFamily: "var(--font-mono)" }}>
+                Applied Pressure
+              </label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={gs("pg-pressure") || "0"}
+                  onChange={e => setInputs(prev => ({ ...prev, "pg-pressure": e.target.value }))}
+                  className="flex-1 h-2 bg-[var(--color-bg-raise)] rounded-full"
+                  style={{ accentColor: "var(--color-accent-blue)" }}
+                />
+                <span className="w-16 text-center text-[var(--color-text-primary)] font-mono">{gs("pg-pressure") || "0"}%</span>
+              </div>
+              <p className="text-[var(--color-text-secondary)] text-xs mt-1">0% = 0 PSI, 100% = Full Scale (e.g., 100 PSI)</p>
+            </div>
+            
+            {/* Gauge Display */}
+            <div className="relative aspect-[1/1] w-full max-w-[300px] mx-auto">
+              {/* Gauge Face */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative w-[280px] h-[280px] bg-[var(--color-bg-card)] rounded-full border-2 border-[var(--color-border)] shadow-lg overflow-hidden">
+                  {/* Gauge Background */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-bg-raise)] to-[var(--color-bg-card)]/50 rounded-full">
+                    {/* Degree markings */}
+                    <div className="absolute inset-0 pointer-events-none">
+                      {[...Array(101)].map((_, i) => (
+            <div key={i} className="absolute left-1/2 top-0 w-[1px] h-2 bg-[var(--color-border)]/30 transform origin-bottom translate-x-[-0.5px] rotate-[${i * 3.6}deg]"></div>
+                      ))}
+                    </div>
+                    {/* Pressure labels */}
+                    <div className="absolute inset-0 pointer-events-none text-[var(--color-text-muted)] text-xs font-mono">
+                      {[0, 25, 50, 75, 100].map(p => (
+            <div key={p} className="absolute left-1/2 top-1/2 w-[120px] h-[120px] flex items-center justify-center transform origin-bottom translate-x-[-50%] translate-y-[-50%] rotate-[${p * 3.6}deg]">
+              <div className="absolute -left-1/2 -top-1/2 w-full h-full flex items-center justify-center rotate-[${-p * 3.6}deg]">
+                <div className="w-4 text-center">{p}</div>
+              </div>
+            </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Bourdon Tube Simulation */}
+                  <div className="absolute inset-0 pointer-events-none">
+                    {/* Moving pointer */}
+                    <div className="absolute left-1/2 top-1/2 w-[2px] h-[100px] bg-[var(--color-accent-blue)]/80 origin-bottom transform origin-bottom translate-x-[-1px] rotate-[${(gs("pg-pressure") || "0") * 3.6}deg] transition-transform duration-200"></div>
+                    
+                    {/* Bourdon tube arc */}
+                    <div className="absolute left-1/2 top-1/2 w-[180px] h-[180px] rounded-full border-[var(--color-border)]/20 transform -translate-x-[-50%] -translate-y-[-50%] rotate-45">
+                      <div className="absolute left-1/2 top-1/2 w-[2px] h-[80px] bg-[var(--color-accent-blue)]/50 origin-bottom transform origin-bottom translate-x-[-1px] rotate-[${(gs("pg-pressure") || "0") * 1.8}deg]"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Gauge Image */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <img
+                  src="/pressure-gauge-diagram.png"
+                  alt="Inside of a Pressure Gauge"
+                  className="w-[200px] h-[200px] object-contain opacity-70"
+                />
+              </div>
+            </div>
+            
+            {/* Pressure Reading */}
+            <div className="text-center">
+              <div className="text-[9px] font-semibold uppercase tracking-[.15em] text-[var(--color-text-muted)] mb-2" style={{ fontFamily: "var(--font-mono)" }}>
+                Pressure Reading
+              </div>
+              <div className="text-3xl font-black leading-none" style={{ color: "var(--color-accent-blue)", fontFamily: "var(--font-display)" }}>
+                {((gs("pg-pressure") || "0") / 100 * 100).toFixed(0)} PSI
+              </div>
+              <p className="text-[var(--color-text-secondary)] text-xs mt-1">Simulated pressure based on input percentage</p>
+            </div>
+            
+            {/* Explanation */}
+            <div className="bg-[var(--color-bg-raise)] rounded-lg p-4 mt-6">
+              <h3 className="text-[var(--color-text-primary)] font-semibold mb-2" style={{ fontFamily: "var(--font-display)" }}>How It Works</h3>
+              <p className="text-[var(--color-text-muted)] text-sm">
+                As pressure increases, the Bourdon tube (shown as the curved blue element) straightens,
+                causing the pointer to rotate clockwise. This mechanical movement is converted to
+                a pressure reading on the dial.
+              </p>
+            </div>
+          </div>
+        </div>
+      );
+
+    default:
+      return <p>Tool coming soon.</p>;
+  }
+}
