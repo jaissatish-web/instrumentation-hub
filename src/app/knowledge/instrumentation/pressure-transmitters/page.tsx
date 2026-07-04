@@ -4,10 +4,20 @@ import InstrumentArticleLayout, {
   NAMURBandChart,
   AccuracyBarChart,
 } from "@/components/InstrumentArticleLayout";
+import PageMeta from "@/components/PageMeta";
 
 // ─── Config ────────────────────────────────────────────────────
-const meta = {
+const seo = {
   title: "Pressure Transmitters",
+  description:
+    "Smart pressure transmitters guide covering 4-20mA HART, piezoresistive sensing, calibration, NAMUR NE43 fault levels, and industrial applications.",
+  canonical: "https://ihub-eta.vercel.app/knowledge/instrumentation/pressure-transmitters",
+  image: "/pressure-transmitter-diagram.svg",
+  keywords: "pressure transmitter, smart transmitter, HART, Foundation Fieldbus, piezoresistive, capacitive, NAMUR NE43, calibration",
+};
+
+const meta = {
+  title: seo.title,
   description:
     "Smart measurement devices for 4–20 mA transmission with HART/Foundation Fieldbus protocols. Covers sensing principles, calibration, NAMUR NE43 fault levels, and industrial applications.",
   category: "Instrumentation Guide",
@@ -263,18 +273,49 @@ const sections = [
 
 // ─── Page ──────────────────────────────────────────────────────
 export default function PressureTransmittersPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "@id": "https://ihub-eta.vercel.app/knowledge/instrumentation/pressure-transmitters#article",
+        "headline": seo.title,
+        "description": seo.description,
+        "image": "https://ihub-eta.vercel.app/pressure-transmitter-diagram.svg",
+        "author": { "@type": "Person", "name": "Satish Kumar Jaiswal", "jobTitle": "Lead I&C Commissioning Engineer" },
+        "publisher": { "@type": "Organization", "name": "Instrumentation Hub", "logo": { "@type": "ImageObject", "url": "https://ihub-eta.vercel.app/favicon.ico" } },
+        "datePublished": "2025-01-15",
+        "dateModified": "2025-01-15",
+        "mainEntityOfPage": { "@type": "WebPage", "@id": "https://ihub-eta.vercel.app/knowledge/instrumentation/pressure-transmitters" },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://ihub-eta.vercel.app/knowledge/instrumentation/pressure-transmitters#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "item": { "@id": "https://ihub-eta.vercel.app/knowledge", "name": "Knowledge Base" } },
+          { "@type": "ListItem", "position": 2, "item": { "@id": "https://ihub-eta.vercel.app/knowledge/instrumentation", "name": "Instrumentation" } },
+          { "@type": "ListItem", "position": 3, "item": { "@id": "https://ihub-eta.vercel.app/knowledge/instrumentation/pressure-transmitters", "name": "Pressure Transmitters" } },
+        ],
+      },
+    ],
+  };
+
   return (
-    <InstrumentArticleLayout
-      title={meta.title}
-      description={meta.description}
-      category={meta.category}
-      breadcrumb={meta.breadcrumb}
-      metaTags={meta.metaTags}
-      sections={sections}
-      sources={undefined}
-      backLink={{ href: "/knowledge/instrumentation", label: "Back to Instrumentation Hub" }}
-      documentVersion="Document Version 1.0 | Based on manufacturer documentation and field experience from NEOM Green Hydrogen, NSRP Vietnam, ADNOC UAE projects"
-      footerNote={undefined}
-    />
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <PageMeta {...seo} />
+      <InstrumentArticleLayout
+        title={meta.title}
+        description={meta.description}
+        category={meta.category}
+        breadcrumb={meta.breadcrumb}
+        metaTags={meta.metaTags}
+        sections={sections}
+        sources={undefined}
+        backLink={{ href: "/knowledge/instrumentation", label: "Back to Instrumentation Hub" }}
+        documentVersion="Document Version 1.0 | Based on manufacturer documentation and field experience from NEOM Green Hydrogen, NSRP Vietnam, ADNOC UAE projects"
+        footerNote={undefined}
+      />
+    </>
   );
 }

@@ -249,55 +249,6 @@ function FeaturedArticleCard({ topic }: { topic: typeof featuredTopics[0] }) {
   );
 }
 
-function UpcomingCard({ topic }: { topic: typeof upcomingTopics[0] }) {
-  const { id, title, description, icon, color, bgColor, tags } = topic;
-  
-  return (
-    <Link
-      href={id === "pressure-transmitters" ? "/knowledge/instrumentation/pressure-transmitters" : "#"}
-      className={`group glass-card rounded-2xl p-6 sm:p-8 relative overflow-hidden transition-all duration-300 hover:translate-y-[-4px] ${id !== "pressure-transmitters" && "opacity-60 pointer-events-none"}`}
-      style={{ border: "1px solid var(--color-border)", background: "var(--color-bg-card)" }}
-      aria-disabled={id !== "pressure-transmitters"}
-      tabIndex={-1}
-    >
-      <div className={`absolute top-0 left-0 right-0 h-1 transition-all duration-300 ${color} group-hover:opacity-100`} />
-      
-      <div className="relative z-10 h-full flex flex-col">
-        <div className={`text-4xl sm:text-5xl mb-4 ${bgColor} inline-flex items-center justify-center rounded-xl w-16 h-16`}>
-          <span aria-hidden="true">{icon}</span>
-        </div>
-
-        <h3 className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)] mb-3" style={{fontFamily: "var(--font-display)"}}>
-          {title}
-          {id !== "pressure-transmitters" && (
-            <span className="ml-2 text-[10px] font-semibold uppercase tracking-[.1em] text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded" style={{fontFamily: "var(--font-mono)"}}>
-              Soon
-            </span>
-          )}
-        </h3>
-
-        <p className="text-sm sm:text-base text-[var(--color-text-muted)] leading-relaxed mb-4 flex-1">
-          {description}
-        </p>
-
-        <div className="flex flex-wrap gap-2 pt-4 border-t border-[var(--color-border)]/30">
-          {tags.map((tag, i) => (
-            <span
-              key={i}
-              className="text-[10px] font-semibold uppercase tracking-[.08em] text-[var(--color-text-muted)] bg-[var(--color-bg-raise)] px-2.5 py-1 rounded-full"
-              style={{fontFamily: "var(--font-mono)"}}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-amber-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
-      </div>
-    </Link>
-  );
-}
-
 export default function InstrumentationPage() {
   return (
     <div className="page-enter min-h-screen pb-16">
@@ -374,16 +325,59 @@ export default function InstrumentationPage() {
         </section>
 
         {/* Upcoming Topics */}
-        <section aria-labelledby="upcoming-heading">
-          <h2 id="upcoming-heading" className="text-2xl font-black text-[var(--color-text-primary)] mb-8" style={{fontFamily: "var(--font-display)"}}>
-            <span className="gradient-amber">Coming Soon</span>
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {upcomingTopics.map((topic) => (
-              <UpcomingCard key={topic.id} topic={topic} />
-            ))}
-          </div>
-        </section>
+                <section aria-labelledby="upcoming-heading">
+                  <h2 id="upcoming-heading" className="text-2xl font-black text-[var(--color-text-primary)] mb-8" style={{fontFamily: "var(--font-display)"}}>
+                    <span className="gradient-amber">Coming Soon</span>
+                  </h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                    {upcomingTopics.map((topic) => {
+                      const { id, title, description, icon, color, bgColor, tags } = topic;
+                      return (
+                        <article
+                          key={id}
+                          className="group relative overflow-hidden rounded-3xl transition-all duration-500 opacity-60 pointer-events-none"
+                          style={{ border: "1px solid var(--color-border)", background: "var(--color-bg-card)" }}
+                        >
+                          {/* Colored top bar */}
+                          <div className={`h-1 w-full ${color} transition-all duration-300`} />
+
+                          <div className="p-6 sm:p-8">
+                            {/* Header with icon and Soon badge */}
+                            <div className="flex items-start justify-between mb-4">
+                              <div className={`text-4xl sm:text-5xl ${bgColor} inline-flex items-center justify-center rounded-xl w-16 h-16`}>
+                                <span aria-hidden="true">{icon}</span>
+                              </div>
+                              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-semibold uppercase tracking-[.1em] text-amber-400 bg-amber-500/10 border border-amber-500/20" style={{fontFamily: "var(--font-mono)"}}>
+                                Soon
+                              </span>
+                            </div>
+
+                            {/* Title */}
+                            <h3 className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)] mb-4 leading-tight" style={{fontFamily: "var(--font-display)"}}>
+                              {title}
+                            </h3>
+
+                            {/* Description */}
+                            <p className="text-base text-[var(--color-text-secondary)] leading-relaxed mb-6">
+                              {description}
+                            </p>
+
+                            {/* Tags */}
+                            <div className="flex flex-wrap gap-2" role="list" aria-label="Topic tags">
+                              {tags.map((tag, i) => (
+                                <li key={i} role="listitem">
+                                  <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-[.08em] border text-[var(--color-text-muted)] bg-[var(--color-bg-raise)] border-[var(--color-border)]/30" style={{fontFamily: "var(--font-mono)"}}>
+                                    {tag}
+                                  </span>
+                                </li>
+                              ))}
+                            </div>
+                          </div>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </section>
 
         {/* Footer CTA */}
         <div className="mt-16 sm:mt-20 text-center">

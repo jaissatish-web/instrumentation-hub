@@ -157,6 +157,52 @@ export const ImagePlaceholder = ({ label = "Diagram coming soon" }: { label?: st
   </div>
 );
 
+// ─── SVG Chart: Pressure Range Selection Visual ───────────────
+export const PressureRangeChart = () => (
+  <div className="w-full py-4">
+    <svg viewBox="0 0 420 160" className="w-full h-auto">
+      <text x="210" y="16" textAnchor="middle" fill="#e8edf5" fontSize="11" fontWeight="600" style={{fontFamily: "var(--font-display)"}}>Pressure Range Selection Guide</text>
+      <g transform="translate(10, 30)">
+        {/* Scale line */}
+        <line x1="0" y1="0" x2="380" y2="0" stroke="#2a3d5c" strokeWidth="2" />
+        
+        {/* Tick marks */}
+        <line x1="0" y1="-5" x2="0" y2="5" stroke="#8a9bb5" strokeWidth="1.5" />
+        <text x="0" y="20" textAnchor="middle" fill="#8a9bb5" fontSize="8" style={{fontFamily: "var(--font-mono)"}}>0</text>
+        
+        <line x1="76" y1="-5" x2="76" y2="5" stroke="#8a9bb5" strokeWidth="1.5" />
+        <text x="76" y="20" textAnchor="middle" fill="#8a9bb5" fontSize="8" style={{fontFamily: "var(--font-mono)"}}>10</text>
+        
+        <line x1="190" y1="-5" x2="190" y2="5" stroke="#8a9bb5" strokeWidth="1.5" />
+        <text x="190" y="20" textAnchor="middle" fill="#8a9bb5" fontSize="8" style={{fontFamily: "var(--font-mono)"}}>50</text>
+        
+        <line x1="304" y1="-5" x2="304" y2="5" stroke="#8a9bb5" strokeWidth="1.5" />
+        <text x="304" y="20" textAnchor="middle" fill="#8a9bb5" fontSize="8" style={{fontFamily: "var(--font-mono)"}}>100</text>
+        
+        <line x1="380" y1="-5" x2="380" y2="5" stroke="#8a9bb5" strokeWidth="1.5" />
+        <text x="380" y="20" textAnchor="middle" fill="#8a9bb5" fontSize="8" style={{fontFamily: "var(--font-mono)"}}>bar</text>
+
+        {/* Range bands */}
+        <rect x="76" y="25" width="114" height="22" rx="4" fill="#F5A800" fillOpacity="0.3" stroke="#F5A800" strokeWidth="1" />
+        <text x="133" y="39" textAnchor="middle" fill="#e8edf5" fontSize="9" style={{fontFamily: "var(--font-mono)"}}>0–16 bar ✓</text>
+
+        <rect x="190" y="55" width="114" height="22" rx="4" fill="#00b4ff" fillOpacity="0.3" stroke="#00b4ff" strokeWidth="1" />
+        <text x="247" y="69" textAnchor="middle" fill="#e8edf5" fontSize="9" style={{fontFamily: "var(--font-mono)"}}>0–60 bar ✓</text>
+
+        <rect x="0" y="85" width="76" height="22" rx="4" fill="#ff3d5c" fillOpacity="0.3" stroke="#ff3d5c" strokeWidth="1" />
+        <text x="38" y="99" textAnchor="middle" fill="#e8edf5" fontSize="9" style={{fontFamily: "var(--font-mono)"}}>-1..0 bar (vacuum)</text>
+
+        <rect x="0" y="115" width="114" height="22" rx="4" fill="#ff6b35" fillOpacity="0.3" stroke="#ff6b35" strokeWidth="1" />
+        <text x="57" y="129" textAnchor="middle" fill="#e8edf5" fontSize="9" style={{fontFamily: "var(--font-mono)"}}>-1..+10 bar (compound)</text>
+
+        {/* Normal op zone indicator */}
+        <rect x="76" y="0" width="114" height="2" fill="#00e676" fillOpacity="0.6" />
+        <text x="133" y="-8" textAnchor="middle" fill="#00e676" fontSize="7" style={{fontFamily: "var(--font-mono)"}}>50-75% FS (ideal)</text>
+      </g>
+    </svg>
+  </div>
+);
+
 // ─── MAIN LAYOUT COMPONENT ─────────────────────────────────────
 export default function InstrumentArticleLayout({
   title,

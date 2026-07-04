@@ -3,11 +3,22 @@
 import InstrumentArticleLayout, {
   AccuracyBarChart,
   NAMURBandChart,
+  PressureRangeChart,
 } from "@/components/InstrumentArticleLayout";
+import PageMeta from "@/components/PageMeta";
 
 // ─── Config ────────────────────────────────────────────────────
-const meta = {
+const seo = {
   title: "Pressure Gauges",
+  description:
+    "Master industrial pressure gauges from Bourdon tube principles to NAMUR NE43 compliance. Covers selection criteria, accuracy classes (Class 0.1-2.5), installation, calibration, and troubleshooting.",
+  canonical: "https://ihub-eta.vercel.app/knowledge/instrumentation/pressure-gauges",
+  image: "/pressure-gauge-diagram.png",
+  keywords: "pressure gauge, Bourdon tube, diaphragm pressure gauge, pressure gauge calibration, pressure gauge accuracy class, EN 837, ASME B40.100, industrial instrumentation",
+};
+
+const meta = {
+  title: seo.title,
   description:
     "Comprehensive guide covering principles, types, selection, installation, calibration, and troubleshooting of industrial pressure gauges.",
   category: "Instrumentation Guide",
@@ -509,9 +520,10 @@ const sections = [
   },
   {
     id: "selection",
-    title: "Selection Guide",
-    icon: "✅",
-    content: SectionContent.selection,
+        title: "Selection Guide",
+        icon: "✅",
+        content: SectionContent.selection,
+        chart: <PressureRangeChart />,
   },
   {
     id: "installation",
@@ -553,8 +565,38 @@ const sections = [
 
 // ─── Page ──────────────────────────────────────────────────────
 export default function PressureGaugesPage() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "@id": "https://ihub-eta.vercel.app/knowledge/instrumentation/pressure-gauges#article",
+        "headline": seo.title,
+        "description": seo.description,
+        "image": "https://ihub-eta.vercel.app/pressure-gauge-diagram.png",
+        "author": { "@type": "Person", "name": "Satish Kumar Jaiswal", "jobTitle": "Lead I&C Commissioning Engineer" },
+        "publisher": { "@type": "Organization", "name": "Instrumentation Hub", "logo": { "@type": "ImageObject", "url": "https://ihub-eta.vercel.app/favicon.ico" } },
+        "datePublished": "2025-01-15",
+        "dateModified": "2025-01-15",
+        "mainEntityOfPage": { "@type": "WebPage", "@id": "https://ihub-eta.vercel.app/knowledge/instrumentation/pressure-gauges" },
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://ihub-eta.vercel.app/knowledge/instrumentation/pressure-gauges#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "item": { "@id": "https://ihub-eta.vercel.app/knowledge", "name": "Knowledge Base" } },
+          { "@type": "ListItem", "position": 2, "item": { "@id": "https://ihub-eta.vercel.app/knowledge/instrumentation", "name": "Instrumentation" } },
+          { "@type": "ListItem", "position": 3, "item": { "@id": "https://ihub-eta.vercel.app/knowledge/instrumentation/pressure-gauges", "name": "Pressure Gauges" } },
+        ],
+      },
+    ],
+  };
+
   return (
-    <InstrumentArticleLayout
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <PageMeta {...seo} />
+      <InstrumentArticleLayout
       title={meta.title}
       description={meta.description}
       category={meta.category}
@@ -566,5 +608,6 @@ export default function PressureGaugesPage() {
       documentVersion="Document Version 1.0 | Based on EN 837, ASME B40.100, API RP 551, and field experience from NEOM Green Hydrogen, NSRP Vietnam, ADNOC UAE projects"
       footerNote={undefined}
     />
+    </>
   );
 }

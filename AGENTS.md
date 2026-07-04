@@ -30,3 +30,7 @@ inline image placement inside the relevant section, at least one chart per
 article, and a mobile-responsive layout (sidebar collapses to a dropdown below
 900px). Every new instrument entry builds content by supplying section data to
 this same component — never by writing a new page layout from scratch.
+
+## SEO Requirements
+
+Every knowledge base article page must render through InstrumentArticleLayout AND generate unique per-page SEO metadata (title, description, OG tags, canonical URL, keywords) via the PageMeta component, plus JSON-LD structured data (TechArticle + BreadcrumbList). No article may use generic site-wide meta tags or lack structured data.
