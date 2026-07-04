@@ -1,373 +1,280 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { marked } from "marked";
+import InstrumentArticleLayout, {
+  NAMURBandChart,
+  AccuracyBarChart,
+} from "@/components/InstrumentArticleLayout";
 
-const markdownContent = `# Pressure Transmitters: Smart Measurement for Process Control
+// ─── Config ────────────────────────────────────────────────────
+const meta = {
+  title: "Pressure Transmitters",
+  description:
+    "Smart measurement devices for 4–20 mA transmission with HART/Foundation Fieldbus protocols. Covers sensing principles, calibration, NAMUR NE43 fault levels, and industrial applications.",
+  category: "Instrumentation Guide",
+  breadcrumb: [
+    { label: "Knowledge Base", href: "/knowledge" },
+    { label: "Instrumentation", href: "/knowledge/instrumentation" },
+    { label: "Pressure Transmitters", href: "/knowledge/instrumentation/pressure-transmitters" },
+  ],
+  metaTags: [
+    { label: "4–20 mA + HART", color: "amber" as const },
+    { label: "Field-Tested (NEOM, NSRP, ADNOC)", color: "cyan" as const },
+    { label: "Piezoresistive · Capacitive", color: "green" as const },
+  ],
+};
 
-Pressure transmitters convert process pressure into standardized electrical signals for control systems. Unlike mechanical gauges, they provide remote transmission capability with digital communication protocols for integration into modern control loops.
-
----
-
-## Operating Principle
-
-Smart pressure transmitters measure pressure via **piezoresistive, capacitive, or resonant sensing elements**, converting deflection into a 4–20 mA signal or digital protocol output. The sensing element acts as a transducer, with electronics conditioning and linearizing the signal.
-
-### Key Sensing Elements
-
-| Element | Principle | Typical Range | Accuracy |
-|---------|-----------|---------------|----------|
-| **Piezoresistive** | Silicon diaphragm strain gauge | 0–1000 bar | ±0.1–0.5% |
-| **Capacitive** | Diaphragm-parallel plate capacitance | 0–100 bar | ±0.075% |
-| **Resonant** | Quartz crystal frequency shift | 0–400 bar | ±0.05% |
-| **Piezeoelectric** | Crystal charge under pressure | Dynamic only | High frequency |
-
----
-
-## Types / Variants
-
-### Differential Pressure (DP) Transmitters
-Most common for flow measurement. Two ports measure pressure difference across an orifice, nozzle, or venturi.
-- *Use case: Flow measurement with DP meters (ISO 5167)*
-
-### Absolute Pressure Transmitters
-Reference to vacuum. Uses sealed reference chamber.
-- *Use case: Tank vapor space, altitude compensation*
-
-### Gauge (Relative) Transmitters
-Reference to atmospheric pressure. Most common for general process.
-- *Use case: Vessel, piping, pump suction/discharge*
-
-### Multivariable Transmit
-Measures DP, static pressure, and temperature simultaneously.
-- *Use case: Steam flow (density compensation), gas flow*
-
----
-
-## Key Specifications
-
-| Parameter | Typical Value | Notes |
-|-----------|---------------|-------|
-| **Range** | 0–1000 bar (configurable) | Span selectable within sensor limits |
-| **Accuracy** | ±0.05–0.5% of span | Depends on sensing element type |
-| **Output** | 4–20 mA + HART | Digital: Foundation Fieldbus, PA |
-| **Supply Voltage** | 12–36 VDC (loop) | 10–30 VDC typical |
-| **Process Connection** | 1/2\" NPT, BSP, flanged | 1/4\" NPT for low pressure |
-| **Temperature Limits** | -40 to +85°C | -20 to +60°C standard |
-| **Protection Class** | IP65, IP66, IP67 | IP67 for submersion risk |
-| **Hazardous Area** | ATEX, IECEx, FM, CSA | Intrinsically safe / flameproof |
-
----
-
-## Performance Chart
-
-The characteristic 4–20 mA relationship shows linear output with fault zones defined by NAMUR NE43.
-
----
-
-## Applications
-
-- **Oil & Gas** — Wellhead pressure monitoring, separator DP
-- **Chemical** — Reactor pressure, scrubber DP, pump protection
-- **Power** — Boiler drum level (DP), steam header pressure
-- **Pharma** — Sterile tank pressure, clean steam (sanitary)
-- **Water/Wastewater** — Filter DP, pump discharge pressure
-- **HVAC** — Chilled water pump head, air handling unit DP
-
----
-
-## Advantages vs. Limitations
-
-| Advantages | Limitations |
-|------------|-------------|
-| Remote monitoring via 4–20 mA signal | Requires power supply (loop power) |
-| Digital protocols (HART, FF, PA) enable diagnostics | Higher initial cost than gauges |
-| High accuracy (±0.05%) available | Electronics susceptible to lightning |
-| No mechanical wear on sensing element | Calibration drift over time |
-| Multiple outputs (mA + digital) | Requires shielding in noisy environments |
-
----
-
-## Installation, Calibration & Troubleshooting
-
-- **Mounting**: Vertical pipe mount preferred; ensure 1/2\" NPT upstream, full port valve for isolation
-- **Isolation Valves**: Always install needle valve + ball valve for service without process shutdown
-- **Impulse Lines**: Keep equal length for DP; slope toward process for liquids, away for gases
-- **Calibration**: Zero before span adjustment; use calibrated deadweight tester or comparator
-- **NAMUR NE43 Check**: Verify 3.8–20.5 mA normal range during commissioning
-- **Common Faults**: Plugged impulse lines cause reading drift; check with "span reset" and blowdown
-
----
-
-## Sources
-
-- Emerson 3051SMV Product Manual
-- Endress+Hauser Cerabar M PMC25 Product Guide
-- ISA-5.1-2009 Instrumentation Symbols and Identification
-- NAMUR NE43 "Electrical Equipment of Field Devices"
-
----
-
-*Document Version 1.0 | Based on manufacturer documentation and field experience from NEOM Green Hydrogen, NSRP Vietnam, ADNOC UAE projects*`;
-
-const sections = [
-  { id: "principles", title: "Operating Principle", icon: "⚙️" },
-  { id: "types", title: "Types / Variants", icon: "📐" },
-  { id: "specs", title: "Key Specifications", icon: "🎯" },
-  { id: "performance", title: "Performance Chart", icon: "📊" },
-  { id: "applications", title: "Applications", icon: "🏭" },
-  { id: "advantages", title: "Advantages vs. Limitations", icon: "⚖️" },
-  { id: "installation", title: "Installation & Calibration", icon: "🔧" },
-  { id: "sources", title: "Sources", icon: "📚" },
-];
-
-// SVG Diagram - Pressure Transmitter Cross Section
-const PressureTransmitterDiagram = () => (
-  <svg viewBox="0 0 400 250" className="w-full h-auto rounded-xl" style={{ filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.3))" }}>
-    <defs>
-      <linearGradient id="diaphragmGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="#312e81" />
-        <stop offset="100%" stopColor="#1e1b4b" />
-      </linearGradient>
-      <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stopColor="#1a2744" />
-        <stop offset="100%" stopColor="#0f1a2d" />
-      </linearGradient>
-    </defs>
-    
-    {/* Process Connection */}
-    <path d="M180 20 L180 60" stroke="#00b4ff" strokeWidth="3" />
-    <rect x="170" y="60" width="20" height="40" fill="#374151" rx="2" />
-    
-    {/* Transmitter Body */}
-    <rect x="120" y="100" width="160" height="100" rx="8" fill="url(#bodyGrad)" stroke="#00b4ff" strokeWidth="2" />
-    <text x="200" y="125" textAnchor="middle" fill="#e8edf5" fontSize="12" fontWeight="600" style={{fontFamily: "var(--font-display)"}}>Process Seal</text>
-    <text x="200" y="155" textAnchor="middle" fill="#8a9bb5" fontSize="10" style={{fontFamily: "var(--font-mono)"}}>316 SS Wetted Parts</text>
-    
-    {/* Diaphragm */}
-    <ellipse cx="200" cy="175" rx="40" ry="25" fill="url(#diaphragmGrad)" stroke="#00b4ff" strokeWidth="1.5" />
-    <text x="200" y="180" textAnchor="middle" fill="#e8edf5" fontSize="9" style={{fontFamily: "var(--font-mono)"}}>Silicon Diaphragm</text>
-    
-    {/* Electronics Housing */}
-    <rect x="140" y="200" width="120" height="40" rx="4" fill="#131d2e" stroke="#00b4ff" strokeWidth="1" />
-    <text x="200" y="220" textAnchor="middle" fill="#00b4ff" fontSize="9" style={{fontFamily: "var(--font-mono)"}}>Electronics + 4–20 mA</text>
-    
-    {/* Terminal Box */}
-    <rect x="200" y="250" width="80" height="30" fill="#374151" stroke="#00b4ff" strokeWidth="1" />
-    <text x="240" y="268" textAnchor="middle" fill="#e8edf5" fontSize="8" style={{fontFamily: "var(--font-mono)"}}>M20 Terminal</text>
-    
-    {/* Sensing Element Labels */}
-    <line x1="250" y1="175" x2="280" y2="175" stroke="#00b4ff" strokeWidth="1" markerEnd="url(#arrowhead)" />
-    <text x="285" y="178" fill="#e8edf5" fontSize="8" style={{fontFamily: "var(--font-mono)"}}>Pressure Applied</text>
-    
-    <defs>
-      <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-        <polygon points="0 0, 10 3.5, 0 7" fill="#00b4ff" />
-      </marker>
-    </defs>
-    
-    {/* Output Signal */}
-    <line x1="280" y1="220" x2="340" y2="220" stroke="#ff6b35" strokeWidth="2" />
-    <text x="345" y="224" fill="#ff6b35" fontSize="9" style={{fontFamily: "var(--font-mono)"}}>4–20 mA HART</text>
-  </svg>
+// ─── SVG Diagrams ──────────────────────────────────────────────
+const TransmitterDiagram = () => (
+  <div className="relative max-w-[600px] mx-auto">
+    <img
+      src="/pressure-transmitter-diagram.svg"
+      alt="Cross-section of a smart pressure transmitter showing process seal, silicon diaphragm sensing element, and electronics housing with HART communication"
+      className="w-full h-auto rounded-xl opacity-90 hover:opacity-100 transition-opacity duration-300"
+      style={{filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.3))"}}
+    />
+    <p className="mt-3 text-center text-sm text-[var(--color-text-muted)]">
+      Cross-section showing process seal, silicon diaphragm sensing element, and electronics housing with HART
+    </p>
+  </div>
 );
 
-// SVG Chart - 4-20mA Linearity
-const CurrentLoopChart = () => (
-  <svg viewBox="0 0 400 200" className="w-full h-auto rounded-xl" style={{ background: "rgba(26,39,68,0.3)", filter: "drop-shadow(0 10px 20px rgba(0,0,0,0.2))" }}>
-    <defs>
-      <linearGradient id="chartGrad" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stopColor="#00b4ff" />
-        <stop offset="100%" stopColor="#00f0ff" />
-      </linearGradient>
-    </defs>
-    
-    {/* Grid */}
-    <g stroke="#1e2d47" strokeWidth="1">
-      {[0, 50, 100, 150, 200].map(y => (
-        <line key={y} x1="40" y1={y} x2="360" y2={y} />
-      ))}
-      {[0, 25, 50, 75, 100].map(x => (
-        <line key={x} x1={40 + x * 3.2} y1="0" x2={40 + x * 3.2} y2="200" />
-      ))}
-    </g>
-    
-    {/* Axes */}
-    <line x1="40" y1="10" x2="40" y2="190" stroke="#8a9bb5" strokeWidth="2" />
-    <line x1="40" y1="190" x2="360" y2="190" stroke="#8a9bb5" strokeWidth="2" />
-    
-    {/* Axes Labels */}
-    <text x="200" y="15" textAnchor="middle" fill="#e8edf5" fontSize="11" fontWeight="600" style={{fontFamily: "var(--font-display)"}}>4–20 mA vs Process Variable</text>
-    <text x="20" y="100" textAnchor="middle" fill="#8a9bb5" fontSize="9" style={{fontFamily: "var(--font-mono)"}}>mA</text>
-    <text x="200" y="195" textAnchor="middle" fill="#8a9bb5" fontSize="9" style={{fontFamily: "var(--font-mono)"}}>Process (% of Span)</text>
-    
-    {/* Linear 4-20mA Line */}
-    <line x1="40" y1="190" x2="360" y2="10" stroke="url(#chartGrad)" strokeWidth="3" />
-    
-    {/* Axis Ticks */}
-    <text x="35" y="195" textAnchor="end" fill="#e8edf5" fontSize="9" style={{fontFamily: "var(--font-mono)"}}>4</text>
-    <text x="35" y="103" textAnchor="end" fill="#e8edf5" fontSize="9" style={{fontFamily: "var(--font-mono)"}}>20</text>
-    <text x="40" y="205" textAnchor="middle" fill="#e8edf5" fontSize="9" style={{fontFamily: "var(--font-mono)"}}>0</text>
-    <text x="200" y="205" textAnchor="middle" fill="#e8edf5" fontSize="9" style={{fontFamily: "var(--font-mono)"}}>50</text>
-    <text x="360" y="205" textAnchor="middle" fill="#e8edf5" fontSize="9" style={{fontFamily: "var(--font-mono)"}}>100</text>
-    
-    {/* NAMUR NE43 Zones */}
-    <line x1="92" y1="180" x2="92" y2="175" stroke="#ff3d5c" strokeWidth="2" />
-    <text x="92" y="168" textAnchor="middle" fill="#ff3d5c" fontSize="8" style={{fontFamily: "var(--font-mono)"}}>3.6</text>
-    <line x1="324" y1="22" x2="324" y2="18" stroke="#ff3d5c" strokeWidth="2" />
-    <text x="324" y="30" textAnchor="middle" fill="#ff3d5c" fontSize="8" style={{fontFamily: "var(--font-mono)"}}>21.0</text>
-    
-    <text x="100" y="30" fill="#ff3d5c" fontSize="8" style={{fontFamily: "var(--font-mono)"}}>NAMUR NE43 Fault Zones</text>
-  </svg>
-);
+// ─── Section Content ───────────────────────────────────────────
+const SectionContent = {
+  principles: (
+    <>
+      <p>
+        Smart pressure transmitters measure pressure via <strong>piezoresistive, capacitive, or resonant sensing elements</strong>,
+        converting deflection into a 4–20 mA signal or digital protocol output. The sensing element acts as a transducer,
+        with electronics conditioning and linearizing the signal.
+      </p>
+      <div className="overflow-x-auto my-4">
+        <table className="w-full text-sm text-[var(--color-text-secondary)]">
+          <thead>
+            <tr className="border-b border-[var(--color-border)]">
+              <th className="text-left py-2 pr-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Element</th>
+              <th className="text-left py-2 px-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Principle</th>
+              <th className="text-left py-2 px-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Typical Range</th>
+              <th className="text-left py-2 pl-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Accuracy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Piezoresistive</td><td className="py-2 px-3">Silicon diaphragm strain gauge</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>0–1000 bar</td><td className="py-2 pl-3" style={{fontFamily: "var(--font-mono)"}}>±0.1–0.5%</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Capacitive</td><td className="py-2 px-3">Diaphragm-parallel plate capacitance</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>0–100 bar</td><td className="py-2 pl-3" style={{fontFamily: "var(--font-mono)"}}>±0.075%</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Resonant</td><td className="py-2 px-3">Quartz crystal frequency shift</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>0–400 bar</td><td className="py-2 pl-3" style={{fontFamily: "var(--font-mono)"}}>±0.05%</td></tr>
+            <tr><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Piezoelectric</td><td className="py-2 px-3">Crystal charge under pressure</td><td className="py-2 px-3">Dynamic only</td><td className="py-2 pl-3">High frequency</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </>
+  ),
 
-export default function PressureTransmittersPage() {
-  const [activeSection, setActiveSection] = useState(0);
-  const renderedHtml = marked.parse(markdownContent);
-
-  return (
-    <div className="page-enter min-h-screen pb-16">
-      <div className="max-w-6xl mx-auto px-4 py-8 sm:py-12">
-        {/* Breadcrumb */}
-        <nav className="mb-8 flex items-center gap-2 text-sm text-[var(--color-text-muted)]" aria-label="Breadcrumb">
-          <Link href="/knowledge" className="hover:text-amber-400 transition-colors">Knowledge Base</Link>
-          <span>/</span>
-          <Link href="/knowledge/instrumentation" className="hover:text-amber-400 transition-colors">Instrumentation</Link>
-          <span>/</span>
-          <span className="text-[var(--color-text-primary)] font-medium">Pressure Transmitters</span>
-        </nav>
-
-        {/* Hero Block */}
-        <header className="mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-500/20 bg-amber-500/5 mb-6">
-            <span className="text-[9px] font-semibold uppercase tracking-[.12em] text-amber-500" style={{fontFamily: "var(--font-mono)"}}>
-              Instrumentation Guide
-            </span>
-          </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[var(--color-text-primary)] mb-4" style={{fontFamily: "var(--font-display)"}}>
-            Pressure Transmitters
-          </h1>
-          <p className="text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-3xl leading-relaxed">
-            Smart measurement devices for 4–20 mA transmission with HART/Foundation Fieldbus protocols.
-          </p>
-          
-          {/* Meta tags */}
-          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-[var(--color-text-muted)]">
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-amber-500" />
-              <span>4–20 mA + HART</span>
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-cyan-500" />
-              <span>Field-Tested (NEOM, NSRP, ADNOC)</span>
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-green-500" />
-              <span>Piezoresistive · Capacitive</span>
-            </span>
-          </div>
-        </header>
-
-        {/* Quick Facts Card Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-10 sm:mb-14">
-          <div className="glass-card rounded-xl p-4 text-center">
-            <div className="text-[10px] font-semibold uppercase tracking-[.1em] text-amber-500 mb-1" style={{fontFamily: "var(--font-mono)"}}>Range</div>
-            <div className="text-lg font-black text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-display)"}}>0-1000 bar</div>
-          </div>
-          <div className="glass-card rounded-xl p-4 text-center">
-            <div className="text-[10px] font-semibold uppercase tracking-[.1em] text-amber-500 mb-1" style={{fontFamily: "var(--font-mono)"}}>Accuracy</div>
-            <div className="text-lg font-black text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-display)"}}>±0.05%</div>
-          </div>
-          <div className="glass-card rounded-xl p-4 text-center">
-            <div className="text-[10px] font-semibold uppercase tracking-[.1em] text-amber-500 mb-1" style={{fontFamily: "var(--font-mono)"}}>Output</div>
-            <div className="text-lg font-black text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-display)"}}>4–20 mA</div>
-          </div>
-          <div className="glass-card rounded-xl p-4 text-center">
-            <div className="text-[10px] font-semibold uppercase tracking-[.1em] text-amber-500 mb-1" style={{fontFamily: "var(--font-mono)"}}>Protocol</div>
-            <div className="text-lg font-black text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-display)"}}>HART</div>
-          </div>
-          <div className="glass-card rounded-xl p-4 text-center">
-            <div className="text-[10px] font-semibold uppercase tracking-[.1em] text-amber-500 mb-1" style={{fontFamily: "var(--font-mono)"}}>Temp Limit</div>
-            <div className="text-lg font-black text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-display)"}}>-40 to 85°C</div>
-          </div>
+  types: (
+    <>
+      <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+        <div className="rounded-xl p-5" style={{background: "var(--color-bg-raise)", border: "1px solid var(--color-border)"}}>
+          <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-2" style={{fontFamily: "var(--font-display)"}}>Differential Pressure (DP)</h3>
+          <p className="text-sm text-[var(--color-text-secondary)] mb-2">Two ports measure ΔP across orifice, nozzle, or venturi.</p>
+          <div className="text-xs text-[var(--color-text-muted)]">Use case: Flow measurement with DP meters (ISO 5167)</div>
         </div>
-
-        {/* Main Content with Sidebar */}
-        <div className="grid lg:grid-cols-[260px_1fr] gap-8">
-          {/* Sidebar TOC */}
-          <aside className="lg:sticky lg:top-24 hidden lg:block">
-            <nav className="glass-card rounded-xl p-4 sm:p-6" style={{border: "1px solid var(--color-border)", background: "var(--color-bg-card)"}}>
-              <h3 className="text-[10px] font-semibold uppercase tracking-[.12em] text-amber-500 mb-4" style={{fontFamily: "var(--font-mono)"}}>
-                Contents
-              </h3>
-              <ul className="space-y-1" role="tablist" aria-label="Sections">
-                {sections.map((section, index) => (
-                  <li key={section.id} role="presentation">
-                    <button
-                      role="tab"
-                      aria-selected={activeSection === index}
-                      aria-controls={`panel-${section.id}`}
-                      id={`tab-${section.id}`}
-                      onClick={() => setActiveSection(index)}
-                      className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all duration-200 flex items-center gap-2 ${
-                        activeSection === index
-                          ? "bg-amber-500/10 text-amber-400 font-semibold"
-                          : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-raise)]"
-                      }`}
-                    >
-                      <span className="text-lg">{section.icon}</span>
-                      <span>{section.title}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </aside>
-
-          {/* Main Content */}
-          <main className="prose prose-lg max-w-none prose-amber prose-img:rounded-xl prose-img:shadow-xl" style={{ 
-            color: 'var(--color-text-secondary)',
-          }}>
-            <div 
-              id="content"
-              className="glass-card rounded-2xl p-6 sm:p-8" 
-              style={{border: "1px solid var(--color-border)", background: "var(--color-bg-card)"}}
-              dangerouslySetInnerHTML={{ __html: renderedHtml }}
-            />
-            
-            {/* Diagrams Section */}
-            <div className="mt-10 space-y-8">
-              <div className="glass-card rounded-2xl p-6 sm:p-8" style={{border: "1px solid var(--color-border)", background: "var(--color-bg-card)"}}>
-                <h3 className="text-xl font-bold text-[var(--color-text-primary)] mb-4" style={{fontFamily: "var(--font-display)"}}>Working Principle Diagram</h3>
-                <PressureTransmitterDiagram />
-                <p className="mt-3 text-center text-sm text-[var(--color-text-muted)]">
-                  Cross-section showing process seal, silicon diaphragm sensing element, and electronics housing
-                </p>
-              </div>
-              
-              <div className="glass-card rounded-2xl p-6 sm:p-8" style={{border: "1px solid var(--color-border)", background: "var(--color-bg-card)"}}>
-                <h3 className="text-xl font-bold text-[var(--color-text-primary)] mb-4" style={{fontFamily: "var(--font-display)"}}>4–20 mA Performance Chart</h3>
-                <CurrentLoopChart />
-                <p className="mt-3 text-center text-sm text-[var(--color-text-muted)]">
-                  Linear input-output curve with NAMUR NE43 fault zones marked
-                </p>
-              </div>
-            </div>
-          </main>
+        <div className="rounded-xl p-5" style={{background: "var(--color-bg-raise)", border: "1px solid var(--color-border)"}}>
+          <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-2" style={{fontFamily: "var(--font-display)"}}>Absolute Pressure</h3>
+          <p className="text-sm text-[var(--color-text-secondary)] mb-2">Reference to vacuum via sealed reference chamber.</p>
+          <div className="text-xs text-[var(--color-text-muted)]">Use case: Tank vapor space, altitude compensation</div>
         </div>
-
-        {/* Back to Top */}
-        <div className="mt-12 text-center">
-          <Link 
-            href="/knowledge/instrumentation" 
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold uppercase tracking-[.08em] text-amber-500 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 transition-all"
-            style={{fontFamily: "var(--font-mono)"}}
-          >
-            ← Back to Instrumentation Hub
-          </Link>
+        <div className="rounded-xl p-5" style={{background: "var(--color-bg-raise)", border: "1px solid var(--color-border)"}}>
+          <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-2" style={{fontFamily: "var(--font-display)"}}>Gauge (Relative) Pressure</h3>
+          <p className="text-sm text-[var(--color-text-secondary)] mb-2">Reference to atmospheric pressure. Most common for general process.</p>
+          <div className="text-xs text-[var(--color-text-muted)]">Use case: Vessel, piping, pump suction/discharge</div>
+        </div>
+        <div className="rounded-xl p-5" style={{background: "var(--color-bg-raise)", border: "1px solid var(--color-border)"}}>
+          <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-2" style={{fontFamily: "var(--font-display)"}}>Multivariable</h3>
+          <p className="text-sm text-[var(--color-text-secondary)] mb-2">Measures DP, static pressure, and temperature simultaneously.</p>
+          <div className="text-xs text-[var(--color-text-muted)]">Use case: Steam flow (density compensation), gas flow</div>
         </div>
       </div>
-    </div>
+    </>
+  ),
+
+  specs: (
+    <>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-[var(--color-text-secondary)]">
+          <thead>
+            <tr className="border-b border-[var(--color-border)]">
+              <th className="text-left py-2 pr-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Parameter</th>
+              <th className="text-left py-2 px-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Typical Value</th>
+              <th className="text-left py-2 pl-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Range</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>0–1000 bar</td><td className="py-2 pl-3">Span selectable within sensor limits</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Accuracy</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>±0.05–0.5% span</td><td className="py-2 pl-3">Depends on sensing element type</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Output</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>4–20 mA + HART</td><td className="py-2 pl-3">Digital: Foundation Fieldbus, PA</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Supply Voltage</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>12–36 VDC</td><td className="py-2 pl-3">10–30 VDC typical for loop power</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Process Connection</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>1/2" NPT, BSP, flanged</td><td className="py-2 pl-3">1/4" NPT for low pressure</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Temp Limits</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>-40 to +85°C</td><td className="py-2 pl-3">-20 to +60°C standard</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Protection Class</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>IP65, IP66, IP67</td><td className="py-2 pl-3">IP67 for submersion risk</td></tr>
+            <tr><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Hazardous Area</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>ATEX, IECEx, FM, CSA</td><td className="py-2 pl-3">Intrinsically safe / flameproof</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </>
+  ),
+
+  applications: (
+    <>
+      <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
+        <div className="flex items-start gap-3 p-4 rounded-xl" style={{background: "var(--color-bg-raise)"}}>
+          <span className="text-2xl flex-shrink-0">🛢️</span>
+          <div><strong className="text-[var(--color-text-primary)]">Oil & Gas</strong><p className="text-sm text-[var(--color-text-muted)]">Wellhead pressure monitoring, separator DP</p></div>
+        </div>
+        <div className="flex items-start gap-3 p-4 rounded-xl" style={{background: "var(--color-bg-raise)"}}>
+          <span className="text-2xl flex-shrink-0">🧪</span>
+          <div><strong className="text-[var(--color-text-primary)]">Chemical</strong><p className="text-sm text-[var(--color-text-muted)]">Reactor pressure, scrubber DP, pump protection</p></div>
+        </div>
+        <div className="flex items-start gap-3 p-4 rounded-xl" style={{background: "var(--color-bg-raise)"}}>
+          <span className="text-2xl flex-shrink-0">⚡</span>
+          <div><strong className="text-[var(--color-text-primary)]">Power</strong><p className="text-sm text-[var(--color-text-muted)]">Boiler drum level (DP), steam header pressure</p></div>
+        </div>
+        <div className="flex items-start gap-3 p-4 rounded-xl" style={{background: "var(--color-bg-raise)"}}>
+          <span className="text-2xl flex-shrink-0">💊</span>
+          <div><strong className="text-[var(--color-text-primary)]">Pharma</strong><p className="text-sm text-[var(--color-text-muted)]">Sterile tank pressure, clean steam (sanitary)</p></div>
+        </div>
+        <div className="flex items-start gap-3 p-4 rounded-xl" style={{background: "var(--color-bg-raise)"}}>
+          <span className="text-2xl flex-shrink-0">💧</span>
+          <div><strong className="text-[var(--color-text-primary)]">Water/WW</strong><p className="text-sm text-[var(--color-text-muted)]">Filter DP, pump discharge pressure</p></div>
+        </div>
+        <div className="flex items-start gap-3 p-4 rounded-xl" style={{background: "var(--color-bg-raise)"}}>
+          <span className="text-2xl flex-shrink-0">🌬️</span>
+          <div><strong className="text-[var(--color-text-primary)]">HVAC</strong><p className="text-sm text-[var(--color-text-muted)]">Chilled water pump head, AHU DP</p></div>
+        </div>
+      </div>
+    </>
+  ),
+
+  advantages: (
+    <>
+      <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+        <div className="rounded-xl p-5" style={{background: "rgba(0,230,118,0.05)", border: "1px solid rgba(0,230,118,0.2)"}}>
+          <h3 className="text-xs font-bold text-green-400 uppercase tracking-[.08em] mb-3" style={{fontFamily: "var(--font-mono)"}}>Advantages</h3>
+          <ul className="text-sm space-y-2 text-[var(--color-text-secondary)]">
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-green-500 flex-shrink-0" />Remote monitoring via 4–20 mA signal</li>
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-green-500 flex-shrink-0" />Digital protocols (HART, FF, PA) enable diagnostics</li>
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-green-500 flex-shrink-0" />High accuracy (±0.05%) available</li>
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-green-500 flex-shrink-0" />No mechanical wear on sensing element</li>
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-green-500 flex-shrink-0" />Multiple outputs (mA + digital)</li>
+          </ul>
+        </div>
+        <div className="rounded-xl p-5" style={{background: "rgba(255,61,92,0.05)", border: "1px solid rgba(255,61,92,0.2)"}}>
+          <h3 className="text-xs font-bold text-red-400 uppercase tracking-[.08em] mb-3" style={{fontFamily: "var(--font-mono)"}}>Limitations</h3>
+          <ul className="text-sm space-y-2 text-[var(--color-text-secondary)]">
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-red-500 flex-shrink-0" />Requires power supply (loop power)</li>
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-red-500 flex-shrink-0" />Higher initial cost than gauges</li>
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-red-500 flex-shrink-0" />Electronics susceptible to lightning</li>
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-red-500 flex-shrink-0" />Calibration drift over time</li>
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-red-500 flex-shrink-0" />Requires shielding in noisy environments</li>
+          </ul>
+        </div>
+      </div>
+    </>
+  ),
+
+  installation: (
+    <>
+      <ul className="text-sm space-y-3 text-[var(--color-text-secondary)]">
+        <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" /><strong>Mounting:</strong> Vertical pipe mount preferred; ensure 1/2" NPT upstream, full port valve for isolation</li>
+        <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" /><strong>Isolation Valves:</strong> Always install needle valve + ball valve for service without process shutdown</li>
+        <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" /><strong>Impulse Lines:</strong> Keep equal length for DP; slope toward process for liquids, away for gases</li>
+        <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" /><strong>Calibration:</strong> Zero before span adjustment; use calibrated deadweight tester or comparator</li>
+        <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" /><strong>NAMUR NE43 Check:</strong> Verify 3.8–20.5 mA normal range during commissioning</li>
+        <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" /><strong>Common Faults:</strong> Plugged impulse lines cause reading drift; check with "span reset" and blowdown</li>
+      </ul>
+    </>
+  ),
+
+  sources: (
+    <>
+      <ul className="text-sm space-y-2 text-[var(--color-text-secondary)]">
+        <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" />Emerson 3051SMV Product Manual</li>
+        <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" />Endress+Hauser Cerabar M PMC25 Product Guide</li>
+        <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" />ISA-5.1-2009 Instrumentation Symbols and Identification</li>
+        <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" />NAMUR NE43 "Electrical Equipment of Field Devices"</li>
+      </ul>
+    </>
+  ),
+};
+
+// ─── Sections Config ──────────────────────────────────────────
+const sections = [
+  {
+    id: "principles",
+    title: "Operating Principle",
+    icon: "⚙️",
+    content: SectionContent.principles,
+    image: <TransmitterDiagram />,
+  },
+  {
+    id: "types",
+    title: "Types / Variants",
+    icon: "📐",
+    content: SectionContent.types,
+  },
+  {
+    id: "specs",
+    title: "Key Specifications",
+    icon: "🎯",
+    content: SectionContent.specs,
+    chart: <AccuracyBarChart />,
+  },
+  {
+    id: "namur",
+    title: "NAMUR NE43 & Performance",
+    icon: "📡",
+    content: (
+      <p>The 4–20 mA linear output relationship with fault zones defined by NAMUR NE43: 4 mA = zero process value (LRV), 20 mA = full-scale (URV), &lt;3.6 mA = low alarm/fault, &gt;21 mA = high alarm/fault.</p>
+    ),
+    chart: <NAMURBandChart />,
+  },
+  {
+    id: "applications",
+    title: "Applications",
+    icon: "🏭",
+    content: SectionContent.applications,
+  },
+  {
+    id: "advantages",
+    title: "Advantages vs. Limitations",
+    icon: "⚖️",
+    content: SectionContent.advantages,
+  },
+  {
+    id: "installation",
+    title: "Installation & Calibration",
+    icon: "🔧",
+    content: SectionContent.installation,
+  },
+  {
+    id: "sources",
+    title: "Sources",
+    icon: "📚",
+    content: SectionContent.sources,
+  },
+];
+
+// ─── Page ──────────────────────────────────────────────────────
+export default function PressureTransmittersPage() {
+  return (
+    <InstrumentArticleLayout
+      title={meta.title}
+      description={meta.description}
+      category={meta.category}
+      breadcrumb={meta.breadcrumb}
+      metaTags={meta.metaTags}
+      sections={sections}
+      sources={undefined}
+      backLink={{ href: "/knowledge/instrumentation", label: "Back to Instrumentation Hub" }}
+      documentVersion="Document Version 1.0 | Based on manufacturer documentation and field experience from NEOM Green Hydrogen, NSRP Vietnam, ADNOC UAE projects"
+      footerNote={undefined}
+    />
   );
 }

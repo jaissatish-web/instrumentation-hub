@@ -18,3 +18,15 @@ Before writing code:
 For the day-to-day content-authoring workflow (adding Knowledge Base items
 and Tools), see the "STANDING WORKFLOW" instructions the user provides in chat —
 these take priority over ad-hoc interpretation.
+
+## Knowledge Base Article Standard
+
+All instrument knowledge base articles MUST be rendered through the shared
+`InstrumentArticleLayout` component at `src/components/InstrumentArticleLayout.tsx`.
+Do NOT create one-off page layouts for new instrument entries. The component
+enforces: auto-generated sticky table-of-contents sidebar with IntersectionObserver
+active-state highlighting, per-section cards (never a single long wall of text),
+inline image placement inside the relevant section, at least one chart per
+article, and a mobile-responsive layout (sidebar collapses to a dropdown below
+900px). Every new instrument entry builds content by supplying section data to
+this same component — never by writing a new page layout from scratch.

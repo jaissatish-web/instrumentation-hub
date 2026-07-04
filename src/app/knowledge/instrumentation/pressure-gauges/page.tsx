@@ -1,419 +1,570 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { marked } from "marked";
-
-const markdownContent = `# Pressure Gauges: Principles, Types, and Applications
-
-Pressure gauges are essential instrumentation devices used to measure and display pressure of gases or liquids in industrial processes. They provide visual indication of pressure relative to atmospheric pressure (gauge pressure) or absolute zero (absolute pressure).
-
----
-
-## Operating Principles
-
-Most mechanical pressure gauges operate on the principle of **elastic deformation**. When pressure is applied to a sensing element, it deforms proportionally to the applied pressure. This mechanical movement is then amplified and displayed on a calibrated dial.
-
-### Key Sensing Elements
-
-| Element | Principle | Typical Range | Applications |
-|---------|-----------|---------------|--------------|
-| **Bourdon Tube** | C-shaped/helical tube straightens under pressure | 0–1000 bar | General purpose, process industry |
-| **Diaphragm** | Flexible membrane deflects under pressure | 0–25 bar | Low pressure, corrosive media |
-| **Bellows** | Accordion-like element expands/contracts | 0–40 bar | Low pressure, differential pressure |
-| **Capsule** | Two diaphragms welded together | 0–600 mbar | Very low pressure, gas applications |
-
----
-
-## Types of Pressure Gauges
-
-### 1. Bourdon Tube Pressure Gauges (Most Common)
-
-The Bourdon tube is a curved, flattened tube that tends to straighten when pressurized. The free end movement is amplified through a link-sector-gear mechanism to rotate the pointer.
-
-#### Configurations
-- **C-Type (Standard)**: 250° arc, most common for 0–1000 bar
-- **Helical/Spiral**: Multiple turns for higher sensitivity, 0–60 bar
-- **Coiled**: Compact design for panel mounting
-
-#### Materials
-| Material | Use Case |
-|----------|----------|
-| **316 SS** | General process, corrosive media |
-| **Monel 400** | Seawater, marine, HF acid |
-| **Inconel 625** | High temp, sour gas (H₂S) |
-| **Bronze/Brass** | Water, air, non-corrosive (economical) |
-
-### 2. Diaphragm Pressure Gauges
-
-Used for low pressures (0–25 bar) and corrosive/viscous media. The diaphragm isolates the process media from the movement.
-
-- **Flat Diaphragm**: For clean fluids
-- **Corrugated Diaphragm**: Higher deflection, better sensitivity
-- **Flush Diaphragm**: Sanitary applications (food, pharma)
-
-### 3. Capsule Pressure Gauges
-
-Two diaphragms welded at periphery form a capsule. Used for very low pressures (0–600 mbar). Common in:
-- Gas distribution systems
-- HVAC air pressure
-- Clean room monitoring
-
-### 4. Differential Pressure Gauges
-
-Measure difference between two pressures. Used for:
-- Filter monitoring (ΔP across filter)
-- Level measurement (bubbler systems)
-- Flow measurement (orifice plate ΔP)
-
----
-
-## Accuracy Classes (per EN 837-1 / ASME B40.100)
-
-| Class | Accuracy (±% of Span) | Typical Use |
-|-------|----------------------|-------------|
-| **Class 0.1** | 0.1% | Laboratory, calibration standards |
-| **Class 0.25** | 0.25% | High-precision process |
-| **Class 0.6** | 0.6% | Precision industrial |
-| **Class 1.0** | 1.0% | General industrial (most common) |
-| **Class 1.6** | 1.6% | General purpose, panel mounting |
-| **Class 2.5** | 2.5% | Commercial, non-critical |
-
-> **Field Note**: For custody transfer or safety systems, specify Class 0.6 or better. For general indication, Class 1.6 is adequate.
-
----
-
-## NAMUR NE43 Compliance (4–20 mA Transmitters)
-
-While not directly applicable to mechanical gauges, if using pressure **transmitters** with gauge displays:
-
-| Signal Range | Status |
-|--------------|--------|
-| 3.8–20.5 mA | Normal operation |
-| < 3.6 mA | **Low alarm (sensor fault, cable break)** |
-| > 21.0 mA | **High alarm (sensor fault, overrange)** |
-| 3.6–3.8 mA | Low saturation (near fault) |
-| 20.5–21.0 mA | High saturation (near fault) |
-
----
-
-## Selection Guide
-
-### Process Media Compatibility
-
-| Media | Recommended Wetted Parts |
-|-------|-------------------------|
-| Water, Air, Oil | Brass, Bronze, 316 SS |
-| Acids (HCl, H₂SO₄) | Monel, Hastelloy C, PTFE-lined |
-| Seawater, Chlorides | Monel 400, Super Duplex |
-| Sour Gas (H₂S) | Inconel 625, NACE MR0175 |
-| High Temperature (>200°C) | Inconel, SS with cooling element |
-| Viscous/Slurry | Flush diaphragm, capillary seal |
-| Sanitary (Food/Pharma) | 316L electropolished, Tri-clamp |
-
-### Pressure Range Selection
-
-**Rule of Thumb**: Select range so normal operating pressure is **50–75% of full scale**.
-
-| Operating Pressure | Recommended Gauge Range |
-|-------------------|------------------------|
-| 10 bar | 0–16 bar or 0–25 bar |
-| 50 bar | 0–60 bar or 0–100 bar |
-| Vacuum | -1 to 0 bar (compound) |
-| Vacuum to Pressure | -1 to +10 bar (compound) |
-
-### Environmental Considerations
-
-| Condition | Protection |
-|-----------|------------|
-| Vibration | Liquid-filled (glycerin/silicone) |
-| Pulsation | Snubber, restrictor, liquid fill |
-| Outdoor/Corrosive | SS case, IP65/IP66, coated movement |
-| High Ambient Temp | Cooling element, capillary |
-| Hazardous Area | Intrinsically safe (if transmitter), SS case |
-
----
-
-## Installation Best Practices
-
-### 1. Mounting Position
-- **Vertical (standard)**: Dial face upright
-- **Horizontal**: Specify "bottom connection" or "back connection"
-- **Panel Mount**: Back connection with front flange or U-clamp
-
-### 2. Process Connection
-- **Thread**: 1/4" NPT (std), 1/2" NPT (high pressure)
-- **Flanged**: Per ASME B16.5 / EN 1092-1
-- **Sanitary**: Tri-clamp per ISO 2852 / ASME BPE
-
-### 3. Impulse Piping
-- Slope piping **≥ 1:10** toward process for gas service
-- Slope **away from process** for liquid service
-- Keep impulse lines **short** and **same length** (for DP)
-- Use **condensate pots** for steam service
-
-### 4. Accessories
-| Accessory | Purpose |
-|-----------|---------|
-| **Snubber/Restrictor** | Dampen pulsation |
-| **Siphon (Pigtail)** | Steam service (condensate trap) |
-| **Diaphragm Seal** | Corrosive, viscous, sanitary, high temp |
-| **Cooling Element** | High process temperature (>100°C) |
-| **Overrange Protector** | Prevent damage from pressure spikes |
-
----
-
-## Calibration & Maintenance
-
-### Calibration Procedure (per DKD/DAkkS / ASME B40.100)
-
-1. **Visual Inspection**: Case, window, pointer, dial
-2. **Zero Check**: Verify pointer at zero with no pressure
-3. **Increasing Pressure**: Apply 0%, 25%, 50%, 75%, 100% FS
-4. **Decreasing Pressure**: Same points descending
-5. **Record**: Hysteresis, repeatability, linearity
-6. **Adjust**: If equipped with zero/span adjustment
-
-### Acceptance Criteria (Class 1.0)
-- **Linearity**: ≤ 1.0% FS
-- **Hysteresis**: ≤ 1.0% FS  
-- **Repeatability**: ≤ 0.5% FS
-
-### Field Maintenance Schedule
-
-| Frequency | Task |
-|-----------|------|
-| **Monthly** | Visual check: pointer at zero, no leaks, window clear |
-| **Quarterly** | Tap test: lightly tap case, pointer should not stick |
-| **Annually** | Full calibration against deadweight tester |
-| **As Needed** | Replace if: cracked window, leaking, pointer stuck, >2× accuracy class error |
-
----
-
-## Common Failure Modes
-
-| Symptom | Probable Cause | Action |
-|---------|---------------|--------|
-| **Pointer stuck at zero** | Broken Bourdon tube, disconnected linkage | Replace gauge |
-| **Pointer oscillates** | Pulsation, no liquid fill | Add snubber or liquid fill |
-| **Reading high/low** | Calibration drift, temperature effect | Recalibrate, check temp spec |
-| **Leak at connection** | Loose fitting, damaged thread | Re-tighten, replace seal |
-| **Cracked window** | Impact, overpressure | Replace window/gauge |
-| **Fogged window** | Seal failure, temp cycling | Replace gauge (hermetic seal lost) |
-| **Pointer doesn't return to zero** | Overpressure, Bourdon tube yield | Replace gauge |
-
----
-
-## Specialized Gauge Types
-
-### Test Gauges (Calibration Grade)
-- Class 0.1, 0.25, 0.6
-- Mirror band parallax elimination
-- Knife-edge pointer
-- Used with deadweight testers
-
-### Panel Mount Gauges
-- Back connection
-- Front flange or U-clamp
-- Often smaller dial (40mm, 50mm, 63mm)
-
-### Differential Pressure Gauges
-- Two Bourdon tubes or diaphragm capsule
-- Single pointer shows ΔP
-- Used on filters, heat exchangers, level
-
-### Sanitary Gauges
-- 316L electropolished (Ra < 0.8 μm)
-- Tri-clamp connection
-- Fill fluid: FDA-approved (neobee, glycerin)
-- No crevices, CIP/SIP compatible
-
-### Digital Pressure Gauges
-- Battery powered, 0.1–0.5% accuracy
-- Data logging, min/max, backlight
-- Units switching (bar, psi, kPa, kg/cm²)
-- 4–20 mA output option
-
----
-
-## Standards & References
-
-| Standard | Scope |
-|----------|-------|
-| **EN 837-1** | Bourdon tube gauges - dimensions, metrology |
-| **EN 837-2** | Selection and installation recommendations |
-| **EN 837-3** | Diaphragm and capsule gauges |
-| **ASME B40.100** | Pressure gauges and gauge attachments |
-| **ASME B40.300** | Diaphragm/sealed gauges |
-| **NAMUR NE43** | 4–20 mA signal levels (transmitters) |
-| **API RP 551** | Process measurement instrumentation |
-| **IEC 60770** | Transmitters for process control |
-
----
-
-## Quick Reference Card
-
-| Parameter | Recommendation |
-|-----------|----------------|
-| **Dial Size** | 100mm (4") field, 160mm (6") control room |
-| **Case Material** | 304/316 SS for process, phenolic for panel |
-| **Window** | Laminated safety glass (std), acrylic (vibration) |
-| **Fill Fluid** | Glycerin 99.7% (–20 to +60°C), Silicone (–40 to +100°C) |
-| **Accuracy** | Class 1.0 (field), Class 0.6 (control), Class 0.25 (lab) |
-| **Range** | Normal op at 50–75% FS |
-| **Connection** | 1/2" NPT male (process), 1/4" NPT (instrument) |
-| **Tagging** | Stainless steel tag, laser etched |
-
----
-
-## Conclusion
-
-Pressure gauges remain the most fundamental and reliable pressure indication devices in process plants. Proper selection requires understanding:
-
-1. **Process conditions** (pressure, temperature, media, viscosity)
-2. **Accuracy requirements** (safety, control, indication only)
-3. **Environment** (vibration, corrosion, temperature, hazardous area)
-4. **Installation constraints** (mounting, impulse piping, accessories)
-5. **Maintenance philosophy** (calibration interval, spare parts strategy)
-
-> **Final Field Note**: A gauge that reads correctly but can't be read (fogged, wrong position, no light) is useless. Install for **readability first**, then accuracy. Use liquid fill for vibration. Specify 316 SS case for corrosive atmospheres. And always—always—verify zero before trusting the reading.
-
----
-
-*Document Version 1.0 | Based on EN 837, ASME B40.100, API RP 551, and field experience from NEOM Green Hydrogen, NSRP Vietnam, ADNOC UAE projects*`;
-
-const sections = [
-  { id: "principles", title: "Operating Principles", icon: "⚙️" },
-  { id: "types", title: "Types of Pressure Gauges", icon: "📐" },
-  { id: "accuracy", title: "Accuracy Classes", icon: "🎯" },
-  { id: "namur", title: "NAMUR NE43", icon: "📡" },
-  { id: "selection", title: "Selection Guide", icon: "✅" },
-  { id: "installation", title: "Installation Best Practices", icon: "🔧" },
-  { id: "calibration", title: "Calibration & Maintenance", icon: "📋" },
-  { id: "failures", title: "Common Failure Modes", icon: "⚠️" },
-  { id: "specialized", title: "Specialized Gauge Types", icon: "🔬" },
-  { id: "standards", title: "Standards & References", icon: "📚" },
-  { id: "quickref", title: "Quick Reference Card", icon: "🗒️" },
-  { id: "conclusion", title: "Conclusion", icon: "🏁" },
-];
-
-export default function PressureGaugesPage() {
-  const [activeSection, setActiveSection] = useState(0);
-
-  const renderedHtml = marked.parse(markdownContent);
-
-  return (
-    <div className="page-enter min-h-screen pb-16">
-      <div className="max-w-6xl mx-auto px-4 py-8 sm:py-12">
-        {/* Breadcrumb */}
-        <nav className="mb-8 flex items-center gap-2 text-sm text-[var(--color-text-muted)]" aria-label="Breadcrumb">
-          <Link href="/knowledge" className="hover:text-amber-400 transition-colors">Knowledge Base</Link>
-          <span>/</span>
-          <Link href="/knowledge/instrumentation" className="hover:text-amber-400 transition-colors">Instrumentation</Link>
-          <span>/</span>
-          <span className="text-[var(--color-text-primary)] font-medium">Pressure Gauges</span>
-        </nav>
-
-        {/* Header */}
-        <header className="mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-amber-500/20 bg-amber-500/5 mb-6">
-            <span className="text-[9px] font-semibold uppercase tracking-[.12em] text-amber-500" style={{fontFamily: "var(--font-mono)"}}>
-              Instrumentation Guide
-            </span>
+import InstrumentArticleLayout, {
+  AccuracyBarChart,
+  NAMURBandChart,
+} from "@/components/InstrumentArticleLayout";
+
+// ─── Config ────────────────────────────────────────────────────
+const meta = {
+  title: "Pressure Gauges",
+  description:
+    "Comprehensive guide covering principles, types, selection, installation, calibration, and troubleshooting of industrial pressure gauges.",
+  category: "Instrumentation Guide",
+  breadcrumb: [
+    { label: "Knowledge Base", href: "/knowledge" },
+    { label: "Instrumentation", href: "/knowledge/instrumentation" },
+    { label: "Pressure Gauges", href: "/knowledge/instrumentation/pressure-gauges" },
+  ],
+  metaTags: [
+    { label: "EN 837 / ASME B40.100", color: "amber" as const },
+    { label: "Field-Tested (NEOM, NSRP, ADNOC)", color: "cyan" as const },
+    { label: "Class 0.1 – 2.5 Coverage", color: "green" as const },
+  ],
+};
+
+// ─── Section Content ───────────────────────────────────────────
+
+const SectionContent = {
+  principles: (
+    <>
+      <p>
+        Most mechanical pressure gauges operate on the principle of <strong>elastic deformation</strong>.
+        When pressure is applied to a sensing element, it deforms proportionally to the applied
+        pressure. This mechanical movement is then amplified and displayed on a calibrated dial.
+      </p>
+      <div className="overflow-x-auto my-4">
+        <table className="w-full text-sm text-[var(--color-text-secondary)]">
+          <thead>
+            <tr className="border-b border-[var(--color-border)]">
+              <th className="text-left py-2 pr-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Element</th>
+              <th className="text-left py-2 px-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Principle</th>
+              <th className="text-left py-2 px-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Typical Range</th>
+              <th className="text-left py-2 pl-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Applications</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Bourdon Tube</td><td className="py-2 px-3">C-shaped/helical tube straightens under pressure</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>0–1000 bar</td><td className="py-2 pl-3">General purpose, process industry</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Diaphragm</td><td className="py-2 px-3">Flexible membrane deflects under pressure</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>0–25 bar</td><td className="py-2 pl-3">Low pressure, corrosive media</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Bellows</td><td className="py-2 px-3">Accordion-like element expands/contracts</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>0–40 bar</td><td className="py-2 pl-3">Low pressure, differential pressure</td></tr>
+            <tr><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Capsule</td><td className="py-2 px-3">Two diaphragms welded together</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>0–600 mbar</td><td className="py-2 pl-3">Very low pressure, gas applications</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </>
+  ),
+
+  types: (
+    <>
+      <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+        {/* 1. Bourdon Tube */}
+        <div className="rounded-xl p-5" style={{background: "var(--color-bg-raise)", border: "1px solid var(--color-border)"}}>
+          <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-2" style={{fontFamily: "var(--font-display)"}}>1. Bourdon Tube (Most Common)</h3>
+          <p className="text-sm text-[var(--color-text-secondary)] mb-3">C-shaped/helical tube straightens when pressurized, amplified through link-sector-gear to rotate pointer.</p>
+          <div className="text-xs space-y-1 text-[var(--color-text-muted)]">
+            <div><strong className="text-[var(--color-text-primary)]">C-Type:</strong> 250° arc, 0–1000 bar</div>
+            <div><strong className="text-[var(--color-text-primary)]">Helical/Spiral:</strong> Multi-turn, higher sensitivity, 0–60 bar</div>
+            <div><strong className="text-[var(--color-text-primary)]">Coiled:</strong> Compact for panel mounting</div>
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[var(--color-text-primary)] mb-4" style={{fontFamily: "var(--font-display)"}}>
-            Pressure Gauges
-          </h1>
-          <p className="text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-3xl leading-relaxed">
-            Comprehensive guide covering principles, types, selection, installation, calibration, and troubleshooting of industrial pressure gauges.
-          </p>
-          
-          {/* Meta tags */}
-          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-[var(--color-text-muted)]">
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-amber-500" />
-              <span>EN 837 / ASME B40.100</span>
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-cyan-500" />
-              <span>Field-Tested (NEOM, NSRP, ADNOC)</span>
-            </span>
-            <span className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-green-500" />
-              <span>Class 0.1 – 2.5 Coverage</span>
-            </span>
-          </div>
-        </header>
-
-        {/* Table of Contents Sidebar + Content */}
-        <div className="grid lg:grid-cols-[260px_1fr] gap-8">
-          {/* Sidebar TOC */}
-          <aside className="lg:sticky lg:top-24 hidden lg:block">
-            <nav className="glass-card rounded-xl p-4 sm:p-6" style={{border: "1px solid var(--color-border)", background: "var(--color-bg-card)"}}>
-              <h3 className="text-[10px] font-semibold uppercase tracking-[.12em] text-amber-500 mb-4" style={{fontFamily: "var(--font-mono)"}}>
-                Contents
-              </h3>
-              <ul className="space-y-1" role="tablist" aria-label="Sections">
-                {sections.map((section, index) => (
-                  <li key={section.id} role="presentation">
-                    <button
-                      role="tab"
-                      aria-selected={activeSection === index}
-                      aria-controls={`panel-${section.id}`}
-                      id={`tab-${section.id}`}
-                      onClick={() => setActiveSection(index)}
-                      className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-all duration-200 flex items-center gap-2 ${
-                        activeSection === index
-                          ? "bg-amber-500/10 text-amber-400 font-semibold"
-                          : "text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-raise)]"
-                      }`}
-                    >
-                      <span className="text-lg">{section.icon}</span>
-                      <span>{section.title}</span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </aside>
-
-          {/* Main Content */}
-          <main className="prose prose-lg max-w-none prose-amber prose-img:rounded-xl prose-img:shadow-xl" style={{ 
-            color: 'var(--color-text-secondary)',
-          }}>
-            <div 
-              id="content"
-              className="glass-card rounded-2xl p-6 sm:p-8" 
-              style={{border: "1px solid var(--color-border)", background: "var(--color-bg-card)"}}
-              dangerouslySetInnerHTML={{ __html: renderedHtml }}
-            />
-
-            {/* Gauge Cross-Section Image */}
-            <div className="mt-10 relative aspect-[4/3] max-w-[600px] mx-auto">
-              <img
-                src="/pressure-gauge-diagram.png"
-                alt="Cross-section of a Bourdon tube pressure gauge showing internal components: Bourdon tube, linkage, sector gear, pinion, pointer, and dial"
-                className="w-full h-full object-contain rounded-xl opacity-90 hover:opacity-100 transition-opacity duration-300"
-                style={{filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.3))"}}
-              />
-              <p className="mt-3 text-center text-sm text-[var(--color-text-muted)]">
-                Internal construction of a Bourdon tube pressure gauge (cross-section view)
-              </p>
-            </div>
-          </main>
         </div>
 
-        {/* Back to Top */}
-        <div className="mt-12 text-center">
-          <Link 
-            href="/knowledge/instrumentation" 
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold uppercase tracking-[.08em] text-amber-500 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 transition-all"
-            style={{fontFamily: "var(--font-mono)"}}
-          >
-            ← Back to Instrumentation Hub
-          </Link>
+        {/* 2. Diaphragm */}
+        <div className="rounded-xl p-5" style={{background: "var(--color-bg-raise)", border: "1px solid var(--color-border)"}}>
+          <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-2" style={{fontFamily: "var(--font-display)"}}>2. Diaphragm Pressure Gauges</h3>
+          <p className="text-sm text-[var(--color-text-secondary)] mb-3">For low pressures (0–25 bar) and corrosive/viscous media. Isolates process media from movement.</p>
+          <div className="text-xs space-y-1 text-[var(--color-text-muted)]">
+            <div><strong className="text-[var(--color-text-primary)]">Flat:</strong> Clean fluids</div>
+            <div><strong className="text-[var(--color-text-primary)]">Corrugated:</strong> Higher deflection, sensitivity</div>
+            <div><strong className="text-[var(--color-text-primary)]">Flush:</strong> Sanitary applications</div>
+          </div>
+        </div>
+
+        {/* 3. Capsule */}
+        <div className="rounded-xl p-5" style={{background: "var(--color-bg-raise)", border: "1px solid var(--color-border)"}}>
+          <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-2" style={{fontFamily: "var(--font-display)"}}>3. Capsule Pressure Gauges</h3>
+          <p className="text-sm text-[var(--color-text-secondary)] mb-3">Two diaphragms welded at periphery. Very low pressures (0–600 mbar).</p>
+          <div className="text-xs space-y-1 text-[var(--color-text-muted)]">
+            <div>Gas distribution systems</div>
+            <div>HVAC air pressure</div>
+            <div>Clean room monitoring</div>
+          </div>
+        </div>
+
+        {/* 4. Differential Pressure */}
+        <div className="rounded-xl p-5" style={{background: "var(--color-bg-raise)", border: "1px solid var(--color-border)"}}>
+          <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-2" style={{fontFamily: "var(--font-display)"}}>4. Differential Pressure Gauges</h3>
+          <p className="text-sm text-[var(--color-text-secondary)] mb-3">Measure difference between two pressures.</p>
+          <div className="text-xs space-y-1 text-[var(--color-text-muted)]">
+            <div>Filter monitoring (ΔP across filter)</div>
+            <div>Level measurement (bubbler systems)</div>
+            <div>Flow measurement (orifice ΔP)</div>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* Materials table */}
+      <div className="mt-6">
+        <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-3" style={{fontFamily: "var(--font-display)"}}>Bourdon Tube Materials</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm text-[var(--color-text-secondary)]">
+            <thead>
+              <tr className="border-b border-[var(--color-border)]">
+                <th className="text-left py-2 pr-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Material</th>
+                <th className="text-left py-2 pl-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Use Case</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">316 SS</td><td className="py-2 pl-3">General process, corrosive media</td></tr>
+              <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Monel 400</td><td className="py-2 pl-3">Seawater, marine, HF acid</td></tr>
+              <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Inconel 625</td><td className="py-2 pl-3">High temp, sour gas (H₂S)</td></tr>
+              <tr><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Bronze/Brass</td><td className="py-2 pl-3">Water, air, non-corrosive (economical)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
+  ),
+
+  accuracy: (
+    <>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-[var(--color-text-secondary)]">
+          <thead>
+            <tr className="border-b border-[var(--color-border)]">
+              <th className="text-left py-2 pr-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Class</th>
+              <th className="text-left py-2 px-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Accuracy (±% of Span)</th>
+              <th className="text-left py-2 pl-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Typical Use</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Class 0.1</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>0.1%</td><td className="py-2 pl-3">Laboratory, calibration standards</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Class 0.25</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>0.25%</td><td className="py-2 pl-3">High-precision process</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Class 0.6</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>0.6%</td><td className="py-2 pl-3">Precision industrial</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Class 1.0</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>1.0%</td><td className="py-2 pl-3">General industrial (most common)</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Class 1.6</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>1.6%</td><td className="py-2 pl-3">General purpose, panel mounting</td></tr>
+            <tr><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Class 2.5</td><td className="py-2 px-3" style={{fontFamily: "var(--font-mono)"}}>2.5%</td><td className="py-2 pl-3">Commercial, non-critical</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div className="mt-4 p-4 rounded-lg border-l-4 border-amber-500 bg-amber-500/5">
+        <p className="text-sm text-[var(--color-text-secondary)]"><strong className="text-amber-400">Field Note:</strong> For custody transfer or safety systems, specify Class 0.6 or better. For general indication, Class 1.6 is adequate.</p>
+      </div>
+    </>
+  ),
+
+  namur: (
+    <>
+      <p className="mb-4">
+        While not directly applicable to mechanical gauges, if using pressure <strong>transmitters</strong> with gauge displays:
+      </p>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-[var(--color-text-secondary)]">
+          <thead>
+            <tr className="border-b border-[var(--color-border)]">
+              <th className="text-left py-2 pr-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Signal Range</th>
+              <th className="text-left py-2 pl-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3" style={{fontFamily: "var(--font-mono)"}}>3.8–20.5 mA</td><td className="py-2 pl-3">Normal operation</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3" style={{fontFamily: "var(--font-mono)"}}>&lt; 3.6 mA</td><td className="py-2 pl-3"><strong className="text-red-500">Low alarm (sensor fault, cable break)</strong></td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3" style={{fontFamily: "var(--font-mono)"}}>&gt; 21.0 mA</td><td className="py-2 pl-3"><strong className="text-red-500">High alarm (sensor fault, overrange)</strong></td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3" style={{fontFamily: "var(--font-mono)"}}>3.6–3.8 mA</td><td className="py-2 pl-3">Low saturation (near fault)</td></tr>
+            <tr><td className="py-2 pr-3" style={{fontFamily: "var(--font-mono)"}}>20.5–21.0 mA</td><td className="py-2 pl-3">High saturation (near fault)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </>
+  ),
+
+  selection: (
+    <>
+      <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-3" style={{fontFamily: "var(--font-display)"}}>Process Media Compatibility</h3>
+      <div className="overflow-x-auto mb-6">
+        <table className="w-full text-sm text-[var(--color-text-secondary)]">
+          <thead>
+            <tr className="border-b border-[var(--color-border)]">
+              <th className="text-left py-2 pr-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Media</th>
+              <th className="text-left py-2 pl-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Recommended Wetted Parts</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Water, Air, Oil</td><td className="py-2 pl-3">Brass, Bronze, 316 SS</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Acids (HCl, H₂SO₄)</td><td className="py-2 pl-3">Monel, Hastelloy C, PTFE-lined</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Seawater, Chlorides</td><td className="py-2 pl-3">Monel 400, Super Duplex</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Sour Gas (H₂S)</td><td className="py-2 pl-3">Inconel 625, NACE MR0175</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">High Temperature (&gt;200°C)</td><td className="py-2 pl-3">Inconel, SS with cooling element</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Viscous/Slurry</td><td className="py-2 pl-3">Flush diaphragm, capillary seal</td></tr>
+            <tr><td className="py-2 pr-3">Sanitary (Food/Pharma)</td><td className="py-2 pl-3">316L electropolished, Tri-clamp</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-3" style={{fontFamily: "var(--font-display)"}}>Pressure Range Selection</h3>
+      <div className="p-4 rounded-lg border-l-4 border-amber-500 bg-amber-500/5 mb-4">
+        <p className="text-sm text-[var(--color-text-secondary)]"><strong className="text-amber-400">Rule of Thumb:</strong> Select range so normal operating pressure is <strong>50–75% of full scale</strong>.</p>
+      </div>
+      <div className="overflow-x-auto mb-6">
+        <table className="w-full text-sm text-[var(--color-text-secondary)]">
+          <thead>
+            <tr className="border-b border-[var(--color-border)]">
+              <th className="text-left py-2 pr-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Operating Pressure</th>
+              <th className="text-left py-2 pl-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Recommended Gauge Range</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3" style={{fontFamily: "var(--font-mono)"}}>10 bar</td><td className="py-2 pl-3" style={{fontFamily: "var(--font-mono)"}}>0–16 bar or 0–25 bar</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3" style={{fontFamily: "var(--font-mono)"}}>50 bar</td><td className="py-2 pl-3" style={{fontFamily: "var(--font-mono)"}}>0–60 bar or 0–100 bar</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Vacuum</td><td className="py-2 pl-3" style={{fontFamily: "var(--font-mono)"}}>-1 to 0 bar (compound)</td></tr>
+            <tr><td className="py-2 pr-3">Vacuum to Pressure</td><td className="py-2 pl-3" style={{fontFamily: "var(--font-mono)"}}>-1 to +10 bar (compound)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-3" style={{fontFamily: "var(--font-display)"}}>Environmental Considerations</h3>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-[var(--color-text-secondary)]">
+          <thead>
+            <tr className="border-b border-[var(--color-border)]">
+              <th className="text-left py-2 pr-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Condition</th>
+              <th className="text-left py-2 pl-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Protection</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Vibration</td><td className="py-2 pl-3">Liquid-filled (glycerin/silicone)</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Pulsation</td><td className="py-2 pl-3">Snubber, restrictor, liquid fill</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Outdoor/Corrosive</td><td className="py-2 pl-3">SS case, IP65/IP66, coated movement</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">High Ambient Temp</td><td className="py-2 pl-3">Cooling element, capillary</td></tr>
+            <tr><td className="py-2 pr-3">Hazardous Area</td><td className="py-2 pl-3">Intrinsically safe (if transmitter), SS case</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </>
+  ),
+
+  installation: (
+    <>
+      <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+        <div className="rounded-xl p-5" style={{background: "var(--color-bg-raise)", border: "1px solid var(--color-border)"}}>
+          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-[.08em] mb-3" style={{fontFamily: "var(--font-mono)"}}>1. Mounting Position</h3>
+          <ul className="text-sm space-y-2 text-[var(--color-text-secondary)]">
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" /><strong>Vertical (standard):</strong> Dial face upright</li>
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" /><strong>Horizontal:</strong> Specify "bottom connection" or "back connection"</li>
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" /><strong>Panel Mount:</strong> Back connection with front flange or U-clamp</li>
+          </ul>
+        </div>
+        <div className="rounded-xl p-5" style={{background: "var(--color-bg-raise)", border: "1px solid var(--color-border)"}}>
+          <h3 className="text-xs font-bold text-amber-400 uppercase tracking-[.08em] mb-3" style={{fontFamily: "var(--font-mono)"}}>2. Process Connection</h3>
+          <ul className="text-sm space-y-2 text-[var(--color-text-secondary)]">
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" /><strong>Thread:</strong> 1/4" NPT (std), 1/2" NPT (high pressure)</li>
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" /><strong>Flanged:</strong> Per ASME B16.5 / EN 1092-1</li>
+            <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" /><strong>Sanitary:</strong> Tri-clamp per ISO 2852 / ASME BPE</li>
+          </ul>
+        </div>
+      </div>
+
+      <div className="mt-4 sm:mt-6">
+        <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-3" style={{fontFamily: "var(--font-display)"}}>3. Impulse Piping</h3>
+        <ul className="text-sm space-y-2 text-[var(--color-text-secondary)]">
+          <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" />Slope piping <strong>≥ 1:10</strong> toward process for gas service</li>
+          <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" />Slope <strong>away from process</strong> for liquid service</li>
+          <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" />Keep impulse lines <strong>short</strong> and <strong>same length</strong> (for DP)</li>
+          <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-amber-500 flex-shrink-0" />Use <strong>condensate pots</strong> for steam service</li>
+        </ul>
+      </div>
+
+      <div className="mt-6 overflow-x-auto">
+        <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-3" style={{fontFamily: "var(--font-display)"}}>4. Accessories</h3>
+        <table className="w-full text-sm text-[var(--color-text-secondary)]">
+          <thead>
+            <tr className="border-b border-[var(--color-border)]">
+              <th className="text-left py-2 pr-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Accessory</th>
+              <th className="text-left py-2 pl-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Snubber/Restrictor</td><td className="py-2 pl-3">Dampen pulsation</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Siphon (Pigtail)</td><td className="py-2 pl-3">Steam service (condensate trap)</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Diaphragm Seal</td><td className="py-2 pl-3">Corrosive, viscous, sanitary, high temp</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Cooling Element</td><td className="py-2 pl-3">High process temperature (&gt;100°C)</td></tr>
+            <tr><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Overrange Protector</td><td className="py-2 pl-3">Prevent damage from pressure spikes</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </>
+  ),
+
+  calibration: (
+    <>
+      <p className="mb-3 text-sm font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Calibration Procedure (per DKD/DAkkS / ASME B40.100)</p>
+      <ol className="text-sm space-y-2 text-[var(--color-text-secondary)] list-decimal list-inside mb-6">
+        <li><strong>Visual Inspection:</strong> Case, window, pointer, dial</li>
+        <li><strong>Zero Check:</strong> Verify pointer at zero with no pressure</li>
+        <li><strong>Increasing Pressure:</strong> Apply 0%, 25%, 50%, 75%, 100% FS</li>
+        <li><strong>Decreasing Pressure:</strong> Same points descending</li>
+        <li><strong>Record:</strong> Hysteresis, repeatability, linearity</li>
+        <li><strong>Adjust:</strong> If equipped with zero/span adjustment</li>
+      </ol>
+
+      <p className="mb-3 text-sm font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Acceptance Criteria (Class 1.0)</p>
+      <ul className="text-sm space-y-2 text-[var(--color-text-secondary)] mb-6">
+        <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-green-500 flex-shrink-0" /><strong>Linearity:</strong> ≤ 1.0% FS</li>
+        <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-green-500 flex-shrink-0" /><strong>Hysteresis:</strong> ≤ 1.0% FS</li>
+        <li className="flex items-start gap-2"><span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-green-500 flex-shrink-0" /><strong>Repeatability:</strong> ≤ 0.5% FS</li>
+      </ul>
+
+      <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-3" style={{fontFamily: "var(--font-display)"}}>Field Maintenance Schedule</h3>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-[var(--color-text-secondary)]">
+          <thead>
+            <tr className="border-b border-[var(--color-border)]">
+              <th className="text-left py-2 pr-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Frequency</th>
+              <th className="text-left py-2 pl-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Task</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3" style={{fontFamily: "var(--font-mono)"}}>Monthly</td><td className="py-2 pl-3">Visual check: pointer at zero, no leaks, window clear</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3" style={{fontFamily: "var(--font-mono)"}}>Quarterly</td><td className="py-2 pl-3">Tap test: lightly tap case, pointer should not stick</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3" style={{fontFamily: "var(--font-mono)"}}>Annually</td><td className="py-2 pl-3">Full calibration against deadweight tester</td></tr>
+            <tr><td className="py-2 pr-3" style={{fontFamily: "var(--font-mono)"}}>As Needed</td><td className="py-2 pl-3">Replace if: cracked window, leaking, pointer stuck, &gt;2× accuracy class error</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </>
+  ),
+
+  failures: (
+    <>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-[var(--color-text-secondary)]">
+          <thead>
+            <tr className="border-b border-[var(--color-border)]">
+              <th className="text-left py-2 pr-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Symptom</th>
+              <th className="text-left py-2 px-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Probable Cause</th>
+              <th className="text-left py-2 pl-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Pointer stuck at zero</td><td className="py-2 px-3">Broken Bourdon tube, disconnected linkage</td><td className="py-2 pl-3">Replace gauge</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Pointer oscillates</td><td className="py-2 px-3">Pulsation, no liquid fill</td><td className="py-2 pl-3">Add snubber or liquid fill</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Reading high/low</td><td className="py-2 px-3">Calibration drift, temperature effect</td><td className="py-2 pl-3">Recalibrate, check temp spec</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Leak at connection</td><td className="py-2 px-3">Loose fitting, damaged thread</td><td className="py-2 pl-3">Re-tighten, replace seal</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Cracked window</td><td className="py-2 px-3">Impact, overpressure</td><td className="py-2 pl-3">Replace window/gauge</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Fogged window</td><td className="py-2 px-3">Seal failure, temp cycling</td><td className="py-2 pl-3">Replace gauge (hermetic seal lost)</td></tr>
+            <tr><td className="py-2 pr-3 font-medium text-[var(--color-text-primary)]">Pointer doesn't return to zero</td><td className="py-2 px-3">Overpressure, Bourdon tube yield</td><td className="py-2 pl-3">Replace gauge</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </>
+  ),
+
+  specialized: (
+    <>
+      <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+        <div className="rounded-xl p-5" style={{background: "var(--color-bg-raise)", border: "1px solid var(--color-border)"}}>
+          <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-2" style={{fontFamily: "var(--font-display)"}}>Test Gauges (Calibration Grade)</h3>
+          <ul className="text-sm space-y-1 text-[var(--color-text-secondary)]">
+            <li>Class 0.1, 0.25, 0.6</li>
+            <li>Mirror band parallax elimination</li>
+            <li>Knife-edge pointer</li>
+            <li>Used with deadweight testers</li>
+          </ul>
+        </div>
+        <div className="rounded-xl p-5" style={{background: "var(--color-bg-raise)", border: "1px solid var(--color-border)"}}>
+          <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-2" style={{fontFamily: "var(--font-display)"}}>Panel Mount Gauges</h3>
+          <ul className="text-sm space-y-1 text-[var(--color-text-secondary)]">
+            <li>Back connection</li>
+            <li>Front flange or U-clamp</li>
+            <li>Smaller dial (40mm, 50mm, 63mm)</li>
+          </ul>
+        </div>
+        <div className="rounded-xl p-5" style={{background: "var(--color-bg-raise)", border: "1px solid var(--color-border)"}}>
+          <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-2" style={{fontFamily: "var(--font-display)"}}>Differential Pressure Gauges</h3>
+          <ul className="text-sm space-y-1 text-[var(--color-text-secondary)]">
+            <li>Two Bourdon tubes or diaphragm capsule</li>
+            <li>Single pointer shows ΔP</li>
+            <li>Used on filters, heat exchangers, level</li>
+          </ul>
+        </div>
+        <div className="rounded-xl p-5" style={{background: "var(--color-bg-raise)", border: "1px solid var(--color-border)"}}>
+          <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-2" style={{fontFamily: "var(--font-display)"}}>Sanitary Gauges</h3>
+          <ul className="text-sm space-y-1 text-[var(--color-text-secondary)]">
+            <li>316L electropolished (Ra &lt; 0.8 μm)</li>
+            <li>Tri-clamp connection</li>
+            <li>Fill fluid: FDA-approved (neobee, glycerin)</li>
+            <li>No crevices, CIP/SIP compatible</li>
+          </ul>
+        </div>
+      </div>
+      <div className="mt-4 sm:mt-6 rounded-xl p-5" style={{background: "var(--color-bg-raise)", border: "1px solid var(--color-border)"}}>
+        <h3 className="text-sm font-bold text-[var(--color-text-primary)] mb-2" style={{fontFamily: "var(--font-display)"}}>Digital Pressure Gauges</h3>
+        <ul className="text-sm space-y-1 text-[var(--color-text-secondary)]">
+          <li>Battery powered, 0.1–0.5% accuracy</li>
+          <li>Data logging, min/max, backlight</li>
+          <li>Units switching (bar, psi, kPa, kg/cm²)</li>
+          <li>4–20 mA output option</li>
+        </ul>
+      </div>
+    </>
+  ),
+
+  quickref: (
+    <>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm text-[var(--color-text-secondary)]">
+          <thead>
+            <tr className="border-b border-[var(--color-border)]">
+              <th className="text-left py-2 pr-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Parameter</th>
+              <th className="text-left py-2 pl-3 font-semibold text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-mono)"}}>Recommendation</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Dial Size</td><td className="py-2 pl-3" style={{fontFamily: "var(--font-mono)"}}>100mm (4") field, 160mm (6") control room</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Case Material</td><td className="py-2 pl-3">304/316 SS for process, phenolic for panel</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Window</td><td className="py-2 pl-3">Laminated safety glass (std), acrylic (vibration)</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Fill Fluid</td><td className="py-2 pl-3" style={{fontFamily: "var(--font-mono)"}}>Glycerin 99.7% (–20 to +60°C), Silicone (–40 to +100°C)</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Accuracy</td><td className="py-2 pl-3" style={{fontFamily: "var(--font-mono)"}}>Class 1.0 (field), Class 0.6 (control), Class 0.25 (lab)</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Range</td><td className="py-2 pl-3">Normal op at 50–75% FS</td></tr>
+            <tr className="border-b border-[var(--color-border)]/50"><td className="py-2 pr-3">Connection</td><td className="py-2 pl-3" style={{fontFamily: "var(--font-mono)"}}>1/2" NPT male (process), 1/4" NPT (instrument)</td></tr>
+            <tr><td className="py-2 pr-3">Tagging</td><td className="py-2 pl-3">Stainless steel tag, laser etched</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </>
+  ),
+
+  conclusion: (
+    <>
+      <p className="mb-4">
+        Pressure gauges remain the most fundamental and reliable pressure indication devices in process plants. Proper selection requires understanding:
+      </p>
+      <ol className="text-sm space-y-2 text-[var(--color-text-secondary)] list-decimal list-inside mb-4">
+        <li><strong>Process conditions</strong> (pressure, temperature, media, viscosity)</li>
+        <li><strong>Accuracy requirements</strong> (safety, control, indication only)</li>
+        <li><strong>Environment</strong> (vibration, corrosion, temperature, hazardous area)</li>
+        <li><strong>Installation constraints</strong> (mounting, impulse piping, accessories)</li>
+        <li><strong>Maintenance philosophy</strong> (calibration interval, spare parts strategy)</li>
+      </ol>
+      <div className="p-4 rounded-lg border-l-4 border-amber-500 bg-amber-500/5">
+        <p className="text-sm text-[var(--color-text-secondary)]">
+          <strong className="text-amber-400">Final Field Note:</strong> A gauge that reads correctly but can't be read (fogged, wrong position, no light) is useless. Install for <strong>readability first</strong>, then accuracy. Use liquid fill for vibration. Specify 316 SS case for corrosive atmospheres. And always—always—verify zero before trusting the reading.
+        </p>
+      </div>
+    </>
+  ),
+};
+
+// ─── Sources ──────────────────────────────────────────────────
+const sources = [
+  { label: "EN 837-1", scope: "Bourdon tube gauges - dimensions, metrology" },
+  { label: "EN 837-2", scope: "Selection and installation recommendations" },
+  { label: "EN 837-3", scope: "Diaphragm and capsule gauges" },
+  { label: "ASME B40.100", scope: "Pressure gauges and gauge attachments" },
+  { label: "ASME B40.300", scope: "Diaphragm/sealed gauges" },
+  { label: "NAMUR NE43", scope: "4–20 mA signal levels (transmitters)" },
+  { label: "API RP 551", scope: "Process measurement instrumentation" },
+  { label: "IEC 60770", scope: "Transmitters for process control" },
+];
+
+// ─── Sections Config ──────────────────────────────────────────
+const sections = [
+  {
+    id: "principles",
+    title: "Operating Principles",
+    icon: "⚙️",
+    content: SectionContent.principles,
+    image: (
+      <div className="relative aspect-[4/3] sm:aspect-[16/10] max-w-[600px] mx-auto">
+        <img
+          src="/pressure-gauge-diagram.png"
+          alt="Cross-section of a Bourdon tube pressure gauge showing internal components: Bourdon tube, linkage, sector gear, pinion, pointer, and dial"
+          className="w-full h-full object-contain rounded-xl opacity-90 hover:opacity-100 transition-opacity duration-300"
+          style={{filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.3))"}}
+        />
+        <p className="mt-3 text-center text-sm text-[var(--color-text-muted)]">
+          Internal construction of a Bourdon tube pressure gauge (cross-section view)
+        </p>
+      </div>
+    ),
+  },
+  {
+    id: "types",
+    title: "Types of Pressure Gauges",
+    icon: "📐",
+    content: SectionContent.types,
+  },
+  {
+    id: "accuracy",
+    title: "Accuracy Classes",
+    icon: "🎯",
+    content: SectionContent.accuracy,
+    chart: <AccuracyBarChart />,
+  },
+  {
+    id: "namur",
+    title: "NAMUR NE43",
+    icon: "📡",
+    content: SectionContent.namur,
+    chart: <NAMURBandChart />,
+  },
+  {
+    id: "selection",
+    title: "Selection Guide",
+    icon: "✅",
+    content: SectionContent.selection,
+  },
+  {
+    id: "installation",
+    title: "Installation Best Practices",
+    icon: "🔧",
+    content: SectionContent.installation,
+  },
+  {
+    id: "calibration",
+    title: "Calibration & Maintenance",
+    icon: "📋",
+    content: SectionContent.calibration,
+  },
+  {
+    id: "failures",
+    title: "Common Failure Modes",
+    icon: "⚠️",
+    content: SectionContent.failures,
+  },
+  {
+    id: "specialized",
+    title: "Specialized Gauge Types",
+    icon: "🔬",
+    content: SectionContent.specialized,
+  },
+  {
+    id: "quickref",
+    title: "Quick Reference Card",
+    icon: "🗒️",
+    content: SectionContent.quickref,
+  },
+  {
+    id: "conclusion",
+    title: "Conclusion",
+    icon: "🏁",
+    content: SectionContent.conclusion,
+  },
+];
+
+// ─── Page ──────────────────────────────────────────────────────
+export default function PressureGaugesPage() {
+  return (
+    <InstrumentArticleLayout
+      title={meta.title}
+      description={meta.description}
+      category={meta.category}
+      breadcrumb={meta.breadcrumb}
+      metaTags={meta.metaTags}
+      sections={sections}
+      sources={sources}
+      backLink={{ href: "/knowledge/instrumentation", label: "Back to Instrumentation Hub" }}
+      documentVersion="Document Version 1.0 | Based on EN 837, ASME B40.100, API RP 551, and field experience from NEOM Green Hydrogen, NSRP Vietnam, ADNOC UAE projects"
+      footerNote={undefined}
+    />
   );
 }
