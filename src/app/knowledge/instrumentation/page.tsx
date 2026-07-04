@@ -2,45 +2,66 @@
 
 import Link from "next/link";
 
-const featuredTopic = {
-  id: "pressure-gauges",
-  title: "Pressure Gauges: Complete Engineering Guide",
-  slug: "pressure-gauges",
-  excerpt: "Master industrial pressure gauges — from Bourdon tube principles to NAMUR NE43 compliance. Covers selection criteria, accuracy classes (Class 0.1–2.5), installation best practices, calibration procedures, failure mode analysis, and specialized types including sanitary, differential, and digital gauges.",
-  heroImage: "/pressure-gauge-diagram.png",
-  heroAlt: "Cross-section of a Bourdon tube pressure gauge showing internal components: Bourdon tube, linkage, sector gear, pinion, pointer, and dial",
-  category: "Instrumentation Fundamentals",
-  readTime: "12 min read",
-  author: "Satish Kumar Jaiswal",
-  authorRole: "Lead I&C Commissioning Engineer",
-  authorExperience: "15+ years · NEOM · NSRP · ADNOC",
-  tags: [
-    { label: "Bourdon Tube", color: "amber" },
-    { label: "Diaphragm", color: "amber" },
-    { label: "Digital Gauges", color: "amber" },
-    { label: "Calibration", color: "green" },
-    { label: "NAMUR NE43", color: "blue" },
-    { label: "EN 837 / ASME B40.100", color: "purple" },
-  ],
-  keyTakeaways: [
-    "Select range so normal operation sits at 50–75% of full scale",
-    "Liquid-filled gauges (glycerin/silicone) essential for vibration service",
-    "Class 1.0 for general industrial, Class 0.6 for control/safety",
-    "Verify zero before trusting any reading — fogged window = failed seal",
-  ],
-  seoKeywords: "pressure gauge, Bourdon tube, diaphragm pressure gauge, pressure gauge calibration, pressure gauge accuracy class, pressure gauge selection, NAMUR NE43, EN 837, ASME B40.100, industrial instrumentation",
-};
-
-const upcomingTopics = [
+const featuredTopics = [
+  {
+    id: "pressure-gauges",
+    title: "Pressure Gauges: Complete Engineering Guide",
+    slug: "pressure-gauges",
+    excerpt: "Master industrial pressure gauges — from Bourdon tube principles to NAMUR NE43 compliance. Covers selection criteria, accuracy classes (Class 0.1–2.5), installation best practices, calibration procedures, failure mode analysis, and specialized types including sanitary, differential, and digital gauges.",
+    heroImage: "/pressure-gauge-diagram.png",
+    heroAlt: "Cross-section of a Bourdon tube pressure gauge showing internal components: Bourdon tube, linkage, sector gear, pinion, pointer, and dial",
+    category: "Instrumentation Fundamentals",
+    readTime: "12 min read",
+    author: "Satish Kumar Jaiswal",
+    authorRole: "Lead I&C Commissioning Engineer",
+    authorExperience: "15+ years · NEOM · NSRP · ADNOC",
+    tags: [
+      { label: "Bourdon Tube", color: "amber" },
+      { label: "Diaphragm", color: "amber" },
+      { label: "Digital Gauges", color: "amber" },
+      { label: "Calibration", color: "green" },
+      { label: "NAMUR NE43", color: "blue" },
+      { label: "EN 837 / ASME B40.100", color: "purple" },
+    ],
+    keyTakeaways: [
+      "Select range so normal operation sits at 50–75% of full scale",
+      "Liquid-filled gauges (glycerin/silicone) essential for vibration service",
+      "Class 1.0 for general industrial, Class 0.6 for control/safety",
+      "Verify zero before trusting any reading — fogged window = failed seal",
+    ],
+    seoKeywords: "pressure gauge, Bourdon tube, diaphragm pressure gauge, pressure gauge calibration, pressure gauge accuracy class, pressure gauge selection, NAMUR NE43, EN 837, ASME B40.100, industrial instrumentation",
+  },
   {
     id: "pressure-transmitters",
-    title: "Pressure Transmitters",
-    description: "4-20mA, HART, Foundation Fieldbus. Smart transmitters, calibration, and commissioning.",
-    icon: "📡",
-    color: "border-blue-500/30",
-    bgColor: "bg-blue-500/5",
-    tags: ["4-20mA", "HART", "Smart", "Commissioning"],
+    title: "Pressure Transmitters: Smart Measurement Guide",
+    slug: "pressure-transmitters",
+    excerpt: "Smart pressure transmitters with 4–20 mA HART output — covering sensing principles (piezoresistive, capacitive, resonant), calibration procedures, NAMUR NE43 fault levels, and troubleshooting common faults in DP, absolute, and gauge pressure applications.",
+    heroImage: "/pressure-transmitter-diagram.svg",
+    heroAlt: "Cross-section of a smart pressure transmitter showing process seal, silicon diaphragm sensing element, and electronics housing with HART communication",
+    category: "Pressure Instrumentation",
+    readTime: "15 min read",
+    author: "Satish Kumar Jaiswal",
+    authorRole: "Lead I&C Commissioning Engineer",
+    authorExperience: "15+ years · NEOM · NSRP · ADNOC",
+    tags: [
+      { label: "4-20mA", color: "amber" },
+      { label: "HART", color: "blue" },
+      { label: "Piezoresistive", color: "cyan" },
+      { label: "Calibration", color: "green" },
+      { label: "NAMUR NE43", color: "blue" },
+      { label: "DP Flow", color: "purple" },
+    ],
+    keyTakeaways: [
+      "Sensing elements: piezoresistive (most common), capacitive, resonant",
+      "NAMUR NE43 fault zones: < 3.6 mA and > 21 mA signal limits",
+      "Install needle + ball valve for service without process shutdown",
+      "Zero before span calibration — check impulse line blockages first",
+    ],
+    seoKeywords: "pressure transmitter, smart transmitter, HART, Foundation Fieldbus, piezoresistive, capacitive, NAMUR NE43, calibration, differential pressure, 4-20mA, industrial instrumentation",
   },
+];
+
+const upcomingTopics = [
   {
     id: "temperature-sensors",
     title: "Temperature Sensors",
@@ -95,8 +116,8 @@ function Tag({ label, color }: { label: string; color: string }) {
   );
 }
 
-function FeaturedArticleCard() {
-  const { title, slug, excerpt, heroImage, heroAlt, category, readTime, author, authorRole, authorExperience, tags, keyTakeaways } = featuredTopic;
+function FeaturedArticleCard({ topic }: { topic: typeof featuredTopics[0] }) {
+  const { title, slug, excerpt, heroImage, heroAlt, category, readTime, author, authorRole, authorExperience, tags, keyTakeaways } = topic;
 
   return (
     <article className="group relative overflow-hidden rounded-3xl transition-all duration-500 hover:translate-y-[-8px] hover:shadow-[0_30px_60px_rgba(0,0,0,0.4)]"
@@ -124,7 +145,7 @@ function FeaturedArticleCard() {
         },
         "datePublished": "2025-01-15",
         "dateModified": "2025-01-15",
-        "keywords": featuredTopic.seoKeywords,
+        "keywords": topic.seoKeywords,
         "mainEntityOfPage": { "@type": "WebPage", "@id": `https://ihub-eta.vercel.app/knowledge/instrumentation/${slug}` },
       }, null, 2) }} />
 
@@ -233,10 +254,10 @@ function UpcomingCard({ topic }: { topic: typeof upcomingTopics[0] }) {
   
   return (
     <Link
-      href="#"
-      className="group glass-card rounded-2xl p-6 sm:p-8 relative overflow-hidden transition-all duration-300 hover:translate-y-[-4px] cursor-pointer opacity-60 pointer-events-none"
+      href={id === "pressure-transmitters" ? "/knowledge/instrumentation/pressure-transmitters" : "#"}
+      className={`group glass-card rounded-2xl p-6 sm:p-8 relative overflow-hidden transition-all duration-300 hover:translate-y-[-4px] ${id !== "pressure-transmitters" && "opacity-60 pointer-events-none"}`}
       style={{ border: "1px solid var(--color-border)", background: "var(--color-bg-card)" }}
-      aria-disabled="true"
+      aria-disabled={id !== "pressure-transmitters"}
       tabIndex={-1}
     >
       <div className={`absolute top-0 left-0 right-0 h-1 transition-all duration-300 ${color} group-hover:opacity-100`} />
@@ -248,9 +269,11 @@ function UpcomingCard({ topic }: { topic: typeof upcomingTopics[0] }) {
 
         <h3 className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)] mb-3" style={{fontFamily: "var(--font-display)"}}>
           {title}
-          <span className="ml-2 text-[10px] font-semibold uppercase tracking-[.1em] text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded" style={{fontFamily: "var(--font-mono)"}}>
-            Soon
-          </span>
+          {id !== "pressure-transmitters" && (
+            <span className="ml-2 text-[10px] font-semibold uppercase tracking-[.1em] text-amber-500 bg-amber-500/10 px-2 py-0.5 rounded" style={{fontFamily: "var(--font-mono)"}}>
+              Soon
+            </span>
+          )}
         </h3>
 
         <p className="text-sm sm:text-base text-[var(--color-text-muted)] leading-relaxed mb-4 flex-1">
@@ -288,19 +311,19 @@ export default function InstrumentationPage() {
         "mainEntity": {
           "@type": "ItemList",
           "itemListElement": [
-            {
+            ...featuredTopics.map((topic, i) => ({
               "@type": "ListItem",
-              "position": 1,
+              "position": i + 1,
               "item": {
                 "@type": "TechArticle",
-                "name": featuredTopic.title,
-                "url": `https://ihub-eta.vercel.app/knowledge/instrumentation/${featuredTopic.slug}`,
-                "description": featuredTopic.excerpt,
+                "name": topic.title,
+                "url": `https://ihub-eta.vercel.app/knowledge/instrumentation/${topic.slug}`,
+                "description": topic.excerpt,
               }
-            },
+            })),
             ...upcomingTopics.map((t, i) => ({
               "@type": "ListItem",
-              "position": i + 2,
+              "position": i + featuredTopics.length + 1,
               "item": {
                 "@type": "TechArticle",
                 "name": t.title,
@@ -328,22 +351,26 @@ export default function InstrumentationPage() {
           </p>
         </header>
 
-        {/* Featured Article - Pressure Gauges */}
+        {/* Featured Articles */}
         <section className="mb-12 sm:mb-16" aria-labelledby="featured-heading">
           <div className="flex items-center justify-between mb-6">
             <h2 id="featured-heading" className="text-2xl font-black text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-display)"}}>
-              <span className="gradient-amber">Featured</span> Guide
+              <span className="gradient-amber">Featured</span> Guides
             </h2>
             <Link
-              href={`/knowledge/instrumentation/${featuredTopic.slug}`}
+              href="/knowledge/instrumentation/pressure-gauges"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-[10px] font-semibold uppercase tracking-[.1em] text-amber-400 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 transition-all"
               style={{fontFamily: "var(--font-mono)"}}
             >
-              View Article
+              View Articles
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
             </Link>
           </div>
-          <FeaturedArticleCard />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {featuredTopics.map((topic) => (
+              <FeaturedArticleCard key={topic.id} topic={topic} />
+            ))}
+          </div>
         </section>
 
         {/* Upcoming Topics */}
