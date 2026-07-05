@@ -59,6 +59,34 @@ const featuredTopics = [
     ],
     seoKeywords: "pressure transmitter, smart transmitter, HART, Foundation Fieldbus, piezoresistive, capacitive, NAMUR NE43, calibration, differential pressure, 4-20mA, industrial instrumentation",
   },
+  {
+    id: "temperature-gauges",
+    title: "Temperature Gauges: Bimetallic & Filled-System Guide",
+    slug: "temperature-gauges",
+    excerpt: "Master industrial temperature gauges — bimetallic thermometers, filled-system and gas-actuated types. Covers thermal expansion principles, accuracy classes (Class 1.0–2.0), stem selection, thermowell installation, calibration, and failure modes.",
+    heroImage: "/bimetallic-thermometer-diagram.svg",
+    heroAlt: "Cross-section of a bimetallic dial thermometer showing dial face, pointer, stainless steel stem, and internal bimetallic coil sensing element",
+    category: "Temperature Instrumentation",
+    readTime: "15 min read",
+    author: "Satish Kumar Jaiswal",
+    authorRole: "Lead I&C Commissioning Engineer",
+    authorExperience: "15+ years · NEOM · NSRP · ADNOC",
+    tags: [
+      { label: "Bimetallic", color: "amber" },
+      { label: "Filled System", color: "blue" },
+      { label: "Gas-Actuated", color: "cyan" },
+      { label: "Thermowell", color: "green" },
+      { label: "ASME B40.200", color: "purple" },
+      { label: "DIN 16195", color: "purple" },
+    ],
+    keyTakeaways: [
+      "Mechanical gauges require no external power — intrinsically safe by design",
+      "Select range so normal operating temp sits at 50–75% of full scale",
+      "Always use a thermowell above 250°C or 50 bar process pressure",
+      "Stem immersion depth: min 75mm in liquids, 150mm in gases",
+    ],
+    seoKeywords: "temperature gauge, bimetallic thermometer, filled system thermometer, dial thermometer, thermal expansion, ASME B40.200, DIN 16195, industrial temperature measurement, thermometer calibration, thermowell",
+  },
 ];
 
 function Tag({ label, color }: { label: string; color: string }) {
