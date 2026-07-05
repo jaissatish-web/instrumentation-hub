@@ -601,16 +601,29 @@ const sections = [
     icon: "⚙️",
     content: SectionContent.workingprinciple,
     image: (
-      <div className="relative aspect-[4/3] sm:aspect-[16/10] max-w-[600px] mx-auto">
-        <img
-          src="/pressure-gauge-diagram.png"
-          alt="Cross-section of a Bourdon tube pressure gauge showing internal components: Bourdon tube, linkage, sector gear, pinion, pointer, and dial"
-          className="w-full h-full object-contain rounded-xl opacity-90 hover:opacity-100 transition-opacity duration-300"
-          style={{filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.3))"}}
-        />
-        <p className="mt-3 text-center text-sm text-[var(--color-text-muted)]">
-          Internal construction of a Bourdon tube pressure gauge (cross-section view). The elliptical Bourdon tube (bottom) straightens under pressure, pulling the link which rotates the sector gear and pinion to drive the pointer across the dial.
-        </p>
+      <div className="flex flex-col sm:flex-row gap-4 max-w-[800px] mx-auto">
+        <div className="relative flex-1 aspect-[4/3] sm:aspect-[16/10]">
+          <img
+            src="/pressure-gauge-diagram.png"
+            alt="Cross-section of a Bourdon tube pressure gauge showing internal components: Bourdon tube, linkage, sector gear, pinion, pointer, and dial"
+            className="w-full h-full object-contain rounded-xl opacity-90 hover:opacity-100 transition-opacity duration-300"
+            style={{filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.3))"}}
+          />
+          <p className="mt-3 text-center text-sm text-[var(--color-text-muted)]">
+            Internal construction of a Bourdon tube pressure gauge (cross-section view)
+          </p>
+        </div>
+        <div className="relative flex-1 aspect-[4/3] sm:aspect-[16/10]">
+          <img
+            src="/bourdon-tube-principle.svg"
+            alt="Bourdon tube elliptical cross-section becoming round under pressure, causing the tube to straighten"
+            className="w-full h-full object-contain rounded-xl opacity-90 hover:opacity-100 transition-opacity duration-300"
+            style={{filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.3))"}}
+          />
+          <p className="mt-3 text-center text-sm text-[var(--color-text-muted)]">
+            Elliptical cross-section attempts to become circular under internal pressure, creating the straightening force
+          </p>
+        </div>
       </div>
     ),
   },
@@ -619,6 +632,19 @@ const sections = [
     title: "Types & Variants",
     icon: "📐",
     content: SectionContent.types,
+    image: (
+      <div className="relative max-w-[600px] mx-auto">
+        <img
+          src="/diaphragm-gauge-capsule.svg"
+          alt="Cross-section diagrams of diaphragm pressure gauge and capsule pressure gauge showing their internal construction"
+          className="w-full h-auto rounded-xl opacity-90 hover:opacity-100 transition-opacity duration-300"
+          style={{filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.3))"}}
+        />
+        <p className="mt-3 text-center text-sm text-[var(--color-text-muted)]">
+          Diaphragm gauge (left) with flexible membrane isolating process media; capsule gauge (right) with dual diaphragms for very low pressure sensing
+        </p>
+      </div>
+    ),
   },
   {
     id: "key-specs",

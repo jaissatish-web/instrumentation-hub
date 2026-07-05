@@ -815,6 +815,19 @@ const sections = [
     title: "Operating Principle",
     icon: "⚙️",
     content: SectionContent.principles,
+    image: (
+      <div className="relative max-w-[600px] mx-auto">
+        <img
+          src="/pressure-transmitter-sensing.svg"
+          alt="Piezoresistive Wheatstone bridge and capacitive pressure sensing schematic diagrams"
+          className="w-full h-auto rounded-xl opacity-90 hover:opacity-100 transition-opacity duration-300"
+          style={{filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.3))"}}
+        />
+        <p className="mt-3 text-center text-sm text-[var(--color-text-muted)]">
+          Piezoresistive sensing (left) uses four diffused resistors in a Wheatstone bridge on a silicon diaphragm; capacitive sensing (right) measures the change in capacitance between the diaphragm and a fixed electrode
+        </p>
+      </div>
+    ),
   },
   {
     id: "types",
@@ -869,6 +882,19 @@ const sections = [
     title: "Installation, Calibration & Maintenance",
     icon: "🔧",
     content: SectionContent.installation,
+    image: (
+      <div className="relative max-w-[600px] mx-auto">
+        <img
+          src="/current-loop-diagram.svg"
+          alt="4-20 mA current loop diagram showing 24 VDC power supply, pressure transmitter, and DCS/PLC input card connected in series"
+          className="w-full h-auto rounded-xl opacity-90 hover:opacity-100 transition-opacity duration-300"
+          style={{filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.3))"}}
+        />
+        <p className="mt-3 text-center text-sm text-[var(--color-text-muted)]">
+          4–20 mA loop wiring: 24 VDC supply powers the transmitter, which regulates loop current proportional to pressure; the DCS/PLC reads the signal across a precision burden resistor
+        </p>
+      </div>
+    ),
   },
   {
     id: "conclusion",
