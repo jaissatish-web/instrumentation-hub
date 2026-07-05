@@ -28,7 +28,6 @@ const meta = {
   ],
   metaTags: [
     { label: "4–20 mA + HART", color: "amber" as const },
-    { label: "Field-Tested (NEOM, NSRP, ADNOC)", color: "cyan" as const },
     { label: "Piezoresistive · Capacitive", color: "green" as const },
   ],
 };

@@ -29,7 +29,6 @@ const meta = {
   ],
   metaTags: [
     { label: "EN 837 / ASME B40.100", color: "amber" as const },
-    { label: "Field-Tested (NEOM, NSRP, ADNOC)", color: "cyan" as const },
     { label: "Class 0.1 – 2.5 Coverage", color: "green" as const },
   ],
 };
