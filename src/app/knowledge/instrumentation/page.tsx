@@ -203,7 +203,7 @@ export default function InstrumentationPage() {
         "@context": "https://schema.org",
         "@type": "CollectionPage",
         "name": "Instrumentation Knowledge Base",
-        "description": "Field-proven references for I&C engineers covering pressure gauges and pressure transmitters.",
+        "description": "Pressure gauges and pressure transmitters reference guides for I&C engineers.",
         "url": "https://ihub-eta.vercel.app/knowledge/instrumentation",
         "mainEntity": {
           "@type": "ItemList",
@@ -230,11 +230,7 @@ export default function InstrumentationPage() {
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-[var(--color-text-primary)] mb-6" style={{fontFamily: "var(--font-display)"}}>
             Instrumentation <span className="gradient-amber">Guides</span>
           </h1>
-          <p className="text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-3xl mx-auto leading-relaxed">
-            Field-proven references for I&C engineers. Covers selection, installation, calibration, and troubleshooting.
-            Built from 15+ years of commissioning experience across NEOM, NSRP, and ADNOC projects.
-          </p>
-        </header>
+                  </header>
 
         <section className="mb-12 sm:mb-16" aria-labelledby="featured-heading">
           <div className="flex items-center justify-between mb-6">
