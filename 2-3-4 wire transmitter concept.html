@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transmitter Wiring • Technician Training</title>
+    <style>
+        /* ─── FONTS ─── */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap');
+
+        /* ─── ROOT ─── */
+        :root {
+            --bg: #f6f9fc;
+            --surface: #ffffff;
+            --surface2: #eef4f9;
+            --border: #d0dfe9;
+            --text: #0b1a2a;
+            --text2: #2a4055;
+            --text3: #5f7a94;
+            --blue: #0066cc;
+            --blue-light: #e6f2ff;
+            --blue-bright: #0088ff;
+            --cyan: #008c9e;
+            --cyan-light: #e0f4f7;
+            --orange: #cc5500;
+            --orange-light: #fff0e6;
+            --green: #008a4a;
+            --green-light: #e6f5ed;
+            --red: #c42e2e;
+            --red-light: #fce8e8;
+            --shadow: 0 8px 40px rgba(0, 20, 40, 0.08);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* ─── RESET ─── */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ─── SLIDE CONTAINER ─── */
+        .slide-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 32px 72px 32px;
+            background: var(--bg);
+        }
+
+        .slide {
+            width: 100%;
+            max-width: 1280px;
+            height: 100%;
+            max-height: 820px;
+            position: relative;
+            display: none;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            overflow-y: auto;
+            padding: 8px 4px 12px 4px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+        .slide::-webkit-scrollbar {
+            width: 4px;
+        }
+        .slide::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .slide::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* ─── CARDS ─── */
+        .card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: box-shadow var(--transition);
+        }
+        .card:hover {
+            box-shadow: 0 12px 48px rgba(0, 20, 40, 0.12);
+        }
+        .card-soft {
+            background: var(--surface2);
+            border: none;
+        }
+        .card-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            box-shadow: none;
+        }
+
+        /* ─── TYPOGRAPHY ─── */
+        .badge {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--blue);
+            background: var(--blue-light);
+            padding: 4px 14px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+        .badge.orange {
+            color: var(--orange);
+            background: var(--orange-light);
+        }
+        .badge.green {
+            color: var(--green);
+            background: var(--green-light);
+        }
+        .badge.cyan {
+            color: var(--cyan);
+            background: var(--cyan-light);
+        }
+        .badge.red {
+            color: var(--red);
+            background: var(--red-light);
+        }
+
+        .slide-title {
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.15;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+        .slide-title .highlight {
+            color: var(--blue);
+        }
+        .slide-title .highlight.orange {
+            color: var(--orange);
+        }
+        .slide-title .highlight.cyan {
+            color: var(--cyan);
+        }
+        .slide-title .highlight.green {
+            color: var(--green);
+        }
+        .slide-title .highlight.red {
+            color: var(--red);
+        }
+
+        .slide-subtitle {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text3);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .label-sm {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text3);
+        }
+
+        /* ─── GRID LAYOUTS ─── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        /* ─── COVER ─── */
+        .cover-slide {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .cover-slide .cover-icon {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 20px;
+        }
+        .cover-slide h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            max-width: 800px;
+        }
+        .cover-slide h1 span {
+            color: var(--blue);
+        }
+        .cover-slide h1 .o {
+            color: var(--orange);
+        }
+        .cover-slide h1 .c {
+            color: var(--cyan);
+        }
+        .cover-slide p {
+            font-size: 1.1rem;
+            color: var(--text3);
+            font-weight: 400;
+            max-width: 560px;
+            margin-top: 8px;
+        }
+        .cover-slide .cover-badge {
+            display: inline-block;
+            background: var(--blue);
+            color: #fff;
+            padding: 8px 28px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-top: 20px;
+        }
+
+        /* ─── ANIMATED LOOP (hero) ─── */
+        .loop-hero {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 24px 28px 28px 28px;
+            box-shadow: var(--shadow);
+            margin: 12px 0 16px 0;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        .loop-hero svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 10px;
+        }
+
+        /* ─── WIRING DIAGRAMS (animated SVG) ─── */
+        .wiring-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 20px 22px 22px 22px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        .wiring-card svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+        }
+
+        /* ─── FEATURE LISTS ─── */
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text2);
+        }
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        .feature-list li .fi {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            background: var(--blue-light);
+            color: var(--blue);
+        }
+        .feature-list li .fi.orange {
+            background: var(--orange-light);
+            color: var(--orange);
+        }
+        .feature-list li .fi.green {
+            background: var(--green-light);
+            color: var(--green);
+        }
+        .feature-list li .fi.cyan {
+            background: var(--cyan-light);
+            color: var(--cyan);
+        }
+        .feature-list li .fi.red {
+            background: var(--red-light);
+            color: var(--red);
+        }
+
+        /* ─── COMPARISON TABLE ─── */
+        .comp-table-wrap {
+            overflow-x: auto;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            background: var(--surface);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        .comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 600px;
+        }
+        .comp-table th {
+            text-align: left;
+            padding: 14px 18px;
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            background: var(--surface2);
+            color: var(--text2);
+            border-bottom: 2px solid var(--border);
+        }
+        .comp-table th.col-blue {
+            color: var(--blue);
+        }
+        .comp-table th.col-cyan {
+            color: var(--cyan);
+        }
+        .comp-table th.col-orange {
+            color: var(--orange);
+        }
+        .comp-table td {
+            padding: 12px 18px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            color: var(--text2);
+        }
+        .comp-table tr:last-child td {
+            border-bottom: none;
+        }
+        .comp-table tr:hover td {
+            background: var(--blue-light);
+        }
+        .comp-table .highlight-blue {
+            color: var(--blue);
+            font-weight: 600;
+        }
+        .comp-table .highlight-cyan {
+            color: var(--cyan);
+            font-weight: 600;
+        }
+        .comp-table .highlight-orange {
+            color: var(--orange);
+            font-weight: 600;
+        }
+
+        /* ─── DECISION TREE ─── */
+        .tree {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 0;
+        }
+        .tree-node {
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 14px 28px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-align: center;
+            max-width: 520px;
+            width: 100%;
+        }
+        .tree-node .sub {
+            font-weight: 400;
+            font-size: 0.8rem;
+            color: var(--text3);
+            display: block;
+            margin-top: 2px;
+        }
+        .tree-branch {
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: 100%;
+            max-width: 600px;
+        }
+        .tree-answer {
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 12px 20px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            text-align: center;
+            min-width: 140px;
+            flex: 1;
+        }
+        .tree-answer.yes {
+            border-color: var(--green);
+        }
+        .tree-answer.no {
+            border-color: var(--red);
+        }
+        .tree-answer .label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tree-answer .value {
+            font-weight: 700;
+            font-size: 1rem;
+            display: block;
+            margin-top: 2px;
+        }
+        .tree-arrow {
+            width: 2px;
+            height: 18px;
+            background: var(--border);
+            position: relative;
+        }
+        .tree-arrow::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 6px solid var(--border);
+        }
+
+        /* ─── WARNING CARDS ─── */
+        .warn-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .warn-card {
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 18px 20px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--red);
+            text-align: center;
+        }
+        .warn-card .icon {
+            font-size: 1.8rem;
+            margin-bottom: 6px;
+        }
+        .warn-card h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .warn-card p {
+            font-size: 0.8rem;
+            color: var(--text3);
+            line-height: 1.5;
+        }
+
+        /* ─── CHECKLIST ─── */
+        .check-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            box-shadow: var(--shadow);
+            font-size: 0.85rem;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        .check-item .box {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--blue);
+            border-radius: 5px;
+            flex-shrink: 0;
+            background: var(--surface);
+            transition: background var(--transition);
+        }
+        .check-item:hover .box {
+            background: var(--blue-light);
+        }
+
+        /* ─── QUIZ ─── */
+        .quiz-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .quiz-card {
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 18px 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+        .quiz-card .q {
+            display: inline-block;
+            background: var(--blue);
+            color: #fff;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 26px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            margin-bottom: 8px;
+        }
+        .quiz-card p {
+            font-size: 0.9rem;
+            color: var(--text2);
+            line-height: 1.5;
+        }
+        .quiz-card .hint {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: var(--text3);
+            font-style: italic;
+        }
+
+        /* ─── TRANSMITTER SHOWCASE ─── */
+        .tx-showcase {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+        .tx-card {
+            background: var(--surface);
+            border-radius: var(--radius-sm);
+            padding: 18px 14px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: transform var(--transition);
+        }
+        .tx-card:hover {
+            transform: translateY(-3px);
+        }
+        .tx-card .icon {
+            font-size: 2.2rem;
+            margin-bottom: 6px;
+        }
+        .tx-card h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .tx-card .desc {
+            font-size: 0.75rem;
+            color: var(--text3);
+            margin: 2px 0 8px 0;
+        }
+        .tx-card .tag {
+            display: inline-block;
+            padding: 2px 14px;
+            border-radius: 20px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tag-2 {
+            background: var(--blue-light);
+            color: var(--blue);
+        }
+        .tag-3 {
+            background: var(--cyan-light);
+            color: var(--cyan);
+        }
+        .tag-4 {
+            background: var(--orange-light);
+            color: var(--orange);
+        }
+
+        /* ─── NAVIGATION ─── */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            z-index: 1000;
+        }
+        .nav-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text2);
+            padding: 6px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all var(--transition);
+        }
+        .nav-btn:hover {
+            background: var(--blue-light);
+            border-color: var(--blue);
+            color: var(--blue);
+        }
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .slide-counter {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text3);
+        }
+        .progress-bar {
+            position: fixed;
+            bottom: 56px;
+            left: 0;
+            height: 3px;
+            background: var(--blue);
+            transition: width 0.4s ease;
+            z-index: 1000;
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* ─── THANK YOU ─── */
+        .thank-you {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .thank-you h1 {
+            font-size: 3.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--blue), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .thank-you p {
+            font-size: 1.1rem;
+            color: var(--text3);
+            max-width: 500px;
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 1024px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .grid-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .grid-4 {
+                grid-template-columns: 1fr 1fr;
+            }
+            .warn-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .quiz-grid {
+                grid-template-columns: 1fr;
+            }
+            .tx-showcase {
+                grid-template-columns: 1fr 1fr;
+            }
+            .check-grid {
+                grid-template-columns: 1fr;
+            }
+            .slide-title {
+                font-size: 1.8rem;
+            }
+            .cover-slide h1 {
+                font-size: 2.2rem;
+            }
+            .slide-container {
+                padding: 16px 16px 72px 16px;
+            }
+        }
+        @media (max-width: 600px) {
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .warn-grid {
+                grid-template-columns: 1fr;
+            }
+            .tx-showcase {
+                grid-template-columns: 1fr;
+            }
+            .tree-branch {
+                flex-direction: column;
+                align-items: center;
+            }
+            .slide-title {
+                font-size: 1.5rem;
+            }
+            .cover-slide h1 {
+                font-size: 1.7rem;
+            }
+            .nav-bar {
+                padding: 0 12px;
+            }
+            .nav-btn {
+                padding: 4px 12px;
+                font-size: 0.7rem;
+            }
+            .slide-container {
+                padding: 10px 8px 64px 8px;
+            }
+            .card {
+                padding: 16px;
+            }
+        }
+
+        /* ─── SCROLLBAR STYLING ─── */
+        .slide::-webkit-scrollbar {
+            width: 4px;
+        }
+        .slide::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .slide::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        /* ─── ANIMATIONS ─── */
+        @keyframes pulse-dot {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.3);
+            }
+        }
+        @keyframes flow-particle {
+            0% {
+                stroke-dashoffset: 0;
+            }
+            100% {
+                stroke-dashoffset: -40;
+            }
+        }
+        @keyframes glow-pulse {
+            0%,
+            100% {
+                filter: drop-shadow(0 0 4px rgba(0, 136, 255, 0.3));
+            }
+            50% {
+                filter: drop-shadow(0 0 16px rgba(0, 136, 255, 0.7));
+            }
+        }
+        .animate-flow {
+            animation: flow-particle 1.2s linear infinite;
+        }
+        .animate-glow {
+            animation: glow-pulse 2s ease-in-out infinite;
+        }
+        .animate-pulse-dot {
+            animation: pulse-dot 1.5s ease-in-out infinite;
+        }
+
+        /* ─── UTILITY ─── */
+        .mt-8 {
+            margin-top: 8px;
+        }
+        .mt-12 {
+            margin-top: 12px;
+        }
+        .mt-16 {
+            margin-top: 16px;
+        }
+        .mt-20 {
+            margin-top: 20px;
+        }
+        .mb-8 {
+            margin-bottom: 8px;
+        }
+        .mb-12 {
+            margin-bottom: 12px;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .gap-12 {
+            gap: 12px;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-sm {
+            font-size: 0.85rem;
+        }
+        .text-muted {
+            color: var(--text3);
+        }
+        .fw-700 {
+            font-weight: 700;
+        }
+        .color-blue {
+            color: var(--blue);
+        }
+        .color-cyan {
+            color: var(--cyan);
+        }
+        .color-orange {
+            color: var(--orange);
+        }
+        .color-green {
+            color: var(--green);
+        }
+        .color-red {
+            color: var(--red);
+        }
+        .bg-soft-blue {
+            background: var(--blue-light);
+        }
+        .bg-soft-cyan {
+            background: var(--cyan-light);
+        }
+        .bg-soft-orange {
+            background: var(--orange-light);
+        }
+        .bg-soft-green {
+            background: var(--green-light);
+        }
+        .bg-soft-red {
+            background: var(--red-light);
+        }
+        .flex {
+            display: flex;
+        }
+        .flex-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .flex-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .flex-col {
+            display: flex;
+            flex-direction: column;
+        }
+        .flex-1 {
+            flex: 1;
+        }
+        .gap-4 {
+            gap: 4px;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .gap-12 {
+            gap: 12px;
+        }
+        .gap-16 {
+            gap: 16px;
+        }
+        .gap-24 {
+            gap: 24px;
+        }
+        .w-full {
+            width: 100%;
+        }
+        .max-w-600 {
+            max-width: 600px;
+        }
+        .mx-auto {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .rounded {
+            border-radius: var(--radius-sm);
+        }
+
+        /* ─── PRINT ─── */
+        @media print {
+            .nav-bar,
+            .progress-bar {
+                display: none !important;
+            }
+            .slide-container {
+                padding: 20px !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+            .slide {
+                display: flex !important;
+                opacity: 1 !important;
+                page-break-after: always;
+                height: auto !important;
+                max-height: none !important;
+                overflow: visible !important;
+                padding: 20px 0 !important;
+            }
+            body {
+                overflow: visible !important;
+                height: auto !important;
+                background: #fff !important;
+            }
+            .card,
+            .loop-hero,
+            .wiring-card {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+            }
+            .cover-slide h1 {
+                font-size: 2.4rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 1 : COVER                           -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide active cover-slide" id="slide-1">
+            <div class="cover-icon">
+                <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="100" r="90" stroke="#d0dfe9" stroke-width="1.5"/>
+                    <circle cx="100" cy="100" r="70" stroke="#d0dfe9" stroke-width="1.5" stroke-dasharray="4,4"/>
+                    <circle cx="100" cy="100" r="50" stroke="#0066cc" stroke-width="2" stroke-dasharray="6,4" opacity="0.3"/>
+                    <rect x="72" y="58" width="56" height="70" rx="6" fill="#e6f2ff" stroke="#0066cc" stroke-width="2"/>
+                    <text x="100" y="82" text-anchor="middle" fill="#0066cc" font-size="9" font-weight="800">4-20mA</text>
+                    <text x="100" y="96" text-anchor="middle" fill="#008c9e" font-size="7">LOOP</text>
+                    <circle cx="86" cy="130" r="5" fill="#c42e2e" stroke="#c42e2e" stroke-width="1.5"/>
+                    <circle cx="100" cy="130" r="5" fill="#d0dfe9" stroke="#8b9bb4" stroke-width="1.5"/>
+                    <circle cx="114" cy="130" r="5" fill="#0066cc" stroke="#0066cc" stroke-width="1.5"/>
+                    <line x1="86" y1="135" x2="86" y2="158" stroke="#c42e2e" stroke-width="2.5"/>
+                    <line x1="100" y1="135" x2="100" y2="158" stroke="#8b9bb4" stroke-width="2.5"/>
+                    <line x1="114" y1="135" x2="114" y2="158" stroke="#0066cc" stroke-width="2.5"/>
+                    <!-- animated dots -->
+                    <circle cx="50" cy="100" r="3" fill="#0088ff" opacity="0.6">
+                        <animate attributeName="cx" values="50;150" dur="2.4s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.6;1;0.6" dur="2.4s" repeatCount="indefinite"/>
+                    </circle>
+                    <circle cx="150" cy="100" r="3" fill="#0088ff" opacity="0.6">
+                        <animate attributeName="cx" values="150;50" dur="2.4s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.6;1;0.6" dur="2.4s" repeatCount="indefinite"/>
+                    </circle>
+                    <rect x="165" y="85" width="22" height="30" rx="3" fill="#e6f5ed" stroke="#008a4a" stroke-width="1.5"/>
+                    <text x="176" y="103" text-anchor="middle" fill="#008a4a" font-size="6" font-weight="700">PLC</text>
+                    <line x1="158" y1="100" x2="165" y2="100" stroke="#008a4a" stroke-width="1.5"/>
+                    <rect x="13" y="85" width="22" height="30" rx="3" fill="#fce8e8" stroke="#c42e2e" stroke-width="1.5"/>
+                    <text x="24" y="103" text-anchor="middle" fill="#c42e2e" font-size="6" font-weight="700">24V</text>
+                    <line x1="35" y1="100" x2="42" y2="100" stroke="#c42e2e" stroke-width="1.5"/>
+                </svg>
+            </div>
+            <h1>Understanding <span>2-Wire</span>, <span class="o">3-Wire</span> &amp; <span>4-Wire</span> Transmitters</h1>
+            <p>Industrial wiring made simple — for technicians who want to get it right the first time.</p>
+            <div class="cover-badge">Beginner Friendly • Visual Guide</div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 2 : AGENDA                         -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-2">
+            <span class="badge">Training Plan</span>
+            <h1 class="slide-title">What We'll Cover <span class="highlight">Today</span></h1>
+            <p class="slide-subtitle">A clear path from zero to confident technician</p>
+            <div class="grid-2" style="margin-top: 8px;">
+                <div class="card" style="display:flex;align-items:center;gap:16px;">
+                    <div style="background:var(--blue-light);border-radius:12px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;color:var(--blue);flex-shrink:0;">01</div>
+                    <div><h4 style="font-size:0.95rem;">What is a Transmitter?</h4><p style="font-size:0.8rem;color:var(--text3);">The signal chain — sensor → transmitter → PLC</p></div>
+                </div>
+                <div class="card" style="display:flex;align-items:center;gap:16px;">
+                    <div style="background:var(--blue-light);border-radius:12px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;color:var(--blue);flex-shrink:0;">02</div>
+                    <div><h4 style="font-size:0.95rem;">The 4-20 mA Loop</h4><p style="font-size:0.8rem;color:var(--text3);">How the industry standard actually works</p></div>
+                </div>
+                <div class="card" style="display:flex;align-items:center;gap:16px;">
+                    <div style="background:var(--blue-light);border-radius:12px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;color:var(--blue);flex-shrink:0;">03</div>
+                    <div><h4 style="font-size:0.95rem;">2-Wire Transmitters</h4><p style="font-size:0.8rem;color:var(--text3);">Loop-powered — power &amp; signal on the same pair</p></div>
+                </div>
+                <div class="card" style="display:flex;align-items:center;gap:16px;">
+                    <div style="background:var(--blue-light);border-radius:12px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;color:var(--blue);flex-shrink:0;">04</div>
+                    <div><h4 style="font-size:0.95rem;">3-Wire Transmitters</h4><p style="font-size:0.8rem;color:var(--text3);">Separate power, shared ground</p></div>
+                </div>
+                <div class="card" style="display:flex;align-items:center;gap:16px;">
+                    <div style="background:var(--blue-light);border-radius:12px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;color:var(--blue);flex-shrink:0;">05</div>
+                    <div><h4 style="font-size:0.95rem;">4-Wire Transmitters</h4><p style="font-size:0.8rem;color:var(--text3);">Fully isolated power &amp; signal paths</p></div>
+                </div>
+                <div class="card" style="display:flex;align-items:center;gap:16px;">
+                    <div style="background:var(--blue-light);border-radius:12px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.1rem;color:var(--blue);flex-shrink:0;">06</div>
+                    <div><h4 style="font-size:0.95rem;">Installation &amp; Troubleshooting</h4><p style="font-size:0.8rem;color:var(--text3);">Real tips, common mistakes, and safety</p></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 3 : WHAT IS A TRANSMITTER?         -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-3">
+            <span class="badge">Fundamentals</span>
+            <h1 class="slide-title">What Exactly <span class="highlight">Is a Transmitter</span>?</h1>
+            <p class="slide-subtitle">It's the translator between the physical world and your control system</p>
+            <div class="loop-hero" style="padding-bottom:18px;">
+                <svg viewBox="0 0 800 160" style="width:100%;height:auto;">
+                    <rect x="10" y="20" width="110" height="80" rx="12" fill="var(--surface2)" stroke="var(--border)" stroke-width="1.5"/>
+                    <text x="65" y="55" text-anchor="middle" font-size="28">🏭</text>
+                    <text x="65" y="82" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text2)">Process</text>
+                    <text x="65" y="96" text-anchor="middle" font-size="8" fill="var(--text3)">(pressure, temp, flow)</text>
+
+                    <line x1="120" y1="60" x2="160" y2="60" stroke="var(--blue)" stroke-width="2.5" stroke-dasharray="6,4"/>
+                    <circle cx="140" cy="60" r="4" fill="var(--blue)">
+                        <animate attributeName="cx" values="122;158" dur="1.6s" repeatCount="indefinite"/>
+                    </circle>
+
+                    <rect x="160" y="15" width="110" height="90" rx="12" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2"/>
+                    <text x="215" y="50" text-anchor="middle" font-size="28">🔬</text>
+                    <text x="215" y="77" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text2)">Sensor</text>
+                    <text x="215" y="93" text-anchor="middle" font-size="8" fill="var(--text3)">(measures the process)</text>
+
+                    <line x1="270" y1="60" x2="310" y2="60" stroke="var(--blue)" stroke-width="2.5" stroke-dasharray="6,4"/>
+                    <circle cx="290" cy="60" r="4" fill="var(--blue)">
+                        <animate attributeName="cx" values="272;308" dur="1.6s" repeatCount="indefinite"/>
+                    </circle>
+
+                    <rect x="310" y="10" width="130" height="100" rx="12" fill="var(--surface)" stroke="var(--blue)" stroke-width="2.5" style="box-shadow:var(--shadow);"/>
+                    <text x="375" y="45" text-anchor="middle" font-size="28">📡</text>
+                    <text x="375" y="72" text-anchor="middle" font-size="13" font-weight="700" fill="var(--blue)">Transmitter</text>
+                    <text x="375" y="92" text-anchor="middle" font-size="8" fill="var(--text3)">converts to 4-20 mA</text>
+
+                    <line x1="440" y1="60" x2="480" y2="60" stroke="var(--blue)" stroke-width="3"/>
+                    <circle cx="460" cy="60" r="5" fill="var(--cyan)">
+                        <animate attributeName="cx" values="442;478" dur="1.2s" repeatCount="indefinite"/>
+                        <animate attributeName="r" values="4;6;4" dur="1.2s" repeatCount="indefinite"/>
+                    </circle>
+                    <rect x="460" y="40" width="70" height="20" rx="4" fill="var(--cyan-light)" stroke="var(--cyan)" stroke-width="1"/>
+                    <text x="495" y="54" text-anchor="middle" font-size="8" font-weight="700" fill="var(--cyan)">4-20 mA</text>
+
+                    <line x1="550" y1="60" x2="590" y2="60" stroke="var(--blue)" stroke-width="2.5" stroke-dasharray="6,4"/>
+                    <circle cx="570" cy="60" r="4" fill="var(--blue)">
+                        <animate attributeName="cx" values="552;588" dur="1.6s" repeatCount="indefinite"/>
+                    </circle>
+
+                    <rect x="590" y="15" width="110" height="90" rx="12" fill="var(--green-light)" stroke="var(--green)" stroke-width="2"/>
+                    <text x="645" y="50" text-anchor="middle" font-size="28">🖥️</text>
+                    <text x="645" y="77" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text2)">PLC</text>
+                    <text x="645" y="93" text-anchor="middle" font-size="8" fill="var(--text3)">reads the signal</text>
+
+                    <line x1="700" y1="60" x2="740" y2="60" stroke="var(--blue)" stroke-width="2.5" stroke-dasharray="6,4"/>
+                    <circle cx="720" cy="60" r="4" fill="var(--blue)">
+                        <animate attributeName="cx" values="702;738" dur="1.6s" repeatCount="indefinite"/>
+                    </circle>
+
+                    <rect x="740" y="20" width="50" height="80" rx="12" fill="var(--surface2)" stroke="var(--border)" stroke-width="1.5"/>
+                    <text x="765" y="50" text-anchor="middle" font-size="28">📊</text>
+                    <text x="765" y="80" text-anchor="middle" font-size="9" font-weight="600" fill="var(--text2)">SCADA</text>
+                </svg>
+                <p style="font-size:0.9rem;color:var(--text2);text-align:center;margin-top:8px;">
+                    <strong style="color:var(--text);">A transmitter</strong> takes a physical measurement (like pressure or temperature) and turns it into a <strong style="color:var(--blue);">4-20 mA electrical signal</strong> that your PLC can understand.
+                </p>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 4 : THE 4-20 mA LOOP (ANIMATED)    -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-4">
+            <span class="badge">Core Concept</span>
+            <h1 class="slide-title">The <span class="highlight">4-20 mA Loop</span> — Live!</h1>
+            <p class="slide-subtitle">Watch the current flow and see how the value changes</p>
+            <div class="loop-hero">
+                <svg viewBox="0 0 900 340" style="width:100%;height:auto;">
+                    <!-- background loop path -->
+                    <rect x="20" y="20" width="860" height="300" rx="16" fill="var(--surface2)" stroke="var(--border)" stroke-width="1"/>
+
+                    <!-- 24V Power Supply -->
+                    <rect x="40" y="50" width="80" height="60" rx="8" fill="var(--red-light)" stroke="var(--red)" stroke-width="2"/>
+                    <text x="80" y="78" text-anchor="middle" font-size="12" font-weight="700" fill="var(--red)">24V DC</text>
+                    <text x="80" y="96" text-anchor="middle" font-size="8" fill="var(--text3)">Power Supply</text>
+
+                    <!-- + line -->
+                    <line x1="120" y1="65" x2="240" y2="65" stroke="var(--red)" stroke-width="3"/>
+                    <text x="180" y="58" text-anchor="middle" font-size="8" font-weight="600" fill="var(--red)">+24V</text>
+                    <!-- animated particle + -->
+                    <circle cx="160" cy="65" r="5" fill="var(--red)" opacity="0.7">
+                        <animate attributeName="cx" values="125;235" dur="2s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+
+                    <!-- Transmitter -->
+                    <rect x="240" y="15" width="130" height="100" rx="10" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2.5"/>
+                    <text x="305" y="45" text-anchor="middle" font-size="22">📡</text>
+                    <text x="305" y="70" text-anchor="middle" font-size="12" font-weight="700" fill="var(--blue)">Transmitter</text>
+                    <text x="305" y="88" text-anchor="middle" font-size="8" fill="var(--text3)">2-Wire (loop-powered)</text>
+                    <!-- terminals -->
+                    <circle cx="255" cy="65" r="8" fill="var(--red)" stroke="#fff" stroke-width="1.5"/>
+                    <text x="255" y="68" text-anchor="middle" font-size="7" fill="#fff" font-weight="700">+</text>
+                    <circle cx="355" cy="65" r="8" fill="var(--text3)" stroke="#fff" stroke-width="1.5"/>
+                    <text x="355" y="68" text-anchor="middle" font-size="7" fill="#fff" font-weight="700">−</text>
+
+                    <!-- - line from transmitter -->
+                    <line x1="363" y1="65" x2="480" y2="65" stroke="var(--text3)" stroke-width="3"/>
+                    <text x="422" y="58" text-anchor="middle" font-size="8" font-weight="600" fill="var(--text3)">GND</text>
+                    <!-- animated particle - -->
+                    <circle cx="410" cy="65" r="5" fill="var(--text3)" opacity="0.7">
+                        <animate attributeName="cx" values="365;475" dur="2s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.7;1;0.7" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+
+                    <!-- PLC -->
+                    <rect x="480" y="25" width="100" height="80" rx="8" fill="var(--green-light)" stroke="var(--green)" stroke-width="2"/>
+                    <text x="530" y="55" text-anchor="middle" font-size="20">🖥️</text>
+                    <text x="530" y="78" text-anchor="middle" font-size="11" font-weight="700" fill="var(--green)">PLC</text>
+                    <text x="530" y="94" text-anchor="middle" font-size="7" fill="var(--text3)">AI Channel</text>
+
+                    <!-- return path from PLC to PSU -->
+                    <line x1="530" y1="105" x2="530" y2="220" stroke="var(--text3)" stroke-width="2.5"/>
+                    <line x1="530" y1="220" x2="80" y2="220" stroke="var(--text3)" stroke-width="2.5"/>
+                    <line x1="80" y1="220" x2="80" y2="110" stroke="var(--text3)" stroke-width="2.5"/>
+                    <text x="300" y="238" text-anchor="middle" font-size="8" fill="var(--text3)" font-weight="600">⏎ Return Path (GND)</text>
+
+                    <!-- Live current value display -->
+                    <rect x="620" y="40" width="240" height="100" rx="10" fill="var(--surface)" stroke="var(--blue)" stroke-width="2" style="box-shadow:var(--shadow);"/>
+                    <text x="740" y="68" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text2)">Live Loop Current</text>
+                    <text x="740" y="100" text-anchor="middle" font-size="32" font-weight="900" fill="var(--blue)">
+                        <animate attributeName="textContent" values="4.0;12.0;20.0;12.0;4.0" dur="6s" repeatCount="indefinite"/>
+                        12.0
+                        <animate attributeName="fill" values="#0066cc;#008c9e;#cc5500;#008c9e;#0066cc" dur="6s" repeatCount="indefinite"/>
+                    </text>
+                    <text x="740" y="122" text-anchor="middle" font-size="12" font-weight="700" fill="var(--text3)">mA</text>
+
+                    <!-- Process value gauge -->
+                    <rect x="620" y="160" width="240" height="80" rx="10" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+                    <text x="740" y="188" text-anchor="middle" font-size="10" font-weight="600" fill="var(--text2)">Process Value</text>
+                    <rect x="650" y="202" width="180" height="18" rx="9" fill="var(--surface2)" stroke="var(--border)" stroke-width="1"/>
+                    <rect x="652" y="204" width="0" height="14" rx="7" fill="var(--blue)" id="gauge-bar">
+                        <animate attributeName="width" values="0;90;176;90;0" dur="6s" repeatCount="indefinite"/>
+                    </rect>
+                    <text x="740" y="218" text-anchor="middle" font-size="9" font-weight="600" fill="var(--text)" id="gauge-label">
+                        <animate attributeName="textContent" values="0%;50%;100%;50%;0%" dur="6s" repeatCount="indefinite"/>
+                        50%
+                    </text>
+
+                    <!-- legend -->
+                    <rect x="50" y="260" width="180" height="40" rx="6" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/>
+                    <text x="140" y="278" text-anchor="middle" font-size="8" fill="var(--text2)" font-weight="600">🔴 4 mA = 0% &nbsp;|&nbsp; 🔵 12 mA = 50%</text>
+                    <text x="140" y="292" text-anchor="middle" font-size="8" fill="var(--text2)" font-weight="600">🟢 20 mA = 100%</text>
+
+                    <!-- highlight ring around transmitter -->
+                    <circle cx="305" cy="65" r="55" fill="none" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="4,4" opacity="0.5">
+                        <animate attributeName="r" values="55;65;55" dur="2s" repeatCount="indefinite"/>
+                        <animate attributeName="opacity" values="0.5;0.2;0.5" dur="2s" repeatCount="indefinite"/>
+                    </circle>
+                </svg>
+            </div>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:4px;">
+                <div class="card" style="flex:1;padding:14px 18px;background:var(--blue-light);border-color:var(--blue);">
+                    <span style="font-weight:700;color:var(--blue);">💡 Why 4 mA and not 0 mA?</span>
+                    <p style="font-size:0.85rem;color:var(--text2);margin-top:4px;">4 mA is <strong>"live zero"</strong> — if the wire breaks, the current drops to <strong>0 mA</strong>, and the PLC knows there's a fault. Smart!</p>
+                </div>
+                <div class="card" style="flex:1;padding:14px 18px;background:var(--orange-light);border-color:var(--orange);">
+                    <span style="font-weight:700;color:var(--orange);">🔧 Technician Tip</span>
+                    <p style="font-size:0.85rem;color:var(--text2);margin-top:4px;">Always measure <strong>current in series</strong> (not voltage). A multimeter in mA mode placed in the loop tells you the exact process value.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 5 : 2-WIRE TRANSMITTER             -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-5">
+            <span class="badge">2-Wire Systems</span>
+            <h1 class="slide-title">The <span class="highlight">2-Wire</span> Transmitter</h1>
+            <p class="slide-subtitle">Power and signal travel together on the same two wires — simple and clever</p>
+            <div class="grid-2">
+                <div>
+                    <div class="card" style="margin-bottom:14px;">
+                        <h4 style="color:var(--blue);margin-bottom:10px;font-size:1rem;">⚡ How It Works</h4>
+                        <ul class="feature-list">
+                            <li><span class="fi">🔌</span><span>The <strong>24V power supply</strong> sends voltage into the loop</span></li>
+                            <li><span class="fi">📡</span><span>The transmitter <strong>draws 4-20 mA</strong> from the loop to power itself</span></li>
+                            <li><span class="fi">📊</span><span>The current value <strong>is the measurement</strong> — e.g., 12 mA = 50%</span></li>
+                            <li><span class="fi">🖥️</span><span>The PLC reads this current through a <strong>250Ω shunt resistor</strong></span></li>
+                        </ul>
+                    </div>
+                    <div class="card" style="background:var(--orange-light);border-color:var(--orange);">
+                        <span style="font-weight:700;color:var(--orange);">🧑‍🔧 Field Tip</span>
+                        <p style="font-size:0.85rem;color:var(--text2);margin-top:4px;">If you disconnect any wire, the loop <strong>opens</strong> and the PLC reads <strong>0 mA</strong> — that's how it detects a broken wire. Always check continuity first!</p>
+                    </div>
+                </div>
+                <div class="wiring-card">
+                    <h4 style="text-align:center;color:var(--blue);margin-bottom:14px;font-size:0.95rem;">Wiring Diagram — 2-Wire</h4>
+                    <svg viewBox="0 0 420 310" style="width:100%;height:auto;">
+                        <!-- PSU -->
+                        <rect x="15" y="30" width="80" height="55" rx="8" fill="var(--red-light)" stroke="var(--red)" stroke-width="2"/>
+                        <text x="55" y="56" text-anchor="middle" font-size="10" font-weight="700" fill="var(--red)">24V DC</text>
+                        <text x="55" y="72" text-anchor="middle" font-size="7" fill="var(--text3)">PSU</text>
+                        <!-- + line -->
+                        <line x1="95" y1="45" x2="165" y2="45" stroke="var(--red)" stroke-width="3"/>
+                        <text x="130" y="38" text-anchor="middle" font-size="7" font-weight="600" fill="var(--red)">+24V</text>
+                        <!-- animated dot -->
+                        <circle cx="120" cy="45" r="4" fill="var(--red)" opacity="0.8">
+                            <animate attributeName="cx" values="100;160" dur="1.8s" repeatCount="indefinite"/>
+                        </circle>
+                        <!-- Transmitter -->
+                        <rect x="165" y="15" width="100" height="90" rx="8" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2.5"/>
+                        <text x="215" y="45" text-anchor="middle" font-size="14" font-weight="700" fill="var(--blue)">TX</text>
+                        <text x="215" y="62" text-anchor="middle" font-size="8" fill="var(--text3)">2-Wire</text>
+                        <circle cx="180" cy="65" r="7" fill="var(--red)" stroke="#fff" stroke-width="1.5"/>
+                        <text x="180" y="68" text-anchor="middle" font-size="6" fill="#fff" font-weight="700">+</text>
+                        <circle cx="250" cy="65" r="7" fill="var(--text3)" stroke="#fff" stroke-width="1.5"/>
+                        <text x="250" y="68" text-anchor="middle" font-size="6" fill="#fff" font-weight="700">−</text>
+                        <!-- - line -->
+                        <line x1="257" y1="65" x2="330" y2="65" stroke="var(--text3)" stroke-width="3"/>
+                        <text x="293" y="58" text-anchor="middle" font-size="7" font-weight="600" fill="var(--text3)">GND</text>
+                        <!-- animated dot -->
+                        <circle cx="285" cy="65" r="4" fill="var(--text3)" opacity="0.8">
+                            <animate attributeName="cx" values="262;325" dur="1.8s" repeatCount="indefinite"/>
+                        </circle>
+                        <!-- PLC -->
+                        <rect x="330" y="30" width="75" height="70" rx="8" fill="var(--green-light)" stroke="var(--green)" stroke-width="2"/>
+                        <text x="367" y="56" text-anchor="middle" font-size="10" font-weight="700" fill="var(--green)">PLC</text>
+                        <text x="367" y="73" text-anchor="middle" font-size="7" fill="var(--text3)">AI Ch 1</text>
+                        <!-- return path -->
+                        <line x1="367" y1="100" x2="367" y2="240" stroke="var(--text3)" stroke-width="2.5"/>
+                        <line x1="367" y1="240" x2="55" y2="240" stroke="var(--text3)" stroke-width="2.5"/>
+                        <line x1="55" y1="240" x2="55" y2="85" stroke="var(--text3)" stroke-width="2.5"/>
+                        <text x="210" y="258" text-anchor="middle" font-size="8" fill="var(--text3)" font-weight="600">⏎ Current Loop Return</text>
+                        <!-- loop label -->
+                        <rect x="135" y="270" width="150" height="24" rx="6" fill="var(--cyan-light)" stroke="var(--cyan)" stroke-width="1.5"/>
+                        <text x="210" y="286" text-anchor="middle" font-size="8" font-weight="700" fill="var(--cyan)">🔄 COMPLETE LOOP</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 6 : 2-WIRE PROS & CONS             -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-6">
+            <span class="badge">2-Wire Systems</span>
+            <h1 class="slide-title">2-Wire: <span class="highlight">Pros &amp; Cons</span></h1>
+            <p class="slide-subtitle">When to use it — and when to pick something else</p>
+            <div class="grid-2">
+                <div class="card" style="border-left:4px solid var(--green);">
+                    <h4 style="color:var(--green);margin-bottom:12px;font-size:1rem;">✅ Advantages</h4>
+                    <ul class="feature-list">
+                        <li><span class="fi green">💰</span><span><strong>Lowest wiring cost</strong> — only 2 conductors needed</span></li>
+                        <li><span class="fi green">🔧</span><span><strong>Simple installation</strong> — fewer terminals to mess up</span></li>
+                        <li><span class="fi green">🛡️</span><span><strong>Intrinsic safety</strong> — low power = safer in hazardous areas</span></li>
+                        <li><span class="fi green">📏</span><span><strong>Long cable runs</strong> — current signal is noise-immune</span></li>
+                        <li><span class="fi green">🔋</span><span><strong>Self-powered</strong> — no separate power feed needed</span></li>
+                    </ul>
+                </div>
+                <div class="card" style="border-left:4px solid var(--red);">
+                    <h4 style="color:var(--red);margin-bottom:12px;font-size:1rem;">⚠️ Limitations</h4>
+                    <ul class="feature-list">
+                        <li><span class="fi red">⚡</span><span><strong>Low power budget</strong> — can't drive displays or heaters</span></li>
+                        <li><span class="fi red">🌡️</span><span><strong>Limited for RTDs</strong> — 3-wire RTDs need more conductors</span></li>
+                        <li><span class="fi red">📊</span><span><strong>No local display</strong> — power budget is too tight</span></li>
+                        <li><span class="fi red">🔌</span><span><strong>Voltage drop</strong> — long runs may starve the device</span></li>
+                    </ul>
+                    <div style="margin-top:14px;padding:12px 16px;background:var(--blue-light);border-radius:8px;">
+                        <span style="font-weight:700;color:var(--blue);">🏭 Common Uses:</span>
+                        <span style="font-size:0.85rem;color:var(--text2);"> Pressure, level, simple temperature — the workhorses of industry.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 7 : 3-WIRE TRANSMITTER             -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-7">
+            <span class="badge cyan">3-Wire Systems</span>
+            <h1 class="slide-title">The <span class="highlight cyan">3-Wire</span> Transmitter</h1>
+            <p class="slide-subtitle">Separate power supply with a shared ground — more power, more flexibility</p>
+            <div class="grid-2">
+                <div>
+                    <div class="card" style="margin-bottom:14px;">
+                        <h4 style="color:var(--cyan);margin-bottom:10px;font-size:1rem;">🔧 How It Works</h4>
+                        <ul class="feature-list">
+                            <li><span class="fi" style="background:var(--red-light);color:var(--red);">🔴</span><span><strong>Wire 1 (+V):</strong> Power supply positive to transmitter</span></li>
+                            <li><span class="fi" style="background:var(--surface2);color:var(--text3);">⚫</span><span><strong>Wire 2 (GND):</strong> Common ground shared by power and signal</span></li>
+                            <li><span class="fi" style="background:var(--blue-light);color:var(--blue);">🔵</span><span><strong>Wire 3 (Signal):</strong> 4-20 mA output to PLC</span></li>
+                            <li><span class="fi cyan">💡</span><span><strong>More power</strong> for local displays and advanced features</span></li>
+                        </ul>
+                    </div>
+                    <div class="card" style="background:var(--cyan-light);border-color:var(--cyan);">
+                        <span style="font-weight:700;color:var(--cyan);">✅ When to Choose 3-Wire</span>
+                        <p style="font-size:0.85rem;color:var(--text2);margin-top:4px;">Flow meters with local displays, devices that need more power than a 2-wire loop provides, or when you want separate power without full isolation.</p>
+                    </div>
+                </div>
+                <div class="wiring-card">
+                    <h4 style="text-align:center;color:var(--cyan);margin-bottom:14px;font-size:0.95rem;">Wiring Diagram — 3-Wire</h4>
+                    <svg viewBox="0 0 420 330" style="width:100%;height:auto;">
+                        <!-- PSU -->
+                        <rect x="15" y="20" width="80" height="55" rx="8" fill="var(--red-light)" stroke="var(--red)" stroke-width="2"/>
+                        <text x="55" y="46" text-anchor="middle" font-size="10" font-weight="700" fill="var(--red)">24V DC</text>
+                        <text x="55" y="62" text-anchor="middle" font-size="7" fill="var(--text3)">PSU</text>
+                        <!-- + line -->
+                        <line x1="95" y1="35" x2="155" y2="35" stroke="var(--red)" stroke-width="3"/>
+                        <text x="125" y="28" text-anchor="middle" font-size="7" font-weight="600" fill="var(--red)">+24V</text>
+                        <!-- Transmitter -->
+                        <rect x="155" y="8" width="110" height="130" rx="8" fill="var(--cyan-light)" stroke="var(--cyan)" stroke-width="2.5"/>
+                        <text x="210" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="var(--cyan)">TX</text>
+                        <text x="210" y="55" text-anchor="middle" font-size="8" fill="var(--text3)">3-Wire</text>
+                        <!-- terminals -->
+                        <circle cx="170" cy="80" r="7" fill="var(--red)" stroke="#fff" stroke-width="1.5"/>
+                        <text x="170" y="83" text-anchor="middle" font-size="6" fill="#fff" font-weight="700">+V</text>
+                        <circle cx="210" cy="80" r="7" fill="var(--text3)" stroke="#fff" stroke-width="1.5"/>
+                        <text x="210" y="83" text-anchor="middle" font-size="6" fill="#fff" font-weight="700">G</text>
+                        <circle cx="250" cy="80" r="7" fill="var(--blue)" stroke="#fff" stroke-width="1.5"/>
+                        <text x="250" y="83" text-anchor="middle" font-size="6" fill="#fff" font-weight="700">S</text>
+                        <!-- signal line -->
+                        <line x1="257" y1="80" x2="335" y2="80" stroke="var(--blue)" stroke-width="3"/>
+                        <text x="296" y="72" text-anchor="middle" font-size="7" font-weight="600" fill="var(--blue)">4-20 mA</text>
+                        <!-- animated dot -->
+                        <circle cx="280" cy="80" r="4" fill="var(--blue)" opacity="0.8">
+                            <animate attributeName="cx" values="262;330" dur="1.6s" repeatCount="indefinite"/>
+                        </circle>
+                        <!-- GND from transmitter down -->
+                        <line x1="210" y1="87" x2="210" y2="180" stroke="var(--text3)" stroke-width="2.5"/>
+                        <line x1="210" y1="180" x2="367" y2="180" stroke="var(--text3)" stroke-width="2.5"/>
+                        <text x="288" y="194" text-anchor="middle" font-size="7" fill="var(--text3)" font-weight="600">Common GND</text>
+                        <!-- PLC -->
+                        <rect x="335" y="40" width="70" height="80" rx="8" fill="var(--green-light)" stroke="var(--green)" stroke-width="2"/>
+                        <text x="370" y="66" text-anchor="middle" font-size="10" font-weight="700" fill="var(--green)">PLC</text>
+                        <text x="370" y="83" text-anchor="middle" font-size="7" fill="var(--text3)">AI Ch 1</text>
+                        <!-- return to PSU -->
+                        <line x1="370" y1="120" x2="370" y2="180" stroke="var(--text3)" stroke-width="2.5"/>
+                        <line x1="370" y1="180" x2="55" y2="180" stroke="var(--text3)" stroke-width="2.5"/>
+                        <line x1="55" y1="180" x2="55" y2="75" stroke="var(--text3)" stroke-width="2.5"/>
+                        <!-- color legend -->
+                        <rect x="15" y="250" width="390" height="44" rx="6" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/>
+                        <text x="35" y="270" fill="var(--red)" font-size="8" font-weight="600">🔴 +24V Power</text>
+                        <text x="135" y="270" fill="var(--text3)" font-size="8" font-weight="600">⚫ Common GND</text>
+                        <text x="250" y="270" fill="var(--blue)" font-size="8" font-weight="600">🔵 4-20 mA Signal</text>
+                        <text x="35" y="286" fill="var(--green)" font-size="8" font-weight="600">🟢 PLC Analog Input</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 8 : 4-WIRE TRANSMITTER             -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-8">
+            <span class="badge orange">4-Wire Systems</span>
+            <h1 class="slide-title">The <span class="highlight orange">4-Wire</span> Transmitter</h1>
+            <p class="slide-subtitle">Fully isolated — power and signal are completely separate for maximum accuracy</p>
+            <div class="grid-2">
+                <div>
+                    <div class="card" style="margin-bottom:14px;">
+                        <h4 style="color:var(--orange);margin-bottom:10px;font-size:1rem;">🔧 How It Works</h4>
+                        <ul class="feature-list">
+                            <li><span class="fi orange">🔴</span><span><strong>Wire 1 &amp; 2:</strong> Dedicated power supply (+V and -V)</span></li>
+                            <li><span class="fi orange">🔵</span><span><strong>Wire 3 &amp; 4:</strong> Dedicated signal output (+Sig and -Sig)</span></li>
+                            <li><span class="fi orange">🛡️</span><span><strong>Galvanic isolation</strong> between power and signal — no ground loops</span></li>
+                            <li><span class="fi orange">⚡</span><span><strong>Highest power</strong> for complex electronics and displays</span></li>
+                        </ul>
+                    </div>
+                    <div class="card" style="background:var(--orange-light);border-color:var(--orange);">
+                        <span style="font-weight:700;color:var(--orange);">🛡️ Isolation Barrier</span>
+                        <div style="display:flex;align-items:center;gap:12px;margin-top:6px;flex-wrap:wrap;">
+                            <span style="font-size:0.8rem;color:var(--text2);background:var(--red-light);padding:4px 12px;border-radius:6px;font-weight:600;">POWER SIDE</span>
+                            <span style="font-size:1.2rem;">⛔</span>
+                            <span style="font-size:0.8rem;color:var(--text2);background:var(--orange-light);padding:4px 12px;border-radius:6px;font-weight:600;border:2px dashed var(--orange);">ISOLATION</span>
+                            <span style="font-size:1.2rem;">⛔</span>
+                            <span style="font-size:0.8rem;color:var(--text2);background:var(--blue-light);padding:4px 12px;border-radius:6px;font-weight:600;">SIGNAL SIDE</span>
+                        </div>
+                        <p style="font-size:0.8rem;color:var(--text3);margin-top:6px;">The isolation barrier blocks ground loops and protects sensitive signal circuits from power-side noise and spikes.</p>
+                    </div>
+                </div>
+                <div class="wiring-card">
+                    <h4 style="text-align:center;color:var(--orange);margin-bottom:14px;font-size:0.95rem;">Wiring Diagram — 4-Wire</h4>
+                    <svg viewBox="0 0 420 350" style="width:100%;height:auto;">
+                        <!-- PSU -->
+                        <rect x="15" y="20" width="80" height="60" rx="8" fill="var(--red-light)" stroke="var(--red)" stroke-width="2"/>
+                        <text x="55" y="46" text-anchor="middle" font-size="10" font-weight="700" fill="var(--red)">24V DC</text>
+                        <text x="55" y="64" text-anchor="middle" font-size="7" fill="var(--text3)">PSU</text>
+                        <!-- +V and -V lines -->
+                        <line x1="95" y1="32" x2="155" y2="32" stroke="var(--red)" stroke-width="3"/>
+                        <text x="125" y="26" text-anchor="middle" font-size="7" font-weight="600" fill="var(--red)">+V</text>
+                        <line x1="95" y1="62" x2="155" y2="62" stroke="var(--text3)" stroke-width="3"/>
+                        <text x="125" y="74" text-anchor="middle" font-size="7" font-weight="600" fill="var(--text3)">−V</text>
+                        <!-- Transmitter -->
+                        <rect x="155" y="5" width="115" height="140" rx="8" fill="var(--orange-light)" stroke="var(--orange)" stroke-width="2.5"/>
+                        <text x="212" y="35" text-anchor="middle" font-size="14" font-weight="700" fill="var(--orange)">TX</text>
+                        <text x="212" y="52" text-anchor="middle" font-size="8" fill="var(--text3)">4-Wire</text>
+                        <!-- power terminals -->
+                        <circle cx="170" cy="75" r="7" fill="var(--red)" stroke="#fff" stroke-width="1.5"/>
+                        <text x="170" y="78" text-anchor="middle" font-size="6" fill="#fff" font-weight="700">+V</text>
+                        <circle cx="170" cy="100" r="7" fill="var(--text3)" stroke="#fff" stroke-width="1.5"/>
+                        <text x="170" y="103" text-anchor="middle" font-size="6" fill="#fff" font-weight="700">−V</text>
+                        <!-- isolation line -->
+                        <line x1="212" y1="115" x2="212" y2="135" stroke="var(--orange)" stroke-width="2" stroke-dasharray="4,4"/>
+                        <text x="212" y="132" text-anchor="middle" font-size="6" fill="var(--orange)" font-weight="700">⛔ ISO</text>
+                        <!-- signal terminals -->
+                        <circle cx="255" cy="75" r="7" fill="var(--blue)" stroke="#fff" stroke-width="1.5"/>
+                        <text x="255" y="78" text-anchor="middle" font-size="6" fill="#fff" font-weight="700">+I</text>
+                        <circle cx="255" cy="100" r="7" fill="var(--cyan)" stroke="#fff" stroke-width="1.5"/>
+                        <text x="255" y="103" text-anchor="middle" font-size="6" fill="#fff" font-weight="700">−I</text>
+                        <!-- signal lines -->
+                        <line x1="262" y1="75" x2="335" y2="75" stroke="var(--blue)" stroke-width="3"/>
+                        <text x="298" y="68" text-anchor="middle" font-size="7" font-weight="600" fill="var(--blue)">+Sig</text>
+                        <line x1="262" y1="100" x2="335" y2="100" stroke="var(--cyan)" stroke-width="3"/>
+                        <text x="298" y="112" text-anchor="middle" font-size="7" font-weight="600" fill="var(--cyan)">−Sig</text>
+                        <!-- animated dots -->
+                        <circle cx="285" cy="75" r="4" fill="var(--blue)" opacity="0.8">
+                            <animate attributeName="cx" values="267;330" dur="1.6s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="285" cy="100" r="4" fill="var(--cyan)" opacity="0.8">
+                            <animate attributeName="cx" values="267;330" dur="1.6s" repeatCount="indefinite"/>
+                        </circle>
+                        <!-- PLC -->
+                        <rect x="335" y="40" width="70" height="95" rx="8" fill="var(--green-light)" stroke="var(--green)" stroke-width="2"/>
+                        <text x="370" y="66" text-anchor="middle" font-size="10" font-weight="700" fill="var(--green)">PLC</text>
+                        <text x="370" y="83" text-anchor="middle" font-size="7" fill="var(--text3)">AI Ch 1</text>
+                        <text x="370" y="100" text-anchor="middle" font-size="6" fill="var(--text3)">Isolated</text>
+                        <!-- legend -->
+                        <rect x="15" y="270" width="390" height="50" rx="6" fill="var(--surface)" stroke="var(--border)" stroke-width="1"/>
+                        <text x="30" y="290" fill="var(--red)" font-size="8" font-weight="600">🔴 +V Power</text>
+                        <text x="110" y="290" fill="var(--text3)" font-size="8" font-weight="600">⚫ −V / GND</text>
+                        <text x="195" y="290" fill="var(--blue)" font-size="8" font-weight="600">🔵 +Signal</text>
+                        <text x="280" y="290" fill="var(--cyan)" font-size="8" font-weight="600">🔵 −Signal Return</text>
+                        <text x="30" y="306" fill="var(--green)" font-size="8" font-weight="600">🟢 PLC Isolated AI</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 9 : 4-WIRE PROS & APPS             -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-9">
+            <span class="badge orange">4-Wire Systems</span>
+            <h1 class="slide-title">4-Wire: <span class="highlight orange">Benefits &amp; Applications</span></h1>
+            <p class="slide-subtitle">When full isolation and high power are non-negotiable</p>
+            <div class="grid-2">
+                <div class="card" style="border-left:4px solid var(--green);">
+                    <h4 style="color:var(--green);margin-bottom:12px;font-size:1rem;">✅ Advantages</h4>
+                    <ul class="feature-list">
+                        <li><span class="fi green">🛡️</span><span><strong>Complete galvanic isolation</strong> — zero ground loops</span></li>
+                        <li><span class="fi green">⚡</span><span><strong>Highest power budget</strong> — drives displays, heaters, relays</span></li>
+                        <li><span class="fi green">📊</span><span><strong>Best accuracy</strong> — no power supply noise on signal</span></li>
+                        <li><span class="fi green">🔌</span><span><strong>Flexible power</strong> — can use AC or different DC voltages</span></li>
+                        <li><span class="fi green">🌐</span><span><strong>Multi-output</strong> — some provide 4-20mA + digital</span></li>
+                    </ul>
+                </div>
+                <div class="card" style="border-left:4px solid var(--orange);">
+                    <h4 style="color:var(--orange);margin-bottom:12px;font-size:1rem;">🏭 Common Applications</h4>
+                    <ul class="feature-list">
+                        <li><span class="fi orange">🧪</span><span><strong>Gas analyzers</strong> — complex electronics need isolation</span></li>
+                        <li><span class="fi orange">⚗️</span><span><strong>pH / conductivity</strong> — sensitive electrochemical measurements</span></li>
+                        <li><span class="fi orange">🔥</span><span><strong>High-temp furnaces</strong> — heated sensor heads need extra power</span></li>
+                        <li><span class="fi orange">📡</span><span><strong>Smart transmitters</strong> — HART + display + diagnostics</span></li>
+                        <li><span class="fi orange">🏥</span><span><strong>Critical safety loops</strong> — SIL-rated applications</span></li>
+                    </ul>
+                    <div style="margin-top:14px;padding:12px 16px;background:var(--orange-light);border-radius:8px;">
+                        <span style="font-weight:700;color:var(--orange);">💡 Remember:</span>
+                        <span style="font-size:0.85rem;color:var(--text2);"> 4-wire costs more in cabling but saves money by preventing ground loop issues and signal corruption in critical measurements.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 10 : COMPARISON TABLE              -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-10">
+            <span class="badge">Side-by-Side</span>
+            <h1 class="slide-title">Complete <span class="highlight">Comparison</span></h1>
+            <p class="slide-subtitle">All three types — see the differences at a glance</p>
+            <div class="comp-table-wrap">
+                <table class="comp-table">
+                    <thead>
+                        <tr>
+                            <th>Criteria</th>
+                            <th class="col-blue">2-Wire</th>
+                            <th class="col-cyan">3-Wire</th>
+                            <th class="col-orange">4-Wire</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Wires</strong></td><td class="highlight-blue">2</td><td class="highlight-cyan">3</td><td class="highlight-orange">4</td></tr>
+                        <tr><td><strong>Power Source</strong></td><td>From 4-20 mA loop</td><td>Separate +24V</td><td>Separate power supply</td></tr>
+                        <tr><td><strong>Isolation</strong></td><td>None</td><td>Partial (shared GND)</td><td class="highlight-orange">Full galvanic</td></tr>
+                        <tr><td><strong>Power Budget</strong></td><td>Low (~20-30 mW)</td><td>Medium (~100-500 mW)</td><td class="highlight-orange">High (unlimited)</td></tr>
+                        <tr><td><strong>Wiring Cost</strong></td><td class="highlight-blue">Lowest</td><td>Medium</td><td>Highest</td></tr>
+                        <tr><td><strong>Complexity</strong></td><td class="highlight-blue">Simplest</td><td>Medium</td><td>Most complex</td></tr>
+                        <tr><td><strong>Noise Immunity</strong></td><td>Good</td><td>Good</td><td class="highlight-orange">Excellent</td></tr>
+                        <tr><td><strong>Accuracy</strong></td><td>Good (0.1-0.25%)</td><td>Good (0.1-0.25%)</td><td class="highlight-orange">Best (0.025-0.1%)</td></tr>
+                        <tr><td><strong>Local Display</strong></td><td>Rare</td><td>Often</td><td>Always</td></tr>
+                        <tr><td><strong>Typical Use</strong></td><td>Pressure, Level, Temp</td><td>Flow, some Level</td><td>Analyzers, Critical</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 11 : DECISION TREE                  -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-11">
+            <span class="badge">Decision Tool</span>
+            <h1 class="slide-title">Which Transmitter <span class="highlight">Should I Choose</span>?</h1>
+            <p class="slide-subtitle">A simple flow for field technicians</p>
+            <div class="tree">
+                <div class="tree-node">Do you need <strong>full galvanic isolation</strong> between power and signal? <span class="sub">(No ground loops, maximum accuracy)</span></div>
+                <div class="tree-arrow"></div>
+                <div class="tree-branch">
+                    <div class="tree-answer yes"><span class="label">✅ YES</span><span class="value" style="color:var(--orange);">Use 4-Wire</span><span style="font-size:0.7rem;color:var(--text3);display:block;">Analyzers, critical loops</span></div>
+                    <div class="tree-answer no"><span class="label">❌ NO</span><span class="value" style="color:var(--text2);">Continue →</span></div>
+                </div>
+                <div class="tree-arrow"></div>
+                <div class="tree-node">Does the device need <strong>more power</strong> than a 2-wire loop can provide? <span class="sub">(Display, heater, relay, etc.)</span></div>
+                <div class="tree-arrow"></div>
+                <div class="tree-branch">
+                    <div class="tree-answer yes"><span class="label">✅ YES</span><span class="value" style="color:var(--cyan);">Use 3-Wire</span><span style="font-size:0.7rem;color:var(--text3);display:block;">Flow meters, powered devices</span></div>
+                    <div class="tree-answer yes"><span class="label">❌ NO</span><span class="value" style="color:var(--blue);">Use 2-Wire</span><span style="font-size:0.7rem;color:var(--text3);display:block;">Pressure, level, simple temp</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 12 : REAL EXAMPLES                  -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-12">
+            <span class="badge">Real World</span>
+            <h1 class="slide-title">Real <span class="highlight">Industrial Examples</span></h1>
+            <p class="slide-subtitle">Which wiring type do these common transmitters use?</p>
+            <div class="tx-showcase">
+                <div class="tx-card">
+                    <div class="icon">🌡️</div>
+                    <h4>Pressure Transmitter</h4>
+                    <p class="desc">Measures pipe / tank pressure</p>
+                    <span class="tag tag-2">2-WIRE</span>
+                    <p style="font-size:0.7rem;color:var(--text3);margin-top:6px;">Most common in industry — simple, reliable</p>
+                </div>
+                <div class="tx-card">
+                    <div class="icon">💨</div>
+                    <h4>Flow Transmitter</h4>
+                    <p class="desc">Measures fluid / gas flow rate</p>
+                    <span class="tag tag-3">3-WIRE</span>
+                    <p style="font-size:0.7rem;color:var(--text3);margin-top:6px;">Often needs local display &amp; more power</p>
+                </div>
+                <div class="tx-card">
+                    <div class="icon">🌡️</div>
+                    <h4>Temperature Transmitter</h4>
+                    <p class="desc">Converts RTD / TC to 4-20mA</p>
+                    <span class="tag tag-2">2-WIRE</span>
+                    <p style="font-size:0.7rem;color:var(--text3);margin-top:6px;">Head-mount transmitters are usually 2-wire</p>
+                </div>
+                <div class="tx-card">
+                    <div class="icon">📏</div>
+                    <h4>Level Transmitter</h4>
+                    <p class="desc">Measures liquid / solid level</p>
+                    <span class="tag tag-2">2-WIRE</span>
+                    <p style="font-size:0.7rem;color:var(--text3);margin-top:6px;">Hydrostatic &amp; radar types are typically 2-wire</p>
+                </div>
+            </div>
+            <div class="card" style="margin-top:16px;background:var(--blue-light);border-color:var(--blue);text-align:center;">
+                <span style="font-weight:700;color:var(--blue);">💡 Pro Tip:</span>
+                <span style="font-size:0.9rem;color:var(--text2);"> Always check the <strong>datasheet</strong> before wiring! The same type of measurement can come in 2-wire, 3-wire, or 4-wire versions depending on the manufacturer.</span>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 13 : PLC WIRING                     -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-13">
+            <span class="badge">PLC Integration</span>
+            <h1 class="slide-title">PLC Analog Input <span class="highlight">Wiring Examples</span></h1>
+            <p class="slide-subtitle">How each transmitter connects to a PLC analog input card</p>
+            <div class="grid-2">
+                <div class="wiring-card">
+                    <h4 style="text-align:center;color:var(--blue);margin-bottom:12px;font-size:0.9rem;">2-Wire → PLC AI</h4>
+                    <svg viewBox="0 0 380 200" style="width:100%;height:auto;">
+                        <rect x="15" y="30" width="65" height="45" rx="8" fill="var(--red-light)" stroke="var(--red)" stroke-width="1.5"/>
+                        <text x="47" y="52" text-anchor="middle" font-size="8" font-weight="700" fill="var(--red)">24V</text>
+                        <text x="47" y="66" text-anchor="middle" font-size="6" fill="var(--text3)">PSU</text>
+                        <rect x="125" y="18" width="85" height="70" rx="8" fill="var(--blue-light)" stroke="var(--blue)" stroke-width="2"/>
+                        <text x="167" y="45" text-anchor="middle" font-size="9" font-weight="700" fill="var(--blue)">2-Wire</text>
+                        <text x="167" y="60" text-anchor="middle" font-size="7" fill="var(--text3)">Tx</text>
+                        <line x1="80" y1="42" x2="125" y2="42" stroke="var(--red)" stroke-width="2"/>
+                        <circle cx="100" cy="42" r="3" fill="var(--red)" opacity="0.8">
+                            <animate attributeName="cx" values="85;120" dur="1.6s" repeatCount="indefinite"/>
+                        </circle>
+                        <line x1="167" y1="88" x2="167" y2="120" stroke="var(--text3)" stroke-width="2"/>
+                        <line x1="167" y1="120" x2="280" y2="120" stroke="var(--text3)" stroke-width="2"/>
+                        <rect x="280" y="50" width="80" height="70" rx="8" fill="var(--green-light)" stroke="var(--green)" stroke-width="2"/>
+                        <text x="320" y="75" text-anchor="middle" font-size="9" font-weight="700" fill="var(--green)">PLC</text>
+                        <text x="320" y="90" text-anchor="middle" font-size="7" fill="var(--text3)">AI Ch 0</text>
+                        <line x1="320" y1="120" x2="320" y2="150" stroke="var(--text3)" stroke-width="2"/>
+                        <line x1="320" y1="150" x2="47" y2="150" stroke="var(--text3)" stroke-width="2"/>
+                        <line x1="47" y1="150" x2="47" y2="75" stroke="var(--text3)" stroke-width="2"/>
+                        <text x="195" y="138" text-anchor="middle" font-size="7" fill="var(--text3)" font-weight="600">⏎ Return</text>
+                    </svg>
+                </div>
+                <div class="wiring-card">
+                    <h4 style="text-align:center;color:var(--orange);margin-bottom:12px;font-size:0.9rem;">4-Wire → PLC AI (Isolated)</h4>
+                    <svg viewBox="0 0 380 200" style="width:100%;height:auto;">
+                        <rect x="15" y="30" width="65" height="45" rx="8" fill="var(--red-light)" stroke="var(--red)" stroke-width="1.5"/>
+                        <text x="47" y="52" text-anchor="middle" font-size="8" font-weight="700" fill="var(--red)">24V</text>
+                        <text x="47" y="66" text-anchor="middle" font-size="6" fill="var(--text3)">PSU</text>
+                        <rect x="120" y="15" width="95" height="80" rx="8" fill="var(--orange-light)" stroke="var(--orange)" stroke-width="2"/>
+                        <text x="167" y="42" text-anchor="middle" font-size="9" font-weight="700" fill="var(--orange)">4-Wire</text>
+                        <text x="167" y="57" text-anchor="middle" font-size="7" fill="var(--text3)">Tx</text>
+                        <line x1="80" y1="42" x2="120" y2="42" stroke="var(--red)" stroke-width="2"/>
+                        <line x1="80" y1="58" x2="120" y2="58" stroke="var(--text3)" stroke-width="2"/>
+                        <line x1="215" y1="35" x2="280" y2="35" stroke="var(--blue)" stroke-width="2"/>
+                        <line x1="215" y1="65" x2="280" y2="65" stroke="var(--cyan)" stroke-width="2"/>
+                        <rect x="280" y="15" width="85" height="80" rx="8" fill="var(--green-light)" stroke="var(--green)" stroke-width="2"/>
+                        <text x="322" y="42" text-anchor="middle" font-size="9" font-weight="700" fill="var(--green)">PLC</text>
+                        <text x="322" y="58" text-anchor="middle" font-size="7" fill="var(--text3)">AI Isolated</text>
+                        <text x="245" y="30" text-anchor="middle" font-size="6" fill="var(--blue)" font-weight="600">+Sig</text>
+                        <text x="245" y="76" text-anchor="middle" font-size="6" fill="var(--cyan)" font-weight="600">−Sig</text>
+                        <!-- isolation marker -->
+                        <line x1="167" y1="95" x2="167" y2="115" stroke="var(--orange)" stroke-width="1.5" stroke-dasharray="3,3"/>
+                        <text x="167" y="128" text-anchor="middle" font-size="6" fill="var(--orange)" font-weight="700">⛔ ISO</text>
+                        <circle cx="235" cy="35" r="3" fill="var(--blue)" opacity="0.8">
+                            <animate attributeName="cx" values="220;275" dur="1.6s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="235" cy="65" r="3" fill="var(--cyan)" opacity="0.8">
+                            <animate attributeName="cx" values="220;275" dur="1.6s" repeatCount="indefinite"/>
+                        </circle>
+                    </svg>
+                </div>
+            </div>
+            <div class="card" style="margin-top:12px;background:var(--surface2);text-align:center;">
+                <span style="font-weight:700;color:var(--text);">🔑 Key Difference:</span>
+                <span style="font-size:0.9rem;color:var(--text2);"> With 2-wire, the PLC AI card provides (or shares) the loop power. With 4-wire, the transmitter has its own power supply — only the signal wires go to the PLC.</span>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 14 : COMMON MISTAKES                -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-14">
+            <span class="badge red">Watch Out</span>
+            <h1 class="slide-title">Common <span class="highlight red">Installation Mistakes</span></h1>
+            <p class="slide-subtitle">Avoid these errors — they cost hours of troubleshooting</p>
+            <div class="warn-grid">
+                <div class="warn-card"><div class="icon">🔌</div><h4>Wrong Polarity</h4><p>Swapping + and − on a 2-wire transmitter gives 0 mA. The PLC shows "Open Loop." Always check terminal labels!</p></div>
+                <div class="warn-card"><div class="icon">🔄</div><h4>Ground Loops</h4><p>Connecting signal ground to earth at multiple points creates circulating currents. Ground at <strong>ONE</strong> point only.</p></div>
+                <div class="warn-card"><div class="icon">🎯</div><h4>Wrong AI Terminals</h4><p>Connecting a 4-20 mA signal to a voltage input (0-10V) channel gives wrong readings. Verify your AI card type.</p></div>
+                <div class="warn-card"><div class="icon">✂️</div><h4>Open Loop</h4><p>A loose terminal or broken wire breaks the loop. PLC reads 0 mA. Check continuity with a multimeter.</p></div>
+                <div class="warn-card"><div class="icon">🛡️</div><h4>Broken Shield</h4><p>Not grounding the cable shield (or grounding both ends) lets noise corrupt your signal. Ground shield at PLC end only.</p></div>
+                <div class="warn-card"><div class="icon">⚡</div><h4>Overvoltage</h4><p>Applying 120V AC to a 24V DC transmitter destroys it instantly. Always verify voltage before connecting.</p></div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 15 : TROUBLESHOOTING                -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-15">
+            <span class="badge">Problem Solving</span>
+            <h1 class="slide-title">Troubleshooting <span class="highlight">Flowchart</span></h1>
+            <p class="slide-subtitle">Step-by-step when your transmitter reading is wrong</p>
+            <div class="tree" style="padding:8px 0;">
+                <div class="tree-node" style="background:var(--red-light);border-color:var(--red);">⚠️ PLC shows 0 mA or "Open Loop" fault</div>
+                <div class="tree-arrow"></div>
+                <div class="tree-node" style="font-weight:500;">Check loop continuity with a multimeter <span class="sub">(beep test or resistance)</span></div>
+                <div class="tree-arrow"></div>
+                <div class="tree-branch">
+                    <div class="tree-answer no"><span class="label">🔴 OPEN</span><span class="value" style="color:var(--red);font-size:0.9rem;">Find the break</span><span style="font-size:0.7rem;color:var(--text3);display:block;">Loose terminal, broken wire, blown fuse, wrong polarity</span></div>
+                    <div class="tree-answer yes"><span class="label">🟢 CLOSED</span><span class="value" style="color:var(--green);font-size:0.9rem;">Check power</span><span style="font-size:0.7rem;color:var(--text3);display:block;">Verify 24V at transmitter terminals. Check PSU capacity.</span></div>
+                </div>
+                <div class="tree-arrow"></div>
+                <div class="tree-node" style="font-weight:500;">Still wrong? Check for ground loops <span class="sub">Disconnect shield, measure voltage between signal ground and earth</span></div>
+                <div class="tree-arrow"></div>
+                <div class="tree-node" style="background:var(--green-light);border-color:var(--green);font-weight:500;">Still wrong? The transmitter may be faulty.<span class="sub">Swap with a known-good unit to confirm.</span></div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 16 : SAFETY                         -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-16">
+            <span class="badge green">Safety First</span>
+            <h1 class="slide-title">Safety <span class="highlight green">Best Practices</span></h1>
+            <p class="slide-subtitle">Non-negotiable rules for every field technician</p>
+            <div class="check-grid">
+                <div class="check-item"><div class="box"></div><div><strong>🔒 Lockout/Tagout (LOTO)</strong><br><span style="font-size:0.75rem;color:var(--text3);">Always de-energize and lock out before working</span></div></div>
+                <div class="check-item"><div class="box"></div><div><strong>⚡ Verify Voltage</strong><br><span style="font-size:0.75rem;color:var(--text3);">Use a multimeter to confirm 0V before touching terminals</span></div></div>
+                <div class="check-item"><div class="box"></div><div><strong>📋 Check Datasheet</strong><br><span style="font-size:0.75rem;color:var(--text3);">Verify wire colors, terminal assignments, and voltage ratings</span></div></div>
+                <div class="check-item"><div class="box"></div><div><strong>🔍 Confirm Terminals</strong><br><span style="font-size:0.75rem;color:var(--text3);">Double-check you're on the right AI channel and terminal block</span></div></div>
+                <div class="check-item"><div class="box"></div><div><strong>🔥 Hazardous Area Precautions</strong><br><span style="font-size:0.75rem;color:var(--text3);">In Zone 0/1/2 areas, use IS barriers and certified equipment</span></div></div>
+                <div class="check-item"><div class="box"></div><div><strong>🧤 Use Proper PPE</strong><br><span style="font-size:0.75rem;color:var(--text3);">Insulated gloves, safety glasses, and arc-rated clothing</span></div></div>
+                <div class="check-item"><div class="box"></div><div><strong>📸 Take Photos Before</strong><br><span style="font-size:0.75rem;color:var(--text3);">Document existing wiring before making changes</span></div></div>
+                <div class="check-item"><div class="box"></div><div><strong>🧪 Test Before Full Power</strong><br><span style="font-size:0.75rem;color:var(--text3);">Use a loop calibrator to verify signal before energizing the PLC</span></div></div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 17 : FIELD CHECKLIST                -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-17">
+            <span class="badge">Printable Tool</span>
+            <h1 class="slide-title">Field Technician <span class="highlight">Checklist</span></h1>
+            <p class="slide-subtitle">Print this and keep it in your toolbox</p>
+            <div class="card" style="border:2px dashed var(--blue);">
+                <div style="text-align:center;margin-bottom:16px;">
+                    <h3 style="color:var(--blue);font-size:1.2rem;">🔧 TRANSMITTER INSTALLATION CHECKLIST</h3>
+                    <p style="font-size:0.8rem;color:var(--text3);">Job: ______________ &nbsp;|&nbsp; Date: ______________ &nbsp;|&nbsp; Tech: ______________</p>
+                </div>
+                <div class="grid-2" style="gap:24px;">
+                    <div>
+                        <h4 style="color:var(--blue);margin-bottom:10px;font-size:0.9rem;">📋 Before Starting</h4>
+                        <div class="check-item" style="margin-bottom:6px;"><div class="box"></div><span>LOTO procedure completed &amp; verified</span></div>
+                        <div class="check-item" style="margin-bottom:6px;"><div class="box"></div><span>Datasheet reviewed for wiring diagram</span></div>
+                        <div class="check-item" style="margin-bottom:6px;"><div class="box"></div><span>Correct wire gauge and type selected</span></div>
+                        <div class="check-item" style="margin-bottom:6px;"><div class="box"></div><span>Shielded twisted pair cable prepared</span></div>
+                        <h4 style="color:var(--cyan);margin:14px 0 10px;font-size:0.9rem;">⚡ During Wiring</h4>
+                        <div class="check-item" style="margin-bottom:6px;"><div class="box"></div><span>Polarity verified (+ to +, − to −)</span></div>
+                        <div class="check-item" style="margin-bottom:6px;"><div class="box"></div><span>Shield grounded at PLC end ONLY</span></div>
+                        <div class="check-item" style="margin-bottom:6px;"><div class="box"></div><span>Terminals tightened to proper torque</span></div>
+                    </div>
+                    <div>
+                        <h4 style="color:var(--green);margin-bottom:10px;font-size:0.9rem;">✅ After Wiring</h4>
+                        <div class="check-item" style="margin-bottom:6px;"><div class="box"></div><span>Loop continuity tested (multimeter beep)</span></div>
+                        <div class="check-item" style="margin-bottom:6px;"><div class="box"></div><span>24V present at transmitter terminals</span></div>
+                        <div class="check-item" style="margin-bottom:6px;"><div class="box"></div><span>4 mA measured at zero process value</span></div>
+                        <div class="check-item" style="margin-bottom:6px;"><div class="box"></div><span>20 mA measured at full scale value</span></div>
+                        <div class="check-item" style="margin-bottom:6px;"><div class="box"></div><span>PLC reading matches expected value</span></div>
+                        <div class="check-item" style="margin-bottom:6px;"><div class="box"></div><span>Cable tags and labels applied</span></div>
+                        <div class="check-item" style="margin-bottom:6px;"><div class="box"></div><span>As-built drawing updated</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 18 : ONE-PAGE SUMMARY               -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-18">
+            <span class="badge">Quick Reference</span>
+            <h1 class="slide-title">One-Page <span class="highlight">Summary</span></h1>
+            <p class="slide-subtitle">Everything you need to remember at a glance</p>
+            <div class="comp-table-wrap">
+                <table class="comp-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th class="col-blue">2-Wire</th>
+                            <th class="col-cyan">3-Wire</th>
+                            <th class="col-orange">4-Wire</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Wires</strong></td><td class="highlight-blue">2 (loop-powered)</td><td class="highlight-cyan">3 (+V, GND, Sig)</td><td class="highlight-orange">4 (+V, −V, +Sig, −Sig)</td></tr>
+                        <tr><td><strong>Power</strong></td><td>From 4-20 mA loop</td><td>Separate +24V DC</td><td>Separate power supply</td></tr>
+                        <tr><td><strong>Isolation</strong></td><td>None</td><td>Partial</td><td class="highlight-orange">Full galvanic</td></tr>
+                        <tr><td><strong>Typical Use</strong></td><td>Pressure, Level, Temp</td><td>Flow, powered sensors</td><td>Analyzers, critical</td></tr>
+                        <tr><td><strong>Cost</strong></td><td class="highlight-blue">💰 Lowest</td><td>💰💰 Medium</td><td>💰💰💰 Highest</td></tr>
+                        <tr><td><strong>Complexity</strong></td><td class="highlight-blue">⭐ Simple</td><td>⭐⭐ Medium</td><td>⭐⭐⭐ Complex</td></tr>
+                        <tr><td><strong>Power Budget</strong></td><td>~20-30 mW</td><td>~100-500 mW</td><td class="highlight-orange">Unlimited</td></tr>
+                        <tr><td><strong>Local Display</strong></td><td>Rare</td><td>Common</td><td>Standard</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 19 : KNOWLEDGE CHECK               -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide" id="slide-19">
+            <span class="badge">Test Yourself</span>
+            <h1 class="slide-title">Knowledge <span class="highlight">Check</span></h1>
+            <p class="slide-subtitle">5 quick questions to verify your understanding</p>
+            <div class="quiz-grid">
+                <div class="quiz-card"><div class="q">1</div><p>A pressure transmitter in a standard plant is most likely which type?</p><div class="hint">💡 Think about power requirements and common practice...</div></div>
+                <div class="quiz-card"><div class="q">2</div><p>Why does 4-20 mA use 4 mA as the "live zero" instead of 0 mA?</p><div class="hint">💡 What happens if a wire breaks in a 0-20 mA system?</div></div>
+                <div class="quiz-card"><div class="q">3</div><p>You see 0 mA on the PLC for a 2-wire transmitter. What's the most likely cause?</p><div class="hint">💡 0 mA means the loop is broken...</div></div>
+                <div class="quiz-card"><div class="q">4</div><p>A gas analyzer needs complete isolation between its 120V AC power and 4-20 mA output. Which type?</p><div class="hint">💡 Isolation is the key requirement here...</div></div>
+            </div>
+            <div class="card" style="margin-top:14px;background:var(--blue-light);border-color:var(--blue);text-align:center;">
+                <span style="font-weight:700;color:var(--blue);">📝 Answers:</span>
+                <span style="font-size:0.9rem;color:var(--text2);"> 1) 2-Wire &nbsp;|&nbsp; 2) To detect broken wire (0 mA = fault) &nbsp;|&nbsp; 3) Open loop — check continuity &nbsp;|&nbsp; 4) 4-Wire with galvanic isolation</span>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- SLIDE 20 : THANK YOU                      -->
+        <!-- ════════════════════════════════════════ -->
+        <div class="slide thank-you" id="slide-20">
+            <div style="font-size:4rem;margin-bottom:12px;">🎯</div>
+            <h1>You've Got This!</h1>
+            <p>You now understand 2-Wire, 3-Wire, and 4-Wire transmitters.<br>Go wire with confidence.</p>
+            <div class="cover-badge" style="margin-top:20px;background:var(--blue);">Industrial Automation Training</div>
+            <p style="font-size:0.8rem;color:var(--text3);margin-top:16px;">Review any slide — knowledge sticks when you see it in action.</p>
+        </div>
+
+    </div><!-- end slide-container -->
+
+    <!-- ─── NAVIGATION ─── -->
+    <div class="progress-bar" id="progress-bar" style="width:5%;"></div>
+    <div class="nav-bar">
+        <button class="nav-btn" id="prev-btn" onclick="changeSlide(-1)">← Previous</button>
+        <span class="slide-counter" id="slide-counter">1 / 20</span>
+        <button class="nav-btn" id="next-btn" onclick="changeSlide(1)">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 20;
+
+        function showSlide(n) {
+            if (n > totalSlides) currentSlide = totalSlides;
+            if (n < 1) currentSlide = 1;
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('slide-' + currentSlide);
+            if (target) target.classList.add('active');
+            document.getElementById('slide-counter').textContent = currentSlide + ' / ' + totalSlides;
+            document.getElementById('progress-bar').style.width = (currentSlide / totalSlides * 100) + '%';
+            document.getElementById('prev-btn').disabled = currentSlide === 1;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides;
+        }
+
+        function changeSlide(n) {
+            currentSlide += n;
+            showSlide(currentSlide);
+        }
+
+        // Keyboard
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault();
+                changeSlide(1); }
+            if (e.key === 'ArrowLeft') { e.preventDefault();
+                changeSlide(-1); }
+        });
+
+        // Touch swipe
+        let touchStart = 0;
+        document.addEventListener('touchstart', e => { touchStart = e.changedTouches[0].screenX; });
+        document.addEventListener('touchend', e => {
+            const diff = touchStart - e.changedTouches[0].screenX;
+            if (Math.abs(diff) > 40) {
+                if (diff > 0) changeSlide(1);
+                else changeSlide(-1);
+            }
+        });
+
+        showSlide(1);
+    </script>
+
+</body>
+</html>
