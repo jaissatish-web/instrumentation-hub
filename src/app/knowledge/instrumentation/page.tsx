@@ -223,6 +223,35 @@ function FeaturedArticleCard({ topic }: { topic: typeof featuredTopics[0] }) {
   );
 }
 
+const moreTopics = [
+  { slug: "4-20ma-signal", icon: "〰", title: "4-20 mA Signal Standard", excerpt: "Live zero, noise immunity, NAMUR NE43 fault indication and loop power — the analog backbone of process control.", category: "Basics · Signals", readTime: "4 min read" },
+  { slug: "dp-flow-calculation", icon: "〜", title: "DP Flow Calculation", excerpt: "Why doubling flow quadruples differential pressure — square-root extraction explained with a commissioning story.", category: "Flow · DP", readTime: "4 min read" },
+  { slug: "2oo3-logic", icon: "🛡️", title: "2oo3 Voting Logic", excerpt: "Two-out-of-three voting for fault-tolerant safety trips — SIL levels, configurations and a $2M shutdown lesson.", category: "Safety · SIS", readTime: "4 min read" },
+  { slug: "loop-checklist", icon: "✅", title: "Loop Check Checklist", excerpt: "Pre-commissioning verification — signal, alarms, valve stroke, configuration and P&ID compliance.", category: "Commissioning", readTime: "4 min read" },
+  { slug: "pressure-transmitter-calibration", icon: "🧮", title: "Pressure Transmitter Calibration", excerpt: "The 5-point calibration procedure — zero, span, error formula and hysteresis checks with field stories.", category: "Calibration", readTime: "4 min read" },
+  { slug: "thermocouple-types", icon: "🔥", title: "Thermocouple Types", excerpt: "Types J, K, T, E, N, R, S and B — ranges, characteristics and a sulfur-poisoning case study.", category: "Temperature", readTime: "4 min read" },
+  { slug: "rtd-pt100", icon: "📟", title: "RTD Pt100 Explained", excerpt: "Platinum resistance, wiring configurations, accuracy classes and a swapped-wire field story.", category: "Temperature", readTime: "4 min read" },
+];
+
+function MoreArticleCard({ topic }: { topic: typeof moreTopics[0] }) {
+  return (
+    <Link
+      href={`/knowledge/instrumentation/${topic.slug}`}
+      className="group block rounded-2xl p-5 transition-all duration-300 hover:translate-y-[-4px]"
+      style={{ border: "1px solid var(--color-border)", background: "var(--color-bg-card)" }}
+    >
+      <div className="flex items-start gap-4">
+        <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl flex-shrink-0" style={{ background: "rgba(0,180,255,0.08)", border: "1px solid rgba(0,180,255,0.2)" }}>{topic.icon}</div>
+        <div className="min-w-0">
+          <div className="text-[9px] font-semibold uppercase tracking-[.12em] text-[var(--color-accent-blue)] mb-1.5" style={{ fontFamily: "var(--font-mono)" }}>{topic.category} · {topic.readTime}</div>
+          <h3 className="text-base font-bold text-[var(--color-text-primary)] mb-1.5 group-hover:text-amber-400 transition-colors" style={{ fontFamily: "var(--font-display)" }}>{topic.title}</h3>
+          <p className="text-xs text-[var(--color-text-secondary)] leading-relaxed">{topic.excerpt}</p>
+        </div>
+      </div>
+    </Link>
+  );
+}
+
 export default function InstrumentationPage() {
   return (
     <div className="page-enter min-h-screen pb-16">
@@ -277,6 +306,19 @@ export default function InstrumentationPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {featuredTopics.map((topic) => (
               <FeaturedArticleCard key={topic.id} topic={topic} />
+            ))}
+          </div>
+        </section>
+
+        <section className="mb-12 sm:mb-16" aria-labelledby="more-heading">
+          <div className="flex items-center justify-between mb-6">
+            <h2 id="more-heading" className="text-2xl font-black text-[var(--color-text-primary)]" style={{fontFamily: "var(--font-display)"}}>
+              <span className="gradient-amber">More</span> Guides
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {moreTopics.map((topic) => (
+              <MoreArticleCard key={topic.slug} topic={topic} />
             ))}
           </div>
         </section>

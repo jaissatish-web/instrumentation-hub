@@ -1,7 +1,21 @@
 import { MetadataRoute } from "next";
+import { blogPosts } from "@/data/blog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://ihub-eta.vercel.app";
+
+  const knowledgeArticles = [
+    "pressure-gauges",
+    "pressure-transmitters",
+    "temperature-gauges",
+    "4-20ma-signal",
+    "dp-flow-calculation",
+    "2oo3-logic",
+    "loop-checklist",
+    "pressure-transmitter-calibration",
+    "thermocouple-types",
+    "rtd-pt100",
+  ];
 
   return [
     {
@@ -22,30 +36,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.8,
     },
-    {
-      url: `${baseUrl}/knowledge/instrumentation/pressure-gauges`,
+    ...knowledgeArticles.map((slug) => ({
+      url: `${baseUrl}/knowledge/instrumentation/${slug}`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
+      changeFrequency: "monthly" as const,
       priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/knowledge/instrumentation/pressure-transmitters`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-    {
-      url: `${baseUrl}/knowledge/instrumentation/temperature-gauges`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
+    })),
     {
       url: `${baseUrl}/tools`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.6,
     },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    ...blogPosts.map((p) => ({
+      url: `${baseUrl}/blog/${p.slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })),
     {
       url: `${baseUrl}/about`,
       lastModified: new Date(),

@@ -1,7 +1,24 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import {
+  TwoOoThreeTool,
+  CalibrationErrorTool,
+  CauseEffectTool,
+  FatSatTool,
+  HartTool,
+  HydrostaticTool,
+  IoSparesTool,
+  IsaTagTool,
+  LoopVoltageTool,
+  MaFaultTool,
+  PidTool,
+  PressureCalibratorTool,
+  PunchListTool,
+  RtdTcReferenceTool,
+  WetLegTool,
+} from "@/components/tools/NewTools";
 
 // ─── TOOL DEFINITIONS ─────────────────────────────────────
 const TOOLS = [
@@ -16,9 +33,35 @@ const TOOLS = [
   { id: "cable", icon: "🔌", name: "Cable Sizing",         desc: "Voltage drop for instrument copper cable" },
   { id: "cl",    icon: "✅", name: "Loop Checklist",        desc: "Pre-commissioning checklist with progress tracking" },
   { id: "pg",    icon: "📏", name: "Pressure Gauge Sim",   desc: "Interactive Bourdon tube pressure gauge simulation" },
+  { id: "2oo3",  icon: "🛡️", name: "2oo3 Voting",          desc: "Two-out-of-three safety voting logic" },
+  { id: "calerr", icon: "🎯", name: "Calibration Error",   desc: "Error vs % of span with tolerance check" },
+  { id: "ce",    icon: "🧩", name: "Cause & Effect",       desc: "C&E matrix verification checklist" },
+  { id: "fatsat", icon: "🧪", name: "FAT / SAT",           desc: "Factory & site acceptance test checklist" },
+  { id: "hart",  icon: "📡", name: "HART Commands",        desc: "Universal command reference table" },
+  { id: "hydro", icon: "🛢️", name: "Hydrostatic Level",    desc: "Level from hydrostatic pressure" },
+  { id: "io",    icon: "🔌", name: "I/O Spares",           desc: "DCS/PLC module count with spare policy" },
+  { id: "isa",   icon: "🏷️", name: "ISA Tag Builder",      desc: "Simplified ISA 5.1-style instrument tags" },
+  { id: "loopv", icon: "⚡", name: "Loop Voltage",         desc: "Voltage budget for transmitter loops" },
+  { id: "mafault", icon: "🔍", name: "mA Fault Finder",    desc: "NAMUR NE43-style signal band diagnosis" },
+  { id: "pid",   icon: "🎛️", name: "PID Simulator",        desc: "First-order process teaching simulation" },
+  { id: "pcal",  icon: "🧮", name: "Pressure Calibrator",  desc: "5-point calibration test points" },
+  { id: "punch", icon: "📋", name: "Punch List",           desc: "Track punch items during walkdown" },
+  { id: "rtct",  icon: "📟", name: "RTD & TC Reference",   desc: "Pt100 / Type K·J·T tables & values" },
+  { id: "wetleg", icon: "🌊", name: "Wet / Dry Leg",       desc: "DP level with reference-leg offset" },
 ];
 export default function ToolsPage() {
   const [active, setActive] = useState<string | null>(null);
+
+  // Hash-based deep linking: /tools#ma opens the 4-20 mA tool
+  useEffect(() => {
+    const h = window.location.hash.replace("#", "");
+    if (h && TOOLS.some((t) => t.id === h)) setActive(h);
+  }, []);
+
+  const selectTool = (id: string) => {
+    setActive(id);
+    window.history.replaceState(null, "", `#${id}`);
+  };
 
   return (
     <div className="page-enter">
@@ -39,8 +82,8 @@ export default function ToolsPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
             {TOOLS.map((t) => (
               <button
-                key={t.id}
-                onClick={() => setActive(t.id)}
+                              key={t.id}
+                              onClick={() => selectTool(t.id)}
                 className="glass-card rounded-xl p-6 text-left cursor-pointer transition-all duration-300 hover:translate-y-[-4px]"
                 style={{border: "1px solid var(--color-border)", background: "var(--color-bg-card)"}}
               >
@@ -54,7 +97,7 @@ export default function ToolsPage() {
         ) : (
           <div>
             <button
-              onClick={() => setActive(null)}
+                          onClick={() => { setActive(null); window.history.replaceState(null, "", window.location.pathname); }}
               className="mb-6 text-[11px] font-semibold uppercase tracking-[.12em] text-[var(--color-text-muted)] hover:text-[var(--color-accent-blue)] transition-colors"
               style={{fontFamily: "var(--font-mono)"}}
             >
@@ -736,7 +779,52 @@ ${"=".repeat(50)}
         </div>
       );
 
-    default:
-      return <p>Tool coming soon.</p>;
-  }
-}
+    case "2oo3":
+          return <TwoOoThreeTool />;
+
+        case "calerr":
+          return <CalibrationErrorTool />;
+
+        case "ce":
+          return <CauseEffectTool />;
+
+        case "fatsat":
+          return <FatSatTool />;
+
+        case "hart":
+          return <HartTool />;
+
+        case "hydro":
+          return <HydrostaticTool />;
+
+        case "io":
+          return <IoSparesTool />;
+
+        case "isa":
+          return <IsaTagTool />;
+
+        case "loopv":
+          return <LoopVoltageTool />;
+
+        case "mafault":
+          return <MaFaultTool />;
+
+        case "pid":
+          return <PidTool />;
+
+        case "pcal":
+          return <PressureCalibratorTool />;
+
+        case "punch":
+          return <PunchListTool />;
+
+        case "rtct":
+          return <RtdTcReferenceTool />;
+
+        case "wetleg":
+          return <WetLegTool />;
+
+        default:
+          return <p>Tool coming soon.</p>;
+      }
+    }

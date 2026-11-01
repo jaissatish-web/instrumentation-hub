@@ -29,10 +29,10 @@ export default function AboutPage() {
               <span className="cat-badge green">🏆 Zero LTI &mdash; 15 Yrs</span>
             </div>
             <div className="flex gap-4 mt-8">
-              <a href="mailto:jaissatish@gmail.com" className="btn-primary px-6 py-3 rounded-lg text-xs font-bold uppercase tracking-[.08em] text-black" style={{background: "var(--color-accent-blue)", fontFamily: "var(--font-mono)", boxShadow: "0 0 20px rgba(0,180,255,0.3)"}}>Contact Me</a>
-              <a href="https://linkedin.com/in/satish-jaiswal-ic" target="_blank" className="btn-ghost px-5 py-3 rounded-lg text-xs font-bold uppercase tracking-[.08em] border border-[var(--color-border)]" style={{fontFamily: "var(--font-mono)"}}>LinkedIn</a>
-              <a href="/portfolio.html" className="btn-ghost px-5 py-3 rounded-lg text-xs font-bold uppercase tracking-[.08em] border border-[var(--color-border)]" style={{fontFamily: "var(--font-mono)"}}>View Full Portfolio</a>
-            </div>
+                          <a href="mailto:jaissatish@gmail.com" className="btn-primary px-6 py-3 rounded-lg text-xs font-bold uppercase tracking-[.08em] text-black" style={{background: "var(--color-accent-blue)", fontFamily: "var(--font-mono)", boxShadow: "0 0 20px rgba(0,180,255,0.3)"}}>Contact Me</a>
+                          <a href="https://linkedin.com/in/satish-jaiswal-ic" target="_blank" className="btn-ghost px-5 py-3 rounded-lg text-xs font-bold uppercase tracking-[.08em] border border-[var(--color-border)]" style={{fontFamily: "var(--font-mono)"}}>LinkedIn</a>
+                          <a href="/Satish_Jaiswal_Resume.pdf" download className="btn-ghost px-5 py-3 rounded-lg text-xs font-bold uppercase tracking-[.08em] border border-[var(--color-border)]" style={{fontFamily: "var(--font-mono)"}}>⬇ Résumé</a>
+                        </div>
           </div>
         </div>
       </section>

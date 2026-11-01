@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const hubs = [
-  { id: "instrumentation", icon: "📡", name: "Instrumentation", desc: "Pressure, Temperature, Flow, Level, Analytical, Control Valves, Calibration, Installation & Commissioning", count: "2 articles", comingSoon: false },
+  { id: "instrumentation", icon: "📡", name: "Instrumentation", desc: "Pressure, Temperature, Flow, Level, Analytical, Control Valves, Calibration, Installation & Commissioning", count: "10 articles", comingSoon: false },
   { id: "plc", icon: "🧩", name: "PLC Programming", desc: "Ladder Logic, Structured Text, Function Block, Timers, Counters, PID, Safety PLC, Networking & Diagnostics", count: "28+ articles", comingSoon: true },
   { id: "scada", icon: "🖥️", name: "SCADA Systems", desc: "HMI Graphics, Alarm Management, Historian, Trending, Tag Management, Scripting & Security", count: "18+ articles", comingSoon: true },
   { id: "dcs", icon: "⚙️", name: "DCS Systems", desc: "Architecture, Controllers, Graphics, Batch Control, Redundancy, I/O Systems & Commissioning", count: "22+ articles", comingSoon: true },
