@@ -1,5 +1,30 @@
 import Link from "next/link";
 
+export function generateStaticParams() {
+  return [
+    { hub: "instrumentation" },
+    { hub: "plc" },
+    { hub: "scada" },
+    { hub: "dcs" },
+    { hub: "process-control" },
+    { hub: "electrical" },
+    { hub: "communication" },
+    { hub: "automation" },
+    { hub: "safety" },
+    { hub: "mechanical" },
+    { hub: "drawings" },
+    { hub: "software" },
+    { hub: "manufacturers" },
+    { hub: "calculators" },
+    { hub: "downloads" },
+    { hub: "interview" },
+    { hub: "mcqs" },
+    { hub: "projects" },
+    { hub: "engineering-tools" },
+    { hub: "career" },
+  ];
+}
+
 export default async function HubPage({ params }: { params: Promise<{ hub: string }> }) {
   const { hub } = await params;
 
